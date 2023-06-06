@@ -1,24 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import EmptyDiv from "./emptydiv";
+import Subjectteacher_test_layout from "./subjectteacher_test_layout";
+import Subjectteacher_result_layout from "./Subjectteacher_result_layout";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+        {/* <Subjectteacher_test_layout/> */}
+        <Subjectteacher_result_layout/>
+    </>
   );
 }
 
