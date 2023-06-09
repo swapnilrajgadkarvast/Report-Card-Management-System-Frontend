@@ -13,6 +13,12 @@ const Navbar = ({ role }) => {
     // Logic for handling logout
   };
 
+  const [activeNavbar, setActiveNavbar] = useState("students");
+
+  const handleNavbarClick = (navbarOption) => {
+    setActiveNavbar(navbarOption);
+  };
+
   return (
     <nav className="flex items-center justify-between bg-purple-900 p-4">
       <div className="flex items-center">
@@ -23,7 +29,7 @@ const Navbar = ({ role }) => {
               <Link
                 to="/students"
                 className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500" // Add the active classes here
+                activeClassName="bg-white text-purple-500"
               >
                 Students
               </Link>

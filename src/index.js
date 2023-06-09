@@ -20,6 +20,8 @@ import SubjectTeacherPage from "./components/subjectTeacher";
 import ClassTeacherPage from "./components/classTeacher";
 import AdminPage from "./components/adminPage";
 import App from "./App";
+import Students from "./components/students";
+import Reports from "./components/reports";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
@@ -48,8 +50,11 @@ const Root = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          <Route path="/subject_teacher" element={<SubjectTeacherPage />} />
           <Route path="/class_teacher" element={<ClassTeacherPage />} />
+          <Route path="/students" element={<Students />} />
+          <Route path="/reports" element={<Reports />} />
+
+          <Route path="/subject_teacher" element={<SubjectTeacherPage />} />
           <Route path="/admin" element={<AdminPage />} />
 
           <Route path="*" element={<ErrorPage />} />
