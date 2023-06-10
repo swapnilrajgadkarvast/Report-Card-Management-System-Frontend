@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
 export default function DropdownComponent() {
+  const [isOpen, setIsOpen] = useState(false);
 
-    const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
 
-    const toggleDropdown = () => {
-      setIsOpen(!isOpen);
-    };
-  
-    return (
-        <div className="relative w-full h-40 flex items-center justify-center bg-slate-50">
-        <div className="relative inline-block">
+  return (
+    <div className="relative w-full h-40 flex items-center justify-center bg-slate-50">
+      <div className="relative inline-block">
         <button
           onClick={toggleDropdown}
           className=" w-60 flex items-center justify-between px-4 py-2 rounded-md border border-gray-300 bg-white
@@ -30,16 +29,11 @@ export default function DropdownComponent() {
             {/* Dropdown content */}
           </div>
         )}
-        </div>
-       
-        <button class=" h-16 w-40 bg-slate-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute right-2.5 ">
+      </div>
+
+      <button class=" h-16 w-40 bg-slate-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded absolute right-2.5 ">
         Add Test
-        </button>
-       
-      
+      </button>
     </div>
-      
-    );
-  };
-      
-    
+  );
+}
