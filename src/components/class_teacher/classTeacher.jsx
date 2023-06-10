@@ -13,11 +13,11 @@ import {
   faAward,
   faUserGraduate,
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../images/rcms_logo_small.jpg";
-import random_profile_pic1 from "../images/random_profile_pic.jpg";
-import random_profile_pic2 from "../images/random_profile_pic2.jpg";
+import logo from "../../images/rcms_logo_small.jpg";
+import random_profile_pic1 from "../../images/random_profile_pic.jpg";
+import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
 
-const Students = () => {
+const ClassTeacher = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
@@ -111,6 +111,7 @@ const Students = () => {
     },
     // Add more student data here...
   ];
+
   return (
     <div style={{ backgroundColor: "white" }}>
       <div className="container">
@@ -318,15 +319,6 @@ const Students = () => {
                               alt="Student"
                               className="w-36 border h-28"
                             />
-                            <br />
-                            <div className="col-span-2">
-                              <strong>Student </strong> <br />
-                              <FontAwesomeIcon
-                                icon={faUserGraduate}
-                                className="text-purple-900 mr-2"
-                              />
-                              {student.studentName}
-                            </div>
                           </div>
                           <div className="ml-4">
                             <div
@@ -418,4 +410,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default ClassTeacher;

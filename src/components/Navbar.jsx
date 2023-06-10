@@ -27,16 +27,24 @@ const Navbar = ({ role }) => {
           {role === "class_teacher" ? (
             <>
               <Link
-                to="/students"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                to="/class_teacher/students"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "students"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("students")}
               >
                 Students
               </Link>
               <Link
-                to="/reports"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                to="/class_teacher/reports"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "reports"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("reports")}
               >
                 Reports
               </Link>
@@ -45,15 +53,21 @@ const Navbar = ({ role }) => {
             <>
               <Link
                 to="/test"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "test" ? "bg-purple-500 text-purple-500" : ""
+                }`}
+                onClick={() => handleNavbarClick("test")}
               >
                 Test
               </Link>
               <Link
                 to="/result"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "result"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("result")}
               >
                 Result
               </Link>
@@ -62,36 +76,54 @@ const Navbar = ({ role }) => {
             <>
               <Link
                 to="/standards"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "standards"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("standards")}
               >
                 Standards
               </Link>
               <Link
                 to="/division"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "division"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("division")}
               >
                 Division
               </Link>
               <Link
                 to="/role"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "role" ? "bg-purple-500 text-purple-500" : ""
+                }`}
+                onClick={() => handleNavbarClick("role")}
               >
                 Role
               </Link>
               <Link
                 to="/user_roles"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "user_roles"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("user_roles")}
               >
                 User Roles
               </Link>
               <Link
                 to="/grades"
-                className="text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-white"
-                activeClassName="bg-white text-purple-500"
+                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
+                  activeNavbar === "grades"
+                    ? "bg-purple-500 text-purple-500"
+                    : ""
+                }`}
+                onClick={() => handleNavbarClick("grades")}
               >
                 Grades
               </Link>

@@ -3,9 +3,9 @@ import Dashboard from "./components/dashboard";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import SubjectTeacherPage from "./components/subjectTeacher";
-import ClassTeacherPage from "./components/classTeacher";
-import AdminPage from "./components/adminPage";
+import SubjectTeacherPage from "./components/subject_teacher/subjectTeacher";
+import ClassTeacherPage from "./components/class_teacher/classTeacher";
+import AdminPage from "./components/admin/adminPage";
 
 function App() {
   return (
