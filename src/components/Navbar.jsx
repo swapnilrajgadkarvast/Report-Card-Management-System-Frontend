@@ -52,7 +52,7 @@ const Navbar = ({ role }) => {
           ) : role === "subject_teacher" ? (
             <>
               <Link
-                to="/test"
+                to="/subject_teacher/test"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "test" ? "bg-purple-500 text-purple-500" : ""
                 }`}
@@ -61,7 +61,7 @@ const Navbar = ({ role }) => {
                 Test
               </Link>
               <Link
-                to="/result"
+                to="/subject_teacher/result"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "result"
                     ? "bg-purple-500 text-purple-500"
@@ -75,7 +75,7 @@ const Navbar = ({ role }) => {
           ) : role === "admin" ? (
             <>
               <Link
-                to="/standards"
+                to="/admin/standards"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "standards"
                     ? "bg-purple-500 text-purple-500"
@@ -86,7 +86,7 @@ const Navbar = ({ role }) => {
                 Standards
               </Link>
               <Link
-                to="/division"
+                to="/admin/divisions"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "division"
                     ? "bg-purple-500 text-purple-500"
@@ -97,7 +97,7 @@ const Navbar = ({ role }) => {
                 Division
               </Link>
               <Link
-                to="/role"
+                to="/admin/roles"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "role" ? "bg-purple-500 text-purple-500" : ""
                 }`}
@@ -106,7 +106,7 @@ const Navbar = ({ role }) => {
                 Role
               </Link>
               <Link
-                to="/user_roles"
+                to="/admin/user_roles"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "user_roles"
                     ? "bg-purple-500 text-purple-500"
@@ -117,7 +117,7 @@ const Navbar = ({ role }) => {
                 User Roles
               </Link>
               <Link
-                to="/grades"
+                to="/admin/grades"
                 className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
                   activeNavbar === "grades"
                     ? "bg-purple-500 text-purple-500"

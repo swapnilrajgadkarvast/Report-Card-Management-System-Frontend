@@ -16,14 +16,19 @@ import ForgotPassword from "./components/forgotPassword";
 import About from "./components/about";
 import Login from "./components/login";
 import Navbar from "./components/Navbar";
-import SubjectTeacherPage from "./components/subject_teacher/subjectTeacher";
-import ClassTeacherPage from "./components/class_teacher/classTeacher";
-import AdminPage from "./components/admin/adminPage";
+
 import App from "./App";
 import Students from "./components/class_teacher/students";
 import Reports from "./components/class_teacher/reports";
+import Test from "./components/subject_teacher/test";
+import Result from "./components/subject_teacher/result";
+import Standard from "./components/admin/standard";
+import Division from "./components/admin/division";
+import Roles from "./components/admin/roles";
+import UserRoles from "./components/admin/user_roles";
+import Grades from "./components/admin/grades";
 
-const userRole = "class_teacher";
+const userRole = "admin";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
@@ -52,12 +57,20 @@ const Root = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
 
-          <Route path="/class_teacher" element={<Students />} />
+          {/* <Route path="/class_teacher" element={<Students />} /> */}
           <Route path="/class_teacher/students" element={<Students />} />
           <Route path="/class_teacher/reports" element={<Reports />} />
 
-          <Route path="/subject_teacher" element={<SubjectTeacherPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          {/* <Route path="/subject_teacher" element={<SubjectTeacherPage />} /> */}
+          <Route path="/subject_teacher/test" element={<Test />} />
+          <Route path="/subject_teacher/result" element={<Result />} />
+
+          {/* <Route path="/admin" element={<AdminPage />} /> */}
+          <Route path="/admin/standards" element={<Standard />} />
+          <Route path="/admin/divisions" element={<Division />} />
+          <Route path="/admin/roles" element={<Roles />} />
+          <Route path="/admin/user_roles" element={<UserRoles />} />
+          <Route path="/admin/grades" element={<Grades />} />
 
           <Route path="*" element={<ErrorPage />} />
         </Routes>

@@ -1,15 +1,45 @@
 import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import rcms_logo_small from "../images/rcms_logo_small.jpg";
 import login_image from "../images/rcms_login.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faLock } from "@fortawesome/free-solid-svg-icons";
-import { Link, useLocation } from "react-router-dom";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loginRole, setLoginRole] = useState("");
+  const navigate = useNavigate();
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
 
   const handleRoleChange = (event) => {
     setLoginRole(event.target.value);
+  };
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    if (username === "prashant" && password === "prashant123") {
+      navigate("/admin/standards");
+    } else if (
+      username === "swapnil.rajgadkar" &&
+      password === "swapnil30" &&
+      loginRole === "subject-teacher"
+    ) {
+      navigate("/subject_teacher/test");
+    } else if (
+      username === "kshama.khamkar" &&
+      password === "kshama123" &&
+      loginRole === "class-teacher"
+    ) {
+      navigate("/class_teacher/students");
+    }
   };
 
   const location = useLocation();
@@ -51,7 +81,7 @@ const Login = () => {
               className="w-auto h-100"
             />
           </div>
-          <form>
+          <form onSubmit={handleLogin}>
             <div className="mb-4">
               <div className="relative">
                 <FontAwesomeIcon
@@ -63,6 +93,8 @@ const Login = () => {
                   id="username"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
               </div>
             </div>
@@ -77,6 +109,8 @@ const Login = () => {
                   id="password"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Password"
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </div>
             </div>
@@ -124,7 +158,7 @@ const Login = () => {
             <div className="flex items-center justify-between mb-4">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:shadow-outline"
-                type="button"
+                type="submit"
               >
                 Login
               </button>
