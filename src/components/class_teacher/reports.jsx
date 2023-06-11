@@ -420,7 +420,7 @@ const Reports = () => {
                     <strong>Remarks </strong>
                     <input
                       type="text"
-                      className="w-full h-72 rounded-md border-gray-300 border px-3 py-1 mb-2"
+                      className="w-full h-64 rounded-md border-gray-300 border px-3 py-1 mb-2"
                       placeholder="Enter remarks..."
                     />
                     <div className="flex justify-end">
