@@ -2,20 +2,40 @@ import React, { useState } from "react";
 import rcms_logo_small from "../images/rcms_logo_small.jpg";
 import register_image from "../images/rcms_register.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faLock,
+  faEnvelope,
+  faPhone,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const Register = () => {
-  const [username, setUsername] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const handleFirstnameChange = (event) => {
+    setFirstname(event.target.value);
+  };
+
+  const handleLastnameChange = (event) => {
+    setLastname(event.target.value);
   };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
+  };
+
+  const handlePhoneChange = (event) => {
+    setPhone(event.target.value);
+  };
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
   };
 
   const handlePasswordChange = (event) => {
@@ -24,8 +44,8 @@ const Register = () => {
 
   const handleRegister = (event) => {
     event.preventDefault();
-    // Handle registration logic here
-    console.log("Register button clicked");
+    // Perform registration logic here
+    // You can access the input values using the state variables (firstname, lastname, email, phone, username, password)
   };
 
   return (
@@ -50,20 +70,38 @@ const Register = () => {
             />
           </div>
           <form>
-            <div className="mb-4">
-              <div className="relative">
-                <FontAwesomeIcon
-                  icon={faUser}
-                  className="text-blue-500 absolute top-3 left-3"
-                />
-                <input
-                  type="text"
-                  id="username"
-                  className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Username"
-                  value={username}
-                  onChange={handleUsernameChange}
-                />
+            <div className="mb-4 flex">
+              <div className="w-1/2 pr-2">
+                <div className="relative">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="text-blue-500 absolute top-3 left-3"
+                  />
+                  <input
+                    type="text"
+                    id="firstname"
+                    className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="First Name"
+                    value={firstname}
+                    onChange={handleFirstnameChange}
+                  />
+                </div>
+              </div>
+              <div className="w-1/2 pl-2">
+                <div className="relative">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="text-blue-500 absolute top-3 left-3"
+                  />
+                  <input
+                    type="text"
+                    id="lastname"
+                    className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    placeholder="Last Name"
+                    value={lastname}
+                    onChange={handleLastnameChange}
+                  />
+                </div>
               </div>
             </div>
             <div className="mb-4">
@@ -79,6 +117,38 @@ const Register = () => {
                   placeholder="Email"
                   value={email}
                   onChange={handleEmailChange}
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="relative">
+                <FontAwesomeIcon
+                  icon={faPhone}
+                  className="text-blue-500 absolute top-3 left-3"
+                />
+                <input
+                  type="tel"
+                  id="phone"
+                  className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Phone"
+                  value={phone}
+                  onChange={handlePhoneChange}
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="relative">
+                <FontAwesomeIcon
+                  icon={faUser}
+                  className="text-blue-500 absolute top-3 left-3"
+                />
+                <input
+                  type="text"
+                  id="username"
+                  className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Username"
+                  value={username}
+                  onChange={handleUsernameChange}
                 />
               </div>
             </div>
