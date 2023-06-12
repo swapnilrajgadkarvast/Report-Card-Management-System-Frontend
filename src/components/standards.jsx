@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState,useEffect } from "react";
+import standardStore from "../stores/standardStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -12,22 +12,48 @@ import {
 import logo from "../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
+import standardModal from "../modals/standardModal";
 
 const Standards = () => {
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  // const openModal = () => {
+  //   setIsOpen(true);
+  // };
+  const closeModal=()=>{
+  setIsOpen(false);
+  }
+
+
+
+
+  const [showProfile, setShowProfile] = useState(false);
+  const [name,setName]=useState("");
+  
+    const { standards, loading, error, getStandards,addStandard,deleteStandard } = standardStore();
+  
+    useEffect(() => {
+     getStandards();
+    }, []);
+  
+    if (loading) {
+      return <p>Loading...</p>;
+    }
+  
+    if (error) {
+      return <p>Error: {error}</p>;
+    }
+  
+    if (!standards) {
+      return null; // Or show a loading indicator
+    }
+    //  else
+     // console.log(standards.data);
+    
+
+  
+  
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
   };
@@ -36,79 +62,49 @@ const Standards = () => {
     // Logic for handling logout
   };
 
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
-  };
+  
 
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
+  // const handleInputChange = (e) => {
+  //  const { name, value } = e.target;
+  //   setStudentData((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //  }));
+  // };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logic for handling form submission
-    console.log(studentData);
+    //console.log(studentData);
     // Reset form after submission
-    setStudentData({
-      student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
-  };
+    // setStudentData({
+    //   student_name: "",
+    //   birth_date: "",
 
-  const studentDatas = [
-    {
-      id: 1,
-      image: null,
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: "Subhash Rajgadkar (Father)",
-      address: "Pragati Nagar, Wani-445304",
-    },
-    {
-      id: 2,
-      image: null,
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: "Rama Khamkar (Mother)",
-      address: "Pashan, Pune",
-    },
-    {
-      id: 3,
-      image: "",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
-  ];
+    //   parent_name: "",
+    //   contact: "",
+    //   roll_no: "",
+    //   email: "",
+    //   address: "",
+    //   image: null,
+    // });
+  };
+ 
+  const handleClick=(e)=>{
+      e.preventDefault();
+      addStandard(name);
+      setName("");
+  }
+  
+ 
 
   return (
+    <>
+    <standardModal isOpen={isOpen} closeModal={closeModal}>
+
+    </standardModal>
     <div style={{ backgroundColor: "white" }}>
       <div className="container">
         <div className="grid grid-cols-12">
@@ -125,7 +121,8 @@ const Standards = () => {
                 <input
                   type="text"
                   placeholder="Search"
-                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none 
+                  focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
                 <FontAwesomeIcon
                   icon={faTimes}
@@ -142,20 +139,21 @@ const Standards = () => {
                     <form onSubmit={handleSubmit}>
                       <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
                         <div className="col-span-6">
-                          <label htmlFor="student_name"><strong>Standard &nbsp; </strong></label>
+                          <label htmlFor="standard_name"><strong>Standard &nbsp; </strong></label>
                           
+
                           <input
                             type="text"
-                            id="student_name"
-                            name="student_name"
-                            value={studentData.student_name}
+                            id="standard_name"
+                            name="standard_name"
+                            value={name}
                             placeholder="Enter standard"
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            onChange={(e)=>setName(e.target.value)}
+                            className="rounded-lg border border-gray-300 px-2 py-1
+                             focus:outline-none focus:ring-2 focus:ring-purple-500"
                           />
                         </div>
-                        
-                        
+                                                
                       </div>
                     </form>
                   </div>
@@ -166,8 +164,10 @@ const Standards = () => {
                   <div className="col-span-2 ml-6 flex items-end justify-end">
                     <button
                       type="submit"
-                      className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+                      className="rounded-full bg-purple-900 text-white px-6 py-2 
+                      flex flex-col items-center justify-center"
                       style={{ fontSize: "13px", borderRadius: "8px" }}
+                      onClick={handleClick}
                     >
                       <FontAwesomeIcon
                         icon={faPlus}
@@ -185,10 +185,10 @@ const Standards = () => {
               <div className="col-span-12 grid">
                 <div className="bg-purple-300 p-3 rounded-lg">
                   <div className="mt-4 ml-1">
-                    {studentDatas.map((student) => (
+                    {standards.map((standard) => (
                       <div
                         className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                        key={student.id}
+                        key={standard._id}
                       >
                         <div className="flex items-start">
                                                   
@@ -198,24 +198,26 @@ const Standards = () => {
                               style={{ width: "100px" }}
                             >
                               <strong>Standard </strong> <br />
-                                                     
+                                                  
                             </div>
                             </div>
                             <div
                               className="col-span-2"
                               style={{ width: "700px" }}
                             >
-                              <strong>I</strong> <br />
+                              <strong>{standard.name}</strong> <br />
                                                            
                             </div>
                           <div className="ml-4 flex items-center">
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2">
+                            <button className="rounded-full bg-purple-900 text-white px-6 py-2
+                             flex flex-col items-center justify-center mr-2" onClick={()=>{setIsOpen(true)}}>
                               <FontAwesomeIcon
                                 icon={faEdit}
                                 style={{ fontSize: "24px" }}
                               />
                             </button>
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center">
+                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center" onClick={()=>deleteStandard(standard._id)}>
                               <FontAwesomeIcon
                                 icon={faTrash}
                                 style={{ fontSize: "24px" }}
@@ -233,6 +235,7 @@ const Standards = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

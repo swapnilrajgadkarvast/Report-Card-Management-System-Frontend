@@ -11,10 +11,8 @@ import {
 import reportWebVitals from "./reportWebVitals";
 
 import Navbar from "./components/Navbar";
-
-
 import App from "./App";
-import Standards  from "./components/standards";
+import Standards from "./components/standards";
 import Division from "./components/division";
 import Roles from "./components/roles";
 import Grades from "./components/grades";
@@ -44,7 +42,7 @@ const Root = () => {
         {/* <Navbar/> */}
         <Routes>
         <Route path="/admin" element={<Admin/>}/> 
-          <Route path="/standards" element={<Standards/>}/> 
+          <Route path="/standard" element={<Standards/>}/> 
           <Route path="/division" element={<Division/>} />
           <Route path="/roles" element={<Roles/>} />
           <Route path="/grades" element={<Grades/>} />
