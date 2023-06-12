@@ -146,7 +146,7 @@ const Navbar = ({ role }) => {
           </button>
           {/* Dropdown menu */}
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-96 bg-white rounded-md shadow-lg overflow-hidden z-10">
+            <div className="absolute right-0 mt-2 w-[25rem] bg-white rounded-md shadow-lg overflow-hidden z-10">
               <div className="py-4 px-4">
                 <div className="flex items-start justify-end space-x-4">
                   <div className="mr-4">
