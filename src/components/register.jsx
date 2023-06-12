@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import rcms_logo_small from "../images/rcms_logo_small.jpg";
 import register_image from "../images/rcms_register.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,9 +9,8 @@ import {
   faEnvelope,
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
 
-const Register = () => {
+const RegisterModal = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -45,7 +45,6 @@ const Register = () => {
   const handleRegister = (event) => {
     event.preventDefault();
     // Perform registration logic here
-    // You can access the input values using the state variables (firstname, lastname, email, phone, username, password)
   };
 
   return (
@@ -57,7 +56,7 @@ const Register = () => {
         <div className="w-1/2">
           <img
             src={register_image}
-            alt="Login Image"
+            alt="Register Image"
             className="w-auto h-135%"
           />
         </div>
@@ -193,4 +192,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterModal;
