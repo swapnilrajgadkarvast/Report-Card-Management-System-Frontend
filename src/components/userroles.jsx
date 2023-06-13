@@ -16,8 +16,17 @@ import {
 import logo from "../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
+import userrolesStore from "../stores/userrolesStore";
+import { useEffect } from "react";
 
 const UserRoles = () => {
+
+  const { userroles, loading, error, getUserRoles } = userrolesStore();
+  
+    useEffect(() => {
+      getUserRoles();
+    }, [getUserRoles]);
+
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
@@ -238,8 +247,7 @@ const UserRoles = () => {
                       {/* Add more division options as needed */}
                     </select>
                         </div>
-                                          
-                      </div>
+                        </div>
                     </form>
                   </div>
                 </div>

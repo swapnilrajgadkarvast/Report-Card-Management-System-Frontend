@@ -157,8 +157,7 @@ const Standards = () => {
                   className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
                 />
               </div>
-             
-            </div>
+             </div>
            
             <div className=" grid grid-cols-12 mt-4 ml-1">
               <div className="col-span-10 flex">

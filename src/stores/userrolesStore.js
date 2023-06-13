@@ -1,100 +1,64 @@
-import { create, useState, useEffect } from "zustand";
-import axios from "axios";
+// store.js
+import {create} from 'zustand';
+import axios from 'axios';
 
-const http = axios.create({ baseURL: "http://127.0.0.1:3030/" });
+const http=axios.create({baseURL:"http://127.0.0.1:3030/"});
 
-const getStudentData = async (setStudentData) => {
-  try {
-    const response = await http.get("/student-test-result");
-    const { data } = response.data;
-    console.log(data);
+const userrolesStore = create((set) => ({
+  userroles:[],
+  loading: false,
+  error: null,
 
-    const studentIds = data.map((result) => result.student);
-    const studentPromises = studentIds.map((studentId) =>
-      http.get(`/student/${studentId}`)
-    );
+  getUserRoles: async () => {
+    set({ loading: true });
+    try {
+      const response = await http.get("/userroles");
+      const {data}=response.data
+      console.log(data);
+      set({ userroles:data, error: null });
+    } catch (error) {
+      set({ error: error.message });
+    }
+    set({ loading: false });
+  },
 
-    const studentResponses = await Promise.all(studentPromises);
-    const studentData = studentResponses.map((response) => response.data);
-    console.log(studentData);
+  addUserRole: async (name) => {
+    set({ loading: true });
+    try {
+      const response = await http.post(`/userroles`,{name});
+      console.log(response.data)
+      set((state)=>({ userroles:[...state.userroles,response.data]},{error: null}));
+    } catch (error) {
+      set({ error: error.message });
+    }
+    set({ loading: false });
+  },
 
-    setStudentData(studentData);
-  } catch (error) {
-    console.error(error);
-  }
-};
+  deleteUserRole: async (id) => {
+    set({ loading: true });
+    try {
+      const response = await http.delete(`/userroles/${id}`);
+      console.log(response.data)
+      set((state)=>({userroles:state.userroles.filter((s)=>s._id!=response.data._id)}))
+    } catch (error) {
+      set({ error: error.message });
+    }
+    set({ loading: false });
+  },
 
-const studentTestResultStore = create((set) => {
-  const setStudentData = (data) => set({ studentData: data });
+  updateUserRole: async (id,name) => {
+    set({ loading: true });
+    console.log(id+" "+name);
+    try {
+      const response = await http.patch(`/userroles/${id}`,{name});
+      //console.log(response.data)
+      set((state)=>({userroles:[...state.userroles]}))
+    } catch (error) {
+      set({ error: error.message });
+    }
+    set({ loading: false });
+  },
 
-  return {
-    studentTestResult: [],
-    studentData: [],
-    loading: false,
-    error: null,
+}));
 
-    getStudentTestResult: async () => {
-      set({ loading: true });
-
-      try {
-        const response = await http.get("/student-test-result");
-        const { data } = response.data;
-        console.log(data);
-        set({ studentTestResult: data, error: null });
-        getStudentData(setStudentData); // Call getStudentData function to fetch student data
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
-
-    addStudentTestResult: async (obtainedMarks) => {
-      set({ loading: true });
-      try {
-        const response = await http.post(`/student-test-result`, {
-          obtainedMarks,
-        });
-        console.log(response.data);
-        set((state) => ({
-          studentTestResult: [...state.studentTestResult, response.data],
-          error: null,
-        }));
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
-
-    deleteStudentTestResult: async (id) => {
-      set({ loading: true });
-      try {
-        const response = await http.delete(`/student-test-result/${id}`);
-        console.log(response.data);
-        set((state) => ({
-          studentTestResult: state.studentTestResult.filter(
-            (s) => s._id !== response.data._id
-          ),
-        }));
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
-
-    updateStudentTestResult: async (id, obtainedMarks) => {
-      set({ loading: true });
-      try {
-        const response = await http.put(`/student-test-result/${id}`, {
-          obtainedMarks,
-        });
-        //console.log(response.data)
-        set((state) => ({ studentTestResult: [...state.studentTestResult] }));
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
-  };
-});
-
-export default studentTestResultStore;
+export default userrolesStore;
