@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -7,30 +7,20 @@ import {
   faTimes,
   faEdit,
   faTrash,
-  faCalendar,
-  faUser,
-  faMapMarkerAlt,
-  faAward,
-  faUserGraduate,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-//import random_profile_pic1 from "../src/images/random_profile_pic.jpg";
-//import random_profile_pic2 from "../src/images/random_profile_pic2.jpg";
+import testStore from "../store/testStore";
 
 const Test = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
+  const [studentData, setStudentData] = useState({});
+  const { tests, loading, error, getTests, addTest } = testStore();
+
+  useEffect(() => {
+    getTests();
+  }, []);
 
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
@@ -66,51 +56,14 @@ const Test = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic for handling form submission
-    console.log(studentData);
-    // Reset form after submission
-    setStudentData({
+    // Add the test using the addTest function from testStore
+    addTest(studentData.student_name);
+    // Reset the input field
+    setStudentData((prevState) => ({
+      ...prevState,
       student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
+    }));
   };
-
-  const studentDatas = [
-    {
-      id: 1,
-      image: "",
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: "Subhash Rajgadkar (Father)",
-      address: "Pragati Nagar, Wani-445304",
-    },
-    {
-      id: 2,
-      image: "",
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: "Rama Khamkar (Mother)",
-      address: "Pashan, Pune",
-    },
-    {
-      id: 3,
-      image: "",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
-  ];
 
   return (
     <div style={{ backgroundColor: "white" }} className="min-h-screen">
@@ -177,6 +130,7 @@ const Test = () => {
                       type="submit"
                       className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
                       style={{ fontSize: "13px", borderRadius: "8px" }}
+                      onClick={handleSubmit}
                     >
                       <FontAwesomeIcon
                         icon={faPlus}
@@ -194,10 +148,10 @@ const Test = () => {
               <div className="col-span-12 grid">
                 <div className="bg-purple-300 p-3 rounded-lg">
                   <div className="mt-4 ml-1">
-                    {studentDatas.map((student) => (
+                    {tests.map((test) => (
                       <div
                         className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                        key={student.id}
+                        key={test.id}
                       >
                         <div className="flex items-start">
                           <div className="ml-4">
@@ -212,7 +166,7 @@ const Test = () => {
                             className="col-span-2"
                             style={{ width: "700px" }}
                           >
-                            <strong>Unit Test 1</strong> <br />
+                            <strong>{test.name}</strong> <br />
                           </div>
                           <div className="ml-4 flex items-center">
                             <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2">
