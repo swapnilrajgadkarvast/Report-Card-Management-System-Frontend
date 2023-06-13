@@ -13,7 +13,7 @@ import {
   faAward,
   faUserGraduate,
 } from "@fortawesome/free-solid-svg-icons";
-import logo from "../images/rcms_logo_small.jpg";
+import logo from "../../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 

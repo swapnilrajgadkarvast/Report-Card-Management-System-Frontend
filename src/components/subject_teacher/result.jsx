@@ -17,7 +17,7 @@ import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
 import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
 
-import studentTestResultStore from "../store/studentTestResultStore";
+import studentTestResultStore from "../../stores/studentTestResultStore";
 import axios from "axios";
 
 const Result = () => {
