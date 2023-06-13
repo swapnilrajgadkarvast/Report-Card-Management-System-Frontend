@@ -137,7 +137,7 @@ const Standards = () => {
         </div>
       </Modal>
 
-      <div style={{ backgroundColor: "white" }}>
+      <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
           <div className="grid grid-cols-12">
             <div className="col-span-2">
