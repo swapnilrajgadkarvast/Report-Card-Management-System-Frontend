@@ -11,8 +11,38 @@ import {
 import logo from "../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
+import { useEffect } from "react";
+import divisionStore from "../stores/divisionStore";
+import Modal from "../modals/Modal";
 
 const Division = () => {
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalDivisionId, setModalDivisionId] = useState('');
+  const [modalDivisionName, setModalDivisionName] = useState('');
+
+  const openModal = (division) => {
+    setIsOpen(true);
+    setModalDivisionId(division._id)
+    setModalDivisionName(division.name)
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalDivisionId('');
+    setModalDivisionName('')
+  };
+
+
+  const { divisions, loading, error, getDivisions,addDivision,deleteDivision,updateDivision } = divisionStore();
+  
+  useEffect(() => {
+   getDivisions();
+  }, [getDivisions]);
+
+
+
+
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
@@ -26,6 +56,13 @@ const Division = () => {
     address: "",
     image: null,
   });
+
+  const [name, setName] = useState('');
+  const handleClick=(e)=>{
+    e.preventDefault();
+    addDivision(name);
+    setName("");
+}
 
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
@@ -108,6 +145,34 @@ const Division = () => {
   ];
 
   return (
+    <>
+    <Modal isOpen={isOpen} onClose={closeModal} data={modalDivisionId} data2={modalDivisionName}>
+      <div className="items-center justify-center">
+      <div className="mb-4">
+        <div className="h-10 w-40 mb-4">
+        <h2 className="text-xl ">Enter Division</h2>
+      </div>
+      <input
+                            type="text"
+                            id="standard_name"
+                            name="standard_name"
+                            value={modalDivisionName}
+                            placeholder="Enter standard"
+                           onChange={(e)=>{ setModalDivisionName(e.target.value)}}
+                            className="rounded-lg border border-gray-300 px-2 py-1
+                             focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          />
+        </div>
+        <button className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center" 
+                            onClick={()=>updateDivision(modalDivisionId,modalDivisionName)}
+                            >
+                              Update Division
+                            </button>
+
+                            </div>
+      </Modal>
+
     <div style={{ backgroundColor: "white" }}>
       <div className="container">
         <div className="grid grid-cols-12">
@@ -145,26 +210,7 @@ const Division = () => {
                 <div className="mt-4">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="grid grid-cols-2 gap-16">
-                      <div>
-                        <div className="flex items-center">
-                          <span className="font-bold text-lg mr-2 ml-2">
-                            Standard{" "}
-                          </span>
-                          <div className="mr-4 ml-2">
-                          <select
-                                value={selectedStandard}
-                                onChange={handleStandardChange}
-                                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                style={{ width: "230px", padding: "8px" }}
-                              >
-                                <option value="">Select Standard</option>
-                                <option value="1">Standard 1</option>
-                                <option value="2">Standard 2</option>
-                                {/* Add more standard options as needed */}
-                              </select>
-                          </div>
-                        </div>
-                      </div>
+                      
                       <div>
                         <div className="flex items-center">
                           <span className="font-bold text-lg mr-2 ml-2">
@@ -174,10 +220,8 @@ const Division = () => {
                           <input
                             type="text"
                             placeholder="Enter Division"
-                            id="student_name"
-                            name="student_name"
-                            value={studentData.student_name}
-                            onChange={handleInputChange}
+                            value={name}
+                            onChange={(e)=>setName(e.target.value)}
                             className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                             style={{ width: "230px", padding: "8px" }}
                           />
@@ -195,7 +239,7 @@ const Division = () => {
                     <button
                       type="submit"
                       className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-                      style={{ fontSize: "13px", borderRadius: "8px" }}
+                      style={{ fontSize: "13px", borderRadius: "8px" }} onClick={()=>addDivision(name)}
                     >
                       <FontAwesomeIcon
                         icon={faPlus}
@@ -214,49 +258,37 @@ const Division = () => {
                 <div className="bg-purple-300 p-3 rounded-lg">
                   <div className="mt-4 ml-1">
                    
-                    {studentDatas.map((student) => (
+                    {divisions.map((division) => (
                       <div
                         className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                        key={student.id}
+                        key={division._id}
                       >
                         <div className="flex items-start">
+                         
                           <div className="ml-4">
                             <div
                               className="col-span-2"
-                              style={{ width: "100px" }}
-                            >
-                              <strong>Standard:</strong> <br />
-                            </div>
-                          </div>
-                          <div
-                            className="col-span-2"
-                            style={{ width: "170px" }}
-                          >
-                            <strong>I</strong> <br />
-                          </div>
-
-                          <div className="ml-4">
-                            <div
-                              className="col-span-2"
-                              style={{ width: "100px" }}
+                              style={{ width: "150px" }}
                             >
                               <strong>Division :</strong> <br />
                             </div>
                           </div>
                           <div
                             className="col-span-2"
-                            style={{ width: "450px" }}
+                            style={{ width: "600px" }}
                           >
-                            <strong>A</strong> <br />
+                            <strong>{division.name}</strong> <br />
                           </div>
                           <div className="ml-4 flex items-center">
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2">
+                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center mr-2" onClick={()=>openModal(division)}>
                               <FontAwesomeIcon
                                 icon={faEdit}
                                 style={{ fontSize: "24px" }}
                               />
                             </button>
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center">
+                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center" onClick={()=>deleteDivision(division._id)}>
                               <FontAwesomeIcon
                                 icon={faTrash}
                                 style={{ fontSize: "24px" }}
@@ -274,6 +306,7 @@ const Division = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

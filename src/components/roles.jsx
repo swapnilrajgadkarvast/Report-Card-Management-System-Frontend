@@ -9,6 +9,10 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../images/rcms_logo_small.jpg";
+import rolesStore from "../stores/rolesStore";
+import { useEffect } from "react";
+import Modal from "../modals/Modal";
+
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 
@@ -27,6 +31,42 @@ const Roles = () => {
     image: null,
   });
 
+  const { roles, loading, error, getRoles,addRole,deleteRole,updateRole } = rolesStore();
+  const [name,setName]=useState("");
+  useEffect(() => {
+    getRoles();
+   }, [getRoles]);
+ 
+   const [isOpen, setIsOpen] = useState(false);
+  const [modalRoleId, setModalRoleId] = useState('');
+  const [modalRoleName, setModalRoleName] = useState('');
+
+  const openModal = (role) => {
+    setIsOpen(true);
+    setModalRoleId(role._id)
+    setModalRoleName(role.name)
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalRoleId('');
+    setModalRoleName('')
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
+  if (!roles) {
+    return null; // Or show a loading indicator
+  }
+  
+
+
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
   };
@@ -42,6 +82,13 @@ const Roles = () => {
   const handleDivisionChange = (e) => {
     setSelectedDivision(e.target.value);
   };
+
+  const handleClick=(e)=>{
+    e.preventDefault();
+    addRole(name);
+    setName("");
+}
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -108,6 +155,33 @@ const Roles = () => {
   ];
 
   return (
+    <>
+    <Modal isOpen={isOpen} onClose={closeModal} data={modalRoleId} data2={modalRoleName}>
+      <div className="mb-4">
+        <div className="h-10 w-40 mb-4">
+        <h2 className="text-2xl ">Enter Role</h2>
+      </div>
+      <input
+                            type="text"
+                            id="standard_name"
+                            name="standard_name"
+                            value={modalRoleName}
+                            placeholder="Enter standard"
+                           onChange={(e)=>{ setModalRoleName(e.target.value)}}
+                            className="rounded-lg border border-gray-300 px-2 py-1
+                             focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          />
+        </div>
+        <button className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center" 
+                            onClick={()=>updateRole(modalRoleId,modalRoleName)}
+                            >
+                              Update Role
+                            </button>
+
+
+      </Modal>
+
     <div style={{ backgroundColor: "white" }}>
       <div className="container">
         <div className="grid grid-cols-12">
@@ -124,7 +198,8 @@ const Roles = () => {
                 <input
                   type="text"
                   placeholder="Search"
-                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300
+                   focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
                 <FontAwesomeIcon
                   icon={faTimes}
@@ -155,10 +230,10 @@ const Roles = () => {
                           <input
                             type="text"
                             placeholder="Enter Role"
-                            id="student_name"
-                            name="student_name"
-                            value={studentData.student_name}
-                            onChange={handleInputChange}
+                            id="role_name"
+                            name="role_name"
+                            value={name}
+                            onChange={(e)=>setName(e.target.value)}
                             className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                             style={{ width: "400px", padding: "8px" }}
                           />
@@ -183,6 +258,7 @@ const Roles = () => {
                       type="submit"
                       className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center w-60"
                       style={{ fontSize: "13px", borderRadius: "8px" }}
+                      onClick={handleClick}
                     >
                       <FontAwesomeIcon
                         icon={faPlus}
@@ -201,10 +277,10 @@ const Roles = () => {
                 <div className="bg-purple-300 p-3 rounded-lg">
                   <div className="mt-4 ml-1">
                    
-                    {studentDatas.map((student) => (
+                    {roles.map((role) => (
                       <div
                         className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                        key={student.id}
+                        key={role._id}
                       >
                         <div className="flex items-start">
                           <div className="ml-4">
@@ -219,7 +295,7 @@ const Roles = () => {
                             className="col-span-2"
                             style={{ width: "170px" }}
                           >
-                            <strong>Class Teacher</strong> <br />
+                            <strong>{role.name}</strong> <br />
                           </div>
 
                           
@@ -230,13 +306,16 @@ const Roles = () => {
                             
                           </div>
                           <div className="ml-4 flex items-center">
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-4">
+                            <button className="rounded-full bg-purple-900 text-white px-6 py-2
+                             flex flex-col items-center justify-center mr-4" onClick={()=>openModal(role)}>
                               <FontAwesomeIcon
                                 icon={faEdit}
                                 style={{ fontSize: "24px" }}
                               />
                             </button>
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center">
+
+                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex
+                             flex-col items-center justify-center" onClick={()=>deleteRole(role._id)}>
                               <FontAwesomeIcon
                                 icon={faTrash}
                                 style={{ fontSize: "24px" }}
@@ -254,6 +333,7 @@ const Roles = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

@@ -7,35 +7,40 @@ import {
   faTimes,
   faEdit,
   faTrash,
-  
+
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
-import standardModal from "../modals/standardModal";
+import Modal from "../modals/Modal";
 
 const Standards = () => {
 
   const [isOpen, setIsOpen] = useState(false);
+  const [modalStandardId, setModalStandardId] = useState('');
+  const [modalStandardName, setModalStandardName] = useState('');
 
-  // const openModal = () => {
-  //   setIsOpen(true);
-  // };
-  const closeModal=()=>{
-  setIsOpen(false);
-  }
+  const openModal = (standard) => {
+    setIsOpen(true);
+    setModalStandardId(standard._id)
+    setModalStandardName(standard.name)
+  };
 
-
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalStandardId('');
+    setModalStandardName('')
+  };
 
 
   const [showProfile, setShowProfile] = useState(false);
   const [name,setName]=useState("");
   
-    const { standards, loading, error, getStandards,addStandard,deleteStandard } = standardStore();
+    const { standards, loading, error, getStandards,addStandard,deleteStandard,updateStandard } = standardStore();
   
     useEffect(() => {
      getStandards();
-    }, []);
+    }, [getStandards]);
   
     if (loading) {
       return <p>Loading...</p>;
@@ -97,14 +102,37 @@ const Standards = () => {
       addStandard(name);
       setName("");
   }
-  
- 
+   
 
   return (
     <>
-    <standardModal isOpen={isOpen} closeModal={closeModal}>
+    <Modal isOpen={isOpen} onClose={closeModal} data={modalStandardId} data2={modalStandardName}>
+      <div className="items-center justify-center">
+      <div className="mb-4">
+        <div className="h-10 w-40 mb-4">
+        <h2 className="text-2xl ">Enter Standard</h2>
+      </div>
+      <input
+                            type="text"
+                            id="standard_name"
+                            name="standard_name"
+                            value={modalStandardName}
+                            placeholder="Enter standard"
+                           onChange={(e)=>{ setModalStandardName(e.target.value)}}
+                            className="rounded-lg border border-gray-300 px-2 py-1
+                             focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          />
+        </div>
+        <button className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center" 
+                            onClick={()=>updateStandard(modalStandardId,modalStandardName)}
+                            >
+                              Update Standard
+                            </button>
 
-    </standardModal>
+                            </div>
+      </Modal>
+    
     <div style={{ backgroundColor: "white" }}>
       <div className="container">
         <div className="grid grid-cols-12">
@@ -140,8 +168,6 @@ const Standards = () => {
                       <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
                         <div className="col-span-6">
                           <label htmlFor="standard_name"><strong>Standard &nbsp; </strong></label>
-                          
-
                           <input
                             type="text"
                             id="standard_name"
@@ -195,7 +221,7 @@ const Standards = () => {
                           <div className="ml-4">
                             <div
                               className="col-span-2"
-                              style={{ width: "100px" }}
+                              style={{ width: "150px" }}
                             >
                               <strong>Standard </strong> <br />
                                                   
@@ -203,14 +229,14 @@ const Standards = () => {
                             </div>
                             <div
                               className="col-span-2"
-                              style={{ width: "700px" }}
+                              style={{ width: "600px" }}
                             >
                               <strong>{standard.name}</strong> <br />
                                                            
                             </div>
                           <div className="ml-4 flex items-center">
                             <button className="rounded-full bg-purple-900 text-white px-6 py-2
-                             flex flex-col items-center justify-center mr-2" onClick={()=>{setIsOpen(true)}}>
+                             flex flex-col items-center justify-center mr-2" onClick={()=>openModal(standard)} >
                               <FontAwesomeIcon
                                 icon={faEdit}
                                 style={{ fontSize: "24px" }}
