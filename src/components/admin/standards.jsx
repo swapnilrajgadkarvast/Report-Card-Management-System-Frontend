@@ -47,6 +47,7 @@ const Standards = () => {
     getStandards();
   }, [getStandards]);
 
+  
   if (loading) {
     return <p>Loading...</p>;
   }

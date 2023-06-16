@@ -13,11 +13,28 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
 import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
+import reportStore from "../../stores/reportStore";
+import { useEffect } from "react";
 
 const Reports = () => {
+  const {
+    students,
+    standards,
+    divisions,
+    tests,
+    getReports,
+    // deleteStudent,
+    // updateStudent,
+    // addStudent,
+  } = reportStore();
+  useEffect(() => {
+    getReports();
+  }, []);
+
+  let div="";
   const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
+  const [selectedStandardReport, setSelectedStandard] = useState("");
+  const [selectedDivisionReport, setSelectedDivision] = useState("");
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
   const [studentData, setStudentData] = useState({
@@ -40,11 +57,27 @@ const Reports = () => {
   };
 
   const handleStandardChange = (e) => {
+    console.log(e.target.value);
     setSelectedStandard(e.target.value);
+     console.log(selectedStandardReport);
+     console.log(students);
+    const searchObjectStudent = students.filter(
+      (studentobj) => studentobj.standard === e.target.value
+    );
+
+    const searchObjectDivisionwiseStudent = searchObjectStudent.filter(
+      (studentobj) => studentobj.division === div
+    );
+    
+    
+   console.log(searchObjectStudent);
+   console.log(searchObjectDivisionwiseStudent)
+    
   };
 
   const handleDivisionChange = (e) => {
     setSelectedDivision(e.target.value);
+    div=e.target.vlaue
   };
 
   const handleStudentChange = (e) => {
@@ -182,15 +215,17 @@ const Reports = () => {
                 <div className="flex items-center">
                   <div className="mr-4">
                     <select
-                      value={selectedStandard}
+                      value={selectedStandardReport}
                       onChange={handleStandardChange}
                       className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       style={{ width: "230px", padding: "8px" }}
                     >
                       <option value="">Select Standard</option>
-                      <option value="1">Standard 1</option>
-                      <option value="2">Standard 2</option>
-                      {/* Add more standard options as needed */}
+                      {standards.map((standard) => (
+                        <option key={standard._id} value={standard._id}>
+                          {standard.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -199,15 +234,17 @@ const Reports = () => {
                 <div className="flex items-center">
                   <div>
                     <select
-                      value={selectedDivision}
+                      value={selectedDivisionReport}
                       onChange={handleDivisionChange}
                       className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       style={{ width: "230px", padding: "8px" }}
                     >
                       <option value="">Select Division</option>
-                      <option value="A">Division A</option>
-                      <option value="B">Division B</option>
-                      {/* Add more division options as needed */}
+                      {divisions.map((division) => (
+                        <option key={division._id} value={division._id}>
+                          {division.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -231,9 +268,11 @@ const Reports = () => {
                               style={{ width: "230px", padding: "8px" }}
                             >
                               <option value="">Select Student</option>
-                              <option value="1">Swapnil Rajgadkar</option>
-                              <option value="2">Kshama Khamkar</option>
-                              {/* Add more standard options as needed */}
+                              {students.map((student) => (
+                                <option key={student._id} value={student._id}>
+                                  {student.firstName + " " + student.lastName}
+                                </option>
+                              ))}
                             </select>
                           </div>
                         </div>
@@ -251,9 +290,11 @@ const Reports = () => {
                               style={{ width: "230px", padding: "8px" }}
                             >
                               <option value="">Select Test</option>
-                              <option value="A">Unit Test 1</option>
-                              <option value="B">Class Test 1</option>
-                              {/* Add more division options as needed */}
+                              {tests.map((test) => (
+                                <option key={test._id} value={test._id}>
+                                  {test.name}
+                                </option>
+                              ))}
                             </select>
                           </div>
                         </div>

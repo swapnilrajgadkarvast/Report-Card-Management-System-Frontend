@@ -32,10 +32,10 @@ const Roles = () => {
   });
 
   const { roles, loading, error, getRoles, addRole, deleteRole, updateRole } =
-    rolesStore();
+  rolesStore();
   const [name, setName] = useState("");
   useEffect(() => {
-    getRoles();
+  getRoles();
   }, [getRoles]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -121,37 +121,7 @@ const Roles = () => {
     });
   };
 
-  const studentDatas = [
-    {
-      id: 1,
-      image: null,
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: "Subhash Rajgadkar (Father)",
-      address: "Pragati Nagar, Wani-445304",
-    },
-    {
-      id: 2,
-      image: null,
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: "Rama Khamkar (Mother)",
-      address: "Pashan, Pune",
-    },
-    {
-      id: 3,
-      image: "",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
-  ];
-
+  
   return (
     <>
       <Modal

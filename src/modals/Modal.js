@@ -9,21 +9,20 @@ const Modal = ({ isOpen, onClose, children }) => {
 
   return (
     <div
-      className="fixed inset-0
-        
-       backdrop-blur-sm flex justify-center 
-       items-center"
+      className="fixed inset-0 flex items-center justify-center backdrop-blur-sm overflow-y-scroll"
       id="wrapper"
       onClick={handleClose}
     >
-      <div className="w-[400px] flex flex-col bg-slate-400">
+      <div className="w-64 sm:w-[35rem] flex flex-col bg-slate-400 mt-[35rem]">
         <button
           className="text-white text-xl place-self-end"
           onClick={() => onClose()}
         >
           X
         </button>
-        <div className="rounded-lg p-8 z-50 bg-slate-200">{children}</div>
+        <div className="rounded-lg p-8 z-50 bg-slate-200 overflow-auto">
+          {children}
+        </div>
       </div>
     </div>
   );

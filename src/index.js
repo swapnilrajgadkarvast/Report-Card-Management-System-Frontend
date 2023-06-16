@@ -28,7 +28,7 @@ import Roles from "./components/admin/roles";
 import UserRoles from "./components/admin/user_roles";
 import Grades from "./components/admin/grades";
 
-const userRole = "admin";
+const userRole = "class_teacher";
 
 const ConditionalNavbar = () => {
   const location = useLocation();
