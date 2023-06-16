@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -13,24 +12,96 @@ import {
   faAward,
   faUserGraduate,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { useEffect } from "react";
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
 import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
+import studentStore1 from "../../stores/studentstore1";
+import Modal from "../../modals/Modal";
+import Modal1 from "../../modals/Modal";
 
 const Students = () => {
+  const {
+    standards,
+    divisions,
+    studentDetails,
+    getStudents,
+    deleteStudent,
+    updateStudent,
+    addStudent,
+  } = studentStore1();
+  useEffect(() => {
+    getStudents();
+  }, []);
+
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen1, setIsOpen1] = useState(false);
+  const [StudentId, setStudentId] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [middleName, setMiddleName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [standard, setStandard] = useState("");
+  const [division, setDivision] = useState("");
+  const [rollNumber, setRollNumber] = useState("");
+  const [year, setYear] = useState("");
+  const [dateOfBirth, setDOB] = useState("");
+  //const [parents, setParentsDetails] = useState("");
+  const [pfirstName, setpfirstName] = useState("");
+  const [plasttName, setplasttName] = useState("");
+  const [pphone, setpphone] = useState("");
+  const [pemail, setpemail] = useState("");
+  const [paddressLine1, setpaddressLine1] = useState("");
+  const [paddressLine2, setpaddressLine2] = useState("");
+  const [parea, setparea] = useState("");
+  const [pcity, setpcity] = useState("");
+  const [pstate, setpstate] = useState("");
+  const [pzipcode, setpzipcode] = useState("");
+  const [prelationship, setprelationship] = useState("");
+
+  const openModal1 = () => {
+    setIsOpen1(true);
+  };
+
+  const closeModal1 = () => {
+    setIsOpen1(false);
+  };
+
+  const openModal = (studentData) => {
+    setIsOpen(true);
+    setStudentId(studentData._id);
+    setFirstName(studentData.firstName);
+    setMiddleName(studentData.middleName);
+    setLastName(studentData.lastName);
+   // setStandard(studentData.standard);
+    //setDivision(studentData.division);
+    setSelectedStandard(studentData.standard)
+    setSelectedDivision(studentData.division)
+    setRollNumber(studentData.rollNumber);
+    setYear(studentData.year);
+    setDOB(studentData.dateOfBirth);
+    setpfirstName(studentData.parent.firstName);
+    setplasttName(studentData.parent.lastName);
+    setpphone(studentData.parent.phone);
+    setpemail(studentData.parent.email);
+    setpaddressLine1(studentData.parent.addressLine1);
+    setpaddressLine2(studentData.parent.addressLine2);
+    setparea(studentData.parent.area);
+    setpcity(studentData.parent.city);
+    setpstate(studentData.parent.state);
+    setpzipcode(studentData.parent.zipcode);
+    setprelationship(studentData.parent.relationship);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    //setModalRoleId("");
+    //setModalRoleName("");
+  };
 
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
@@ -48,100 +119,663 @@ const Students = () => {
     setSelectedDivision(e.target.value);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setStudentData((prevState) => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   setStudentData((prevState) => ({
+  //     ...prevState,
+  //     image: file,
+  //   }));
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logic for handling form submission
-    console.log(studentData);
+
     // Reset form after submission
-    setStudentData({
-      student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
   };
 
-  const studentDatas = [
-    {
-      id: 1,
-      image: random_profile_pic1,
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: "Subhash Rajgadkar (Father)",
-      address: "Pragati Nagar, Wani-445304",
-    },
-    {
-      id: 2,
-      image: random_profile_pic2,
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: "Rama Khamkar (Mother)",
-      address: "Pashan, Pune",
-    },
-    {
-      id: 3,
-      image: "student3.jpg",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
-  ];
   return (
-    <div style={{ backgroundColor: "white" }} className="min-h-screen">
-      <div className="container">
-        <div className="grid grid-cols-12">
-          <div className="col-span-2">
-            <img src={logo} alt="Logo" className="w-44 h-20" />
-          </div>
-          <div className="col-span-10">
-            <div className="flex items-center justify-between mt-4">
-              <div className="relative">
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"
-                />
+    <>
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        // Other props...
+
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0 bg-black opacity-50"
+      >
+        <div className="bg-white p-4 max-w-full max-h-full overflow-auto">
+          <div className="mb-2 bg-slate-200">
+            <div className="h-10 w-60 mb-2">
+              <h2 className="text-xl text-center">Update Student Details</h2>
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter First Name:</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter Middle Name :</label>
+              <input
+                type="text"
+                value={middleName}
+                onChange={(e) => {
+                  setMiddleName(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter Last Name :</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Standard :</label>
+              <select
+                value={selectedStandard}
+                onChange={handleStandardChange}
+                placeholder="select standard"
+                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                style={{ width: "230px", padding: "8px" }}
+              >
+               // <option value="">Select Standard</option>
+                {standards.map((standard) => (
+                  <option key={standard._id} value={standard._id}>
+                    {standard.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Division :</label>
+              <select
+                value={selectedDivision}
+                onChange={handleDivisionChange}
+                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                style={{ width: "230px", padding: "8px" }}
+              >
+                <option value="">Select Division</option>
+                {divisions.map((division) => (
+                  <option key={division._id} value={division._id}>
+                    {division.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Roll No :</label>
+              <input
+                type="text"
+                value={rollNumber}
+                onChange={(e) => {
+                  setRollNumber(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500 ml-2"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Year :</label>
+              <input
+                type="text"
+                value={year}
+                onChange={(e) => {
+                  setYear(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500 ml-2"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16"> Birth Date:</label>
+              <input
+                type="date"
+                id="birth_date"
+                name="birth_date"
+                value={dateOfBirth}
+                onChange={(e) => {
+                  setDOB(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1 
+                          focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Parent Information:</label>
+              <div className="mb-2">
+                <label className="ml-8">Enter First Name :</label>
                 <input
                   type="text"
-                  placeholder="Search"
-                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                  value={pfirstName}
+                  onChange={(e) => {
+                    setpfirstName(e.target.value);
+                  }}
+                  className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
-              <button className="ml-2 rounded-full bg-purple-900 text-white px-4 py-2">
-                Delete Student
-              </button>
             </div>
-            <div className="grid grid-cols-12 mt-4 ml-1">
-              <div className="col-span-3">
-                <div className="flex items-center">
+            <div className="mb-2">
+              <label className="ml-8">Enter Last Name :</label>
+              <input
+                type="text"
+                value={plasttName}
+                onChange={(e) => {
+                  setplasttName(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Phone :</label>
+              <input
+                type="text"
+                value={pphone}
+                onChange={(e) => {
+                  setpphone(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Email :</label>
+              <input
+                type="text"
+                value={pemail}
+                onChange={(e) => {
+                  setpemail(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Address Line 1 :</label>
+              <input
+                type="text"
+                value={paddressLine1}
+                onChange={(e) => {
+                  setpaddressLine1(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Address Line 2 :</label>
+              <input
+                type="text"
+                value={paddressLine2}
+                onChange={(e) => {
+                  setpaddressLine2(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Area :</label>
+              <input
+                type="text"
+                value={parea}
+                onChange={(e) => {
+                  setparea(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">City :</label>
+              <input
+                type="text"
+                value={pcity}
+                onChange={(e) => {
+                  setpcity(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">State :</label>
+              <input
+                type="text"
+                value={pstate}
+                onChange={(e) => {
+                  setpstate(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Zipcode :</label>
+              <input
+                type="text"
+                value={pzipcode}
+                onChange={(e) => {
+                  setpzipcode(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="ml-8">Relationship:</label>
+              <input
+                type="text"
+                value={prelationship}
+                onChange={(e) => {
+                  setprelationship(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+          </div>
+          <div className="flex justify-center mt-4">
+            <button
+              className="rounded-full bg-purple-900 text-white px-6 py-2"
+              onClick={() => {
+                const isActive = true;
+                const parent = {
+                  firstName: pfirstName,
+                  lastName: plasttName,
+                  phone: pphone,
+                  email: pemail,
+                  addressLine1: paddressLine1,
+                  addressLine2: paddressLine2,
+                  area: parea,
+                  city: pcity,
+                  state: pstate,
+                  zipcode: pzipcode,
+                  relationship: prelationship,
+                };
+                const student = {
+                  firstName,
+                  middleName,
+                  lastName,
+                  standard:selectedStandard,
+                  division:selectedDivision,
+                  rollNumber,
+                  year,
+                  dateOfBirth,
+                  parent,
+                  isActive,
+                };
+
+                console.log(student);
+                updateStudent(StudentId, student);
+                closeModal();
+              }}
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      <Modal1
+        isOpen={isOpen1}
+        onClose={closeModal1}
+        // Other props...
+
+        className="fixed inset-0 flex items-center justify-center"
+        overlayClassName="fixed inset-0 bg-black opacity-50"
+      >
+        <div className="bg-white p-4 max-w-full max-h-full overflow-auto">
+          <div className="mb-2 bg-slate-200">
+            <div className="h-10 w-60 mb-2">
+              <h2 className="text-xl text-center">Update Student Details</h2>
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter First Name:</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter Middle Name :</label>
+              <input
+                type="text"
+                value={middleName}
+                onChange={(e) => {
+                  setMiddleName(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter Last Name :</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Standard :</label>
+              <select
+                value={selectedStandard}
+                onChange={handleStandardChange}
+                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                style={{ width: "230px", padding: "8px" }}
+              >
+                <option value="">Select Standard</option>
+                {standards.map((standard) => (
+                  <option key={standard._id} value={standard._id}>
+                    {standard.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Division :</label>
+              <select
+                value={selectedDivision}
+                onChange={handleDivisionChange}
+                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                style={{ width: "230px", padding: "8px" }}
+              >
+                <option value="">Select Division</option>
+                {divisions.map((division) => (
+                  <option key={division._id} value={division._id}>
+                    {division.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Roll No :</label>
+              <input
+                type="text"
+                value={rollNumber}
+                onChange={(e) => {
+                  setRollNumber(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500 ml-2"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Year :</label>
+              <input
+                type="text"
+                value={year}
+                onChange={(e) => {
+                  setYear(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500 ml-2"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16"> Birth Date:</label>
+              <input
+                type="date"
+                id="birth_date"
+                name="birth_date"
+                value={dateOfBirth}
+                onChange={(e) => {
+                  setDOB(e.target.value);
+                }}
+                className="rounded-lg border border-gray-300 px-2 py-1 
+                          focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-16">Parent Information:</label>
+              <div className="mb-2">
+                <label className="ml-8">Enter First Name :</label>
+                <input
+                  type="text"
+                  value={pfirstName}
+                  onChange={(e) => {
+                    setpfirstName(e.target.value);
+                  }}
+                  className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Enter Last Name :</label>
+              <input
+                type="text"
+                value={plasttName}
+                onChange={(e) => {
+                  setplasttName(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Phone :</label>
+              <input
+                type="text"
+                value={pphone}
+                onChange={(e) => {
+                  setpphone(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Email :</label>
+              <input
+                type="text"
+                value={pemail}
+                onChange={(e) => {
+                  setpemail(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Address Line 1 :</label>
+              <input
+                type="text"
+                value={paddressLine1}
+                onChange={(e) => {
+                  setpaddressLine1(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Address Line 2 :</label>
+              <input
+                type="text"
+                value={paddressLine2}
+                onChange={(e) => {
+                  setpaddressLine2(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Area :</label>
+              <input
+                type="text"
+                value={parea}
+                onChange={(e) => {
+                  setparea(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">City :</label>
+              <input
+                type="text"
+                value={pcity}
+                onChange={(e) => {
+                  setpcity(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">State :</label>
+              <input
+                type="text"
+                value={pstate}
+                onChange={(e) => {
+                  setpstate(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="ml-8">Zipcode :</label>
+              <input
+                type="text"
+                value={pzipcode}
+                onChange={(e) => {
+                  setpzipcode(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="ml-8">Relationship:</label>
+              <input
+                type="text"
+                value={prelationship}
+                onChange={(e) => {
+                  setprelationship(e.target.value);
+                }}
+                className="mr-2 rounded-lg border border-gray-300 px-2 py-1
+                   focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
+          </div>
+          <div className="flex justify-center mt-4">
+            <button
+              className="rounded-full bg-purple-900 text-white px-6 py-2"
+              onClick={() => {
+                const isActive = true;
+                const parent = {
+                  firstName: pfirstName,
+                  lastName: plasttName,
+                  phone: pphone,
+                  email: pemail,
+                  addressLine1: paddressLine1,
+                  addressLine2: paddressLine2,
+                  area: parea,
+                  city: pcity,
+                  state: pstate,
+                  zipcode: pzipcode,
+                  relationship: prelationship,
+                };
+                const student = {
+                  firstName,
+                  middleName,
+                  lastName,
+                  standard: selectedStandard,
+                  division: selectedDivision,
+                  rollNumber,
+                  year,
+                  dateOfBirth,
+                  parent,
+                  isActive,
+                };
+
+                console.log(student);
+                addStudent(student);
+                closeModal1();
+              }}
+            >
+              Add Student
+            </button>
+          </div>
+        </div>
+      </Modal1>
+
+      <div style={{ backgroundColor: "white" }} className="min-h-screen">
+        <div className="container">
+          <div className="grid grid-cols-12">
+            <div className="col-span-2">
+              <img src={logo} alt="Logo" className="w-44 h-20" />
+            </div>
+            <div className="col-span-10">
+              <div className="flex items-center justify-between mt-4">
+                <div className="relative">
+                  <FontAwesomeIcon
+                    icon={faSearch}
+                    className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Search"
+                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                  <FontAwesomeIcon
+                    icon={faTimes}
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                  />
+                </div>
+                <button className="ml-2 rounded-full bg-purple-900 text-white px-4 py-2">
+                  Delete Student
+                </button>
+              </div>
+              <div className="grid grid-cols-12 mt-4 ml-1">
+                <div className="col-span-3">
+                  <div className="flex items-center"></div>
+                </div>
+                <div className="col-span-3"></div>
+              </div>
+              <div className=" grid grid-cols-12 mt-4 ml-1">
+                <div className="col-span-10 flex">
                   <div className="mr-4">
                     <select
                       value={selectedStandard}
@@ -150,254 +784,171 @@ const Students = () => {
                       style={{ width: "230px", padding: "8px" }}
                     >
                       <option value="">Select Standard</option>
-                      <option value="1">Standard 1</option>
-                      <option value="2">Standard 2</option>
-                      {/* Add more standard options as needed */}
+                      {standards.map((standard) => (
+                        <option key={standard._id} value={standard._id}>
+                          {standard.name}
+                        </option>
+                      ))}
                     </select>
                   </div>
-                </div>
-              </div>
-              <div className="col-span-3">
-                <div className="flex items-center">
-                  <div>
-                    <select
-                      value={selectedDivision}
-                      onChange={handleDivisionChange}
-                      className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                      style={{ width: "230px", padding: "8px" }}
-                    >
-                      <option value="">Select Division</option>
-                      <option value="A">Division A</option>
-                      <option value="B">Division B</option>
-                      {/* Add more division options as needed */}
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className=" grid grid-cols-12 mt-4 ml-1">
-              <div className="col-span-10 flex">
-                <div className="mt-4">
-                  <div className="bg-purple-300 p-3 rounded-lg">
-                    <form onSubmit={handleSubmit}>
-                      <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
-                        <div className="col-span-4">
-                          <label htmlFor="student_name">Student Name </label>
-                          <br />
-                          <input
-                            type="text"
-                            id="student_name"
-                            name="student_name"
-                            value={studentData.student_name}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          />
-                        </div>
-                        <div className="col-span-4">
-                          <label htmlFor="birth_date">Birth Date </label>
-                          <br />
-                          <input
-                            type="date"
-                            id="birth_date"
-                            name="birth_date"
-                            value={studentData.birth_date}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          />
-                        </div>
-                        <div className="col-span-4">
-                          <label htmlFor="parent_name">Parent Name </label>
-                          <br />
-                          <input
-                            type="text"
-                            id="parent_name"
-                            name="parent_name"
-                            value={studentData.parent_name}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          />
-                        </div>
-                        <div className="col-span-4">
-                          <label htmlFor="contact">Contact </label>
-                          <br />
-                          <input
-                            type="number"
-                            id="contact"
-                            name="contact"
-                            value={studentData.contact}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          />
-                        </div>
-                        <div className="col-span-4">
-                          <label htmlFor="roll_no">Roll No </label>
-                          <br />
-                          <input
-                            type="text"
-                            id="roll_no"
-                            name="roll_no"
-                            value={studentData.roll_no}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          />
-                        </div>
-                        <div className="col-span-4">
-                          <label htmlFor="email">Email </label>
-                          <br />
-                          <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={studentData.email}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                          />
-                        </div>
-                        <div className="col-span-8">
-                          <label htmlFor="address">Address </label>
-                          <br />
-                          <input
-                            type="text"
-                            id="address"
-                            name="address"
-                            value={studentData.address}
-                            onChange={handleInputChange}
-                            className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            style={{ width: "473px" }}
-                          />
-                        </div>
-                        <div className="col-span-4">
-                          <label htmlFor="image">Upload Image </label>
-                          <br />
-                          <input
-                            type="file"
-                            id="image"
-                            name="image"
-                            onChange={handleImageUpload}
-                            className="focus:outline-none"
-                          />
-                        </div>
+                  <div className="col-span-3">
+                    <div className="flex items-center">
+                      <div>
+                        <select
+                          value={selectedDivision}
+                          onChange={handleDivisionChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          style={{ width: "230px", padding: "8px" }}
+                        >
+                          <option value="">Select Division</option>
+                          {divisions.map((division) => (
+                            <option key={division._id} value={division._id}>
+                              {division.name}
+                            </option>
+                          ))}
+                        </select>
                       </div>
-                    </form>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <div className="mt-4">
+                    <div className="mt-4">
+                      <div className="col-span-2 ml-6 flex items-end justify-end">
+                        <button
+                          type="submit"
+                          className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+                          style={{ fontSize: "13px", borderRadius: "8px" }}
+                          onClick={() => openModal1()}
+                        >
+                          <FontAwesomeIcon
+                            icon={faPlus}
+                            className="text-white"
+                            style={{ fontSize: "24px" }}
+                          />
+                          <span style={{ marginTop: "4px" }}>Add Student</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col-span-2">
-                <div className="mt-4">
-                  <div className="col-span-2 ml-6 flex items-end justify-end">
-                    <button
-                      type="submit"
-                      className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-                      style={{ fontSize: "13px", borderRadius: "8px" }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faPlus}
-                        className="text-white"
-                        style={{ fontSize: "24px" }}
-                      />
-                      <span style={{ marginTop: "4px" }}>Add Student</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-12 mt-4 ml-1">
-              <div className="col-span-12 grid">
-                <div className="bg-purple-200 p-3 rounded-lg">
-                  <div className="mt-4 ml-1">
-                    {studentDatas.map((student) => (
-                      <div
-                        className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                        key={student.id}
-                      >
-                        <div className="flex items-start">
-                          <div className="col-span-2 grid">
-                            <img
-                              src={student.image}
-                              alt="Student"
-                              className="w-36 border h-28"
-                            />
-                          </div>
-                          <div className="ml-4">
-                            <div
-                              className="grid grid-cols-2"
-                              style={{ width: "160px" }}
-                            >
-                              <div className="col-span-2">
-                                <strong>Student </strong> <br />
+              <div className="grid grid-cols-12 mt-4 ml-1">
+                <div className="col-span-12 grid">
+                  <div className="bg-purple-200 p-3 rounded-lg">
+                    <div className="mt-4 ml-1">
+                      {studentDetails.map((studentData) => (
+                        <div
+                          className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
+                          key={studentData._id}
+                        >
+                          <div className="flex items-start">
+                            <div className="col-span-2 grid">
+                              <img
+                                src={""}
+                                alt="Student"
+                                className="w-36 border h-28"
+                              />
+                            </div>
+                            <div className="ml-4">
+                              <div
+                                className="grid grid-cols-2"
+                                style={{ width: "160px" }}
+                              >
+                                <div className="col-span-2">
+                                  <strong>Student </strong> <br />
+                                  <FontAwesomeIcon
+                                    icon={faUserGraduate}
+                                    className="text-purple-900 mr-2"
+                                  />
+                                  {studentData.firstName +
+                                    " " +
+                                    studentData.lastName}
+                                </div>
+                                <div className="col-span-2">
+                                  <strong>Roll No </strong> <br />
+                                  <FontAwesomeIcon
+                                    icon={faAward}
+                                    className="text-purple-900 mr-2"
+                                  />
+                                  {studentData.rollNumber}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="ml-4">
+                              <div
+                                className="col-span-2"
+                                style={{ width: "130px" }}
+                              >
+                                <strong>Birth Date </strong> <br />
                                 <FontAwesomeIcon
-                                  icon={faUserGraduate}
+                                  icon={faCalendar}
                                   className="text-purple-900 mr-2"
                                 />
-                                {student.studentName}
+                                {studentData.dateOfBirth}
                               </div>
-                              <div className="col-span-2">
-                                <strong>Roll No </strong> <br />
+                            </div>
+                            <div className="ml-4">
+                              <div
+                                className="col-span-2"
+                                style={{ width: "175px" }}
+                              >
+                                <strong>Parent Details </strong> <br />
                                 <FontAwesomeIcon
-                                  icon={faAward}
+                                  icon={faUser}
                                   className="text-purple-900 mr-2"
                                 />
-                                {student.rollNo}
+                                {studentData.parent.firstName +
+                                  " " +
+                                  studentData.parent.lastName +
+                                  "  " +
+                                  studentData.parent.phone +
+                                  " " +
+                                  studentData.parent.email}
                               </div>
                             </div>
-                          </div>
-                          <div className="ml-4">
-                            <div
-                              className="col-span-2"
-                              style={{ width: "130px" }}
-                            >
-                              <strong>Birth Date </strong> <br />
-                              <FontAwesomeIcon
-                                icon={faCalendar}
-                                className="text-purple-900 mr-2"
-                              />
-                              {student.birthDate}
+                            <div className="ml-4">
+                              <div
+                                className="col-span-2"
+                                style={{ width: "170px" }}
+                              >
+                                <strong>Address </strong> <br />
+                                <FontAwesomeIcon
+                                  icon={faMapMarkerAlt}
+                                  className="text-purple-900 mr-2"
+                                />
+                                {studentData.parent.addressLine1 +
+                                  " " +
+                                  studentData.parent.addressLine2}
+                              </div>
                             </div>
-                          </div>
-                          <div className="ml-4">
-                            <div
-                              className="col-span-2"
-                              style={{ width: "175px" }}
-                            >
-                              <strong>Parent Details </strong> <br />
-                              <FontAwesomeIcon
-                                icon={faUser}
-                                className="text-purple-900 mr-2"
-                              />
-                              {student.parentDetails}
+                            <div className="ml-4 flex items-center">
+                              <button
+                                className="rounded-full bg-purple-900 text-white px-6 py-2
+                             flex flex-col items-center justify-center mr-2"
+                                onClick={() => openModal(studentData)}
+                              >
+                                <FontAwesomeIcon
+                                  icon={faEdit}
+                                  style={{ fontSize: "24px" }}
+                                />
+                              </button>
+                              <button
+                                className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center"
+                                onClick={() => deleteStudent(studentData._id)}
+                              >
+                                <FontAwesomeIcon
+                                  icon={faTrash}
+                                  style={{ fontSize: "24px" }}
+                                />
+                              </button>
                             </div>
-                          </div>
-                          <div className="ml-4">
-                            <div
-                              className="col-span-2"
-                              style={{ width: "170px" }}
-                            >
-                              <strong>Address </strong> <br />
-                              <FontAwesomeIcon
-                                icon={faMapMarkerAlt}
-                                className="text-purple-900 mr-2"
-                              />
-                              {student.address}
-                            </div>
-                          </div>
-                          <div className="ml-4 flex items-center">
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2">
-                              <FontAwesomeIcon
-                                icon={faEdit}
-                                style={{ fontSize: "24px" }}
-                              />
-                            </button>
-                            <button className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center">
-                              <FontAwesomeIcon
-                                icon={faTrash}
-                                style={{ fontSize: "24px" }}
-                              />
-                            </button>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -405,7 +956,7 @@ const Students = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
