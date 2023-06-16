@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,6 +13,11 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
 import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
+
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import { Chart } from "chart.js/auto";
+import html2canvas from "html2canvas";
 
 const Reports = () => {
   const [showProfile, setShowProfile] = useState(false);
@@ -73,19 +78,6 @@ const Reports = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic for handling form submission
-    console.log(studentData);
-    // Reset form after submission
-    setStudentData({
-      student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
   };
 
   const studentDatas = [
@@ -102,7 +94,21 @@ const Reports = () => {
         parentAddress: "Pragati Nagar, Wani-445304",
         relation: "Father",
       },
-      marks: {
+      averageMarks: {
+        English: 65,
+        Hindi: 65,
+        Marathi: 65,
+        Science: 65,
+        Math: 65,
+      },
+      highestMarks: {
+        English: 93,
+        Hindi: 93,
+        Marathi: 93,
+        Science: 93,
+        Math: 93,
+      },
+      obtainedMarks: {
         English: 67,
         Hindi: 78,
         Marathi: 63,
@@ -113,44 +119,160 @@ const Reports = () => {
       percentage: 74,
       grade: "Distinction",
     },
-    {
-      id: 2,
-      image: random_profile_pic2,
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: {
-        parentName: "Rama Khamkar",
-        phoneNumber: 8889991110,
-        parentEmail: "rama@gmail.com",
-        parentAddress: "Pashan, Pune",
-        relation: "Mother",
-      },
-      marks: {
-        English: 67,
-        Hindi: 78,
-        Marathi: 63,
-        Science: 79,
-        Math: 83,
-      },
-      totalMarks: 370,
-      percentage: 74,
-      grade: "Pass",
-    },
-    {
-      id: 3,
-      image: "student3.jpg",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
   ];
 
+  const generatePDF = async () => {
+    const doc = new jsPDF({
+      orientation: "p",
+      unit: "mm",
+      format: "a4",
+    });
+
+    doc.setFontSize(16);
+    doc.text("Student Report", 10, 10);
+
+    doc.setFontSize(12);
+    doc.text("Student Name: " + studentDatas[0].studentName, 10, 20);
+    doc.text("Grade: " + studentDatas[0].grade, 10, 30);
+
+    doc.setFontSize(14);
+    doc.text("Obtained Marks", 10, 40);
+
+    const obtainedMarksData = [
+      ["Subject", "Obtained Marks"],
+      ["English", studentDatas[0].obtainedMarks.English],
+      ["Hindi", studentDatas[0].obtainedMarks.Hindi],
+      ["Marathi", studentDatas[0].obtainedMarks.Marathi],
+      ["Science", studentDatas[0].obtainedMarks.Science],
+      ["Math", studentDatas[0].obtainedMarks.Math],
+    ];
+
+    doc.autoTable({
+      startY: 50,
+      head: [["Subject", "Obtained Marks"]],
+      body: obtainedMarksData.slice(1),
+    });
+
+    doc.setFontSize(14);
+    doc.text("Grades", 10, doc.autoTable.previous.finalY + 10);
+
+    const gradesData = [
+      ["Grades", "Range"],
+      ["A+", "90% - 100%"],
+      ["A", "80% - 90%"],
+      ["B+", "70% - 80%"],
+      ["B", "60% - 70%"],
+      ["C", "50% - 60%"],
+      ["D", "35% - 50%"],
+      ["FAIL", "< 35%"],
+    ];
+
+    doc.autoTable({
+      startY: doc.autoTable.previous.finalY + 20,
+      head: [["Grades", "Range"]],
+      body: gradesData.slice(1),
+    });
+
+    doc.setFontSize(14);
+    doc.text("Marks Comparison", 10, doc.autoTable.previous.finalY + 10);
+
+    const chartContainer = document.createElement("div");
+    chartContainer.style.width = "400px";
+    chartContainer.style.height = "300px";
+    document.body.appendChild(chartContainer);
+
+    const chartCanvas = document.createElement("canvas");
+    chartContainer.appendChild(chartCanvas);
+
+    const marksChart = new Chart(chartCanvas, {
+      type: "bar",
+      data: {
+        labels: ["English", "Hindi", "Marathi", "Science", "Math"],
+        datasets: [
+          {
+            label: "Obtained Marks",
+            data: [
+              studentDatas[0].obtainedMarks.English,
+              studentDatas[0].obtainedMarks.Hindi,
+              studentDatas[0].obtainedMarks.Marathi,
+              studentDatas[0].obtainedMarks.Science,
+              studentDatas[0].obtainedMarks.Math,
+            ],
+            backgroundColor: "rgba(	78, 60, 111, 1)",
+            borderColor: "rgba(255, 255, 255, 1)",
+            borderWidth: 1,
+          },
+          {
+            label: "Average Marks",
+            data: [
+              studentDatas[0].averageMarks.English,
+              studentDatas[0].averageMarks.Hindi,
+              studentDatas[0].averageMarks.Marathi,
+              studentDatas[0].averageMarks.Science,
+              studentDatas[0].averageMarks.Math,
+            ],
+            backgroundColor: "rgba(75, 192, 192, 1)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+          {
+            label: "Highest Marks",
+            data: [
+              studentDatas[0].highestMarks.English,
+              studentDatas[0].highestMarks.Hindi,
+              studentDatas[0].highestMarks.Marathi,
+              studentDatas[0].highestMarks.Science,
+              studentDatas[0].highestMarks.Math,
+            ],
+            backgroundColor: "rgba(	21, 103, 96, 1)",
+            borderColor: "rgba(	21, 103, 96, 0.2)",
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+          },
+        },
+      },
+    });
+
+    // Delay for 500 milliseconds to allow the chart to render before capturing the image
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const canvasImage = await html2canvas(chartContainer, { useCORS: true });
+    const chartImage = canvasImage.toDataURL("image/png");
+
+    doc.addImage(
+      chartImage,
+      "PNG",
+      10,
+      doc.autoTable.previous.finalY + 20,
+      180,
+      70
+    );
+
+    doc.setFontSize(14);
+    doc.text("Remarks", 10, doc.autoTable.previous.finalY + 100);
+    doc.text("Good Job.", 10, doc.autoTable.previous.finalY + 110);
+
+    doc.save("student_report.pdf");
+
+    // Clean up
+    document.body.removeChild(chartContainer);
+  };
+
   return (
-    <div style={{ backgroundColor: "white" }} className="min-h-screen">
+    <div
+      style={{ backgroundColor: "white" }}
+      className="min-h-screen"
+      id="report_page"
+    >
       <div className="container">
         <div className="grid grid-cols-12">
           <div className="col-span-2">
@@ -270,6 +392,7 @@ const Reports = () => {
                       type="submit"
                       className="rounded-full bg-purple-900 text-white w-full h-full px-6 py-2 flex flex-col items-center justify-center"
                       style={{ fontSize: "13px", borderRadius: "8px" }}
+                      onClick={generatePDF}
                     >
                       <span style={{ marginTop: "4px" }}>
                         Generate <br />
@@ -283,7 +406,7 @@ const Reports = () => {
 
             {/* <div className="grid grid-cols-12 mt-4 ml-1 bg-purple-300 p-3 rounded-lg"> */}
             {studentDatas
-              .filter((student) => student.id === 2)
+              .filter((student) => student.id === 1)
               .map((student) => (
                 <div
                   className="grid grid-cols-12 mt-4 ml-1 bg-purple-300 p-3 rounded-lg"
@@ -312,38 +435,38 @@ const Reports = () => {
                       <thead>
                         <tr>
                           <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[0]}
+                            {Object.keys(student.obtainedMarks)[0]}
                           </th>
                           <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[1]}
+                            {Object.keys(student.obtainedMarks)[1]}
                           </th>
                           <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[2]}
+                            {Object.keys(student.obtainedMarks)[2]}
                           </th>
                           <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[3]}
+                            {Object.keys(student.obtainedMarks)[3]}
                           </th>
                           <th className="border-b border-white text-center">
-                            {Object.keys(student.marks)[4]}
+                            {Object.keys(student.obtainedMarks)[4]}
                           </th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
                           <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[0]}/100
+                            {Object.values(student.obtainedMarks)[0]}/100
                           </td>
                           <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[1]}/100
+                            {Object.values(student.obtainedMarks)[1]}/100
                           </td>
                           <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[2]}/100
+                            {Object.values(student.obtainedMarks)[2]}/100
                           </td>
                           <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[3]}/100
+                            {Object.values(student.obtainedMarks)[3]}/100
                           </td>
                           <td className="border-b border-white text-center font-bold">
-                            {Object.values(student.marks)[4]}/100
+                            {Object.values(student.obtainedMarks)[4]}/100
                           </td>
                         </tr>
                       </tbody>
@@ -446,6 +569,29 @@ const Reports = () => {
     </div>
     // </div>
   );
+};
+
+// Styles for the PDF document
+const styles = {
+  page: {
+    fontFamily: "Helvetica",
+    fontSize: 12,
+    paddingTop: 30,
+    paddingBottom: 30,
+    paddingLeft: 60,
+    paddingRight: 60,
+  },
+  title: {
+    fontSize: 24,
+    textAlign: "center",
+    marginBottom: 30,
+  },
+  subtitle: {
+    fontSize: 18,
+    marginTop: 20,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
 };
 
 export default Reports;
