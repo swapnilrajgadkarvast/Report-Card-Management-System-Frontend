@@ -10,7 +10,7 @@ import {
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 
-const RegisterModal = () => {
+const Register = () => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
@@ -192,4 +192,4 @@ const RegisterModal = () => {
   );
 };
 
-export default RegisterModal;
+export default Register;

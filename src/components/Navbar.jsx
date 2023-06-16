@@ -1,132 +1,128 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import logo from "../images/rcms_logo_small.jpg";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import random_profile_pic1 from "../images/random_profile_pic.jpg";
+import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const Navbar = ({ role }) => {
+const Navbar = ({ setLogin }) => {
   const [showProfile, setShowProfile] = useState(false);
 
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
   };
 
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  const [activeNavbar, setActiveNavbar] = useState("students");
-
-  const handleNavbarClick = (navbarOption) => {
-    setActiveNavbar(navbarOption);
-  };
+  // const { setLogin } = props;
+  const navigate = useNavigate();
+  if (!sessionStorage.getItem("loginData")) return;
+  const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  // console.log(loginData);
+  const role = loginData.user.role;
+  const user = loginData.user;
 
   return (
     <nav className="flex items-center justify-between bg-purple-900 p-4">
       <div className="flex items-center">
         <div className="w-56"></div> {/* Empty div for spacing */}
         <div className="flex items-center space-x-8">
-          {role === "class_teacher" ? (
+          {role === "Class Teacher" ? (
             <>
-              <Link
-                to="/class_teacher/students"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "students"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("students")}
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/class_teacher/students"}
               >
                 Students
-              </Link>
-              <Link
-                to="/class_teacher/reports"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "reports"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("reports")}
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/class_teacher/reports"}
               >
                 Reports
-              </Link>
+              </NavLink>
             </>
-          ) : role === "subject_teacher" ? (
+          ) : role === "Subject Teacher" ? (
             <>
-              <Link
-                to="/subject_teacher/test"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "test" ? "bg-purple-500 text-purple-500" : ""
-                }`}
-                onClick={() => handleNavbarClick("test")}
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/subject_teacher/test"}
               >
                 Test
-              </Link>
-              <Link
-                to="/subject_teacher/result"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "result"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("result")}
+              </NavLink>
+
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/subject_teacher/result"}
               >
                 Result
-              </Link>
+              </NavLink>
             </>
-          ) : role === "admin" ? (
+          ) : role === "Admin" ? (
             <>
-              <Link
-                to="/admin/standards"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "standards"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("standards")}
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/admin/standards"}
               >
-                Standards
-              </Link>
-              <Link
-                to="/admin/divisions"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "division"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("division")}
+                Standard
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/admin/division"}
               >
                 Division
-              </Link>
-              <Link
-                to="/admin/roles"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "role" ? "bg-purple-500 text-purple-500" : ""
-                }`}
-                onClick={() => handleNavbarClick("role")}
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/admin/roles"}
               >
                 Role
-              </Link>
-              <Link
-                to="/admin/user_roles"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "user_roles"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("user_roles")}
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/admin/user_roles"}
               >
-                User Roles
-              </Link>
-              <Link
-                to="/admin/grades"
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition duration-300 hover:bg-purple-600 ${
-                  activeNavbar === "grades"
-                    ? "bg-purple-500 text-purple-500"
-                    : ""
-                }`}
-                onClick={() => handleNavbarClick("grades")}
+                User Role
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
+                to={"/admin/grades"}
               >
                 Grades
-              </Link>
+              </NavLink>
             </>
           ) : null}
         </div>
@@ -138,29 +134,67 @@ const Navbar = ({ role }) => {
             className="flex items-center focus:outline-none"
           >
             <img
-              src="profile-pic.jpg"
+              src={random_profile_pic1}
               alt="Profile"
-              className="w-8 h-8 rounded-full"
+              className="w-24 h-16 rounded-full"
             />
-            <svg
-              className="w-4 h-4 fill-current text-white ml-2"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              {/* SVG path */}
-            </svg>
           </button>
           {/* Dropdown menu */}
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg overflow-hidden z-10">
-              <div className="py-1">
-                {/* Profile data */}
-                <button
-                  onClick={handleLogout}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
-                >
-                  Logout
-                </button>
+            <div className="absolute right-0 mt-2 w-[26rem] bg-white rounded-md shadow-lg overflow-hidden z-10">
+              <div className="py-4 px-4">
+                <div className="flex items-start space-x-4">
+                  <div className="mr-4">
+                    {" "}
+                    <img
+                      src={random_profile_pic1}
+                      alt="Profile"
+                      className="w-36 h-28"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-lg font-medium">{`${user.firstName} ${user.lastName}`}</p>
+                    <div>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faEnvelope}
+                          className="text-purple-900 mr-2"
+                        />
+                        {`${user.email}`}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon
+                          icon={faPhone}
+                          className="text-purple-900 mr-2"
+                        />
+                        {`${user.phone}`}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <p>
+                    Username : <strong>{`${user.userName}`}</strong>
+                  </p>
+                </div>
+                <div className="flex justify-end mt-6">
+                  <button
+                    className="bg-white hover:bg-gray-300 text-purple-600 font-medium px-4 py-2 rounded"
+                    onClick={handleProfileClick}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="block px-4 py-2 text-sm text-white bg-purple-700 hover:bg-purple-800 ml-2 rounded"
+                    onClick={() => {
+                      navigate("/login");
+                      setLogin(false);
+                      sessionStorage.clear();
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             </div>
           )}

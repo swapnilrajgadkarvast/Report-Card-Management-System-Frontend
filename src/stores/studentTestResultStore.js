@@ -4,98 +4,130 @@ import axios from "axios";
 
 const http = axios.create({ baseURL: "http://127.0.0.1:3030/" });
 
-const getStudentData = async (setStudentData) => {
-  try {
-    const response = await http.get("/student-test-result");
-    const { data } = response.data;
-    console.log(data);
+const studentTestResultStore = create((set) => ({
+  studentTestResult: [],
+  studentData: [],
+  testData: [],
+  loading: false,
+  error: null,
 
-    const studentIds = data.map((result) => result.student);
-    const studentPromises = studentIds.map((studentId) =>
-      http.get(`/student/${studentId}`)
-    );
+  getStudentTestResult: async (subjectTeacher) => {
+    try {
+      const { standard, subject, division } = subjectTeacher;
 
-    const studentResponses = await Promise.all(studentPromises);
-    const studentData = studentResponses.map((response) => response.data);
-    console.log(studentData);
+      const testFilter = {
+        standard,
+        subject,
+        division,
+      };
 
-    setStudentData(studentData);
-  } catch (error) {
-    console.error(error);
-  }
-};
+      const testResponse = await http.get(
+        `/tests?standard=${testFilter.standard}&subject=${testFilter.subject}&division=${testFilter.division}`
+      );
+      const tests = testResponse.data.data;
+      console.log("tests");
+      console.log(tests);
 
-const studentTestResultStore = create((set) => {
-  const setStudentData = (data) => set({ studentData: data });
-
-  return {
-    studentTestResult: [],
-    studentData: [],
-    loading: false,
-    error: null,
-
-    getStudentTestResult: async () => {
-      set({ loading: true });
-
-      try {
-        const response = await http.get("/student-test-result");
-        const { data } = response.data;
-        console.log(data);
-        set({ studentTestResult: data, error: null });
-        getStudentData(setStudentData); // Call getStudentData function to fetch student data
-      } catch (error) {
-        set({ error: error.message });
+      if (tests.length === 0) {
+        console.log("No tests found");
+        return;
       }
-      set({ loading: false });
-    },
 
-    addStudentTestResult: async (obtainedMarks) => {
-      set({ loading: true });
-      try {
-        const response = await http.post(`/student-test-result`, {
-          obtainedMarks,
-        });
-        console.log(response.data);
-        set((state) => ({
-          studentTestResult: [...state.studentTestResult, response.data],
-          error: null,
-        }));
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
+      const testIds = tests.map((test) => test._id);
 
-    deleteStudentTestResult: async (id) => {
-      set({ loading: true });
-      try {
-        const response = await http.delete(`/student-test-result/${id}`);
-        console.log(response.data);
-        set((state) => ({
-          studentTestResult: state.studentTestResult.filter(
-            (s) => s._id !== response.data._id
-          ),
-        }));
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
+      const response = await http.get("/student-test-result");
+      const { data } = response.data;
 
-    updateStudentTestResult: async (id, obtainedMarks) => {
-      set({ loading: true });
-      try {
-        const response = await http.put(`/student-test-result/${id}`, {
-          obtainedMarks,
-        });
-        //console.log(response.data)
-        set((state) => ({ studentTestResult: [...state.studentTestResult] }));
-      } catch (error) {
-        set({ error: error.message });
-      }
-      set({ loading: false });
-    },
-  };
-});
+      const filteredData = data.filter((result) =>
+        testIds.includes(result.tests)
+      );
+
+      console.log("filteredData");
+      console.log(filteredData);
+
+      const studentIds = filteredData.map((result) => result.student);
+      const studentPromises = studentIds.map((studentId) =>
+        http.get(`/student/${studentId}`)
+      );
+
+      const studentResponses = await Promise.all(studentPromises);
+      const studentData = studentResponses.map((response) => response.data);
+
+      console.log("studentData");
+      console.log(studentData);
+
+      set({
+        studentTestResult: filteredData,
+        studentData: studentData,
+        testData: tests,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  addStudentTestResult: async (obtainedMarks) => {
+    set({ loading: true });
+    try {
+      const response = await http.post(`/student-test-result`, {
+        obtainedMarks,
+      });
+      console.log(response.data);
+      set((state) => ({
+        studentTestResult: [...state.studentTestResult, response.data],
+        error: null,
+      }));
+    } catch (error) {
+      set({ error: error.message });
+    }
+    set({ loading: false });
+  },
+
+  deleteStudentTestResult: async (id) => {
+    set({ loading: true });
+    try {
+      const response = await http.delete(`/student-test-result/${id}`);
+      console.log(response.data);
+      set((state) => ({
+        studentTestResult: state.studentTestResult.filter(
+          (s) => s._id !== response.data._id
+        ),
+      }));
+    } catch (error) {
+      set({ error: error.message });
+    }
+    set({ loading: false });
+  },
+
+  updateStudentTestResult: async (
+    studentTestResultDataId,
+    updatedObtainedMarks
+  ) => {
+    try {
+      const response = await http.patch(
+        `/student-test-result/${studentTestResultDataId}`,
+        {
+          obtainedMarks: updatedObtainedMarks,
+        }
+      );
+
+      const { data } = response;
+      set((state) => ({
+        studentTestResult: state.studentTestResult.map(
+          (studentTestResultData) =>
+            studentTestResultData._id === studentTestResultDataId
+              ? {
+                  ...studentTestResultData,
+                  obtainedMarks: updatedObtainedMarks,
+                }
+              : studentTestResultData
+        ),
+        error: null,
+      }));
+    } catch (error) {
+      set({ error: error.message });
+    }
+  },
+}));
 
 export default studentTestResultStore;
