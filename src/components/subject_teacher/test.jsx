@@ -89,9 +89,6 @@ const Test = () => {
     setIsOpen(true);
     setModalTestId(tests._id);
     setModalTestName(tests.name);
-
-    console.log("Tests object");
-    console.log(tests);
   };
 
   const closeModal = () => {

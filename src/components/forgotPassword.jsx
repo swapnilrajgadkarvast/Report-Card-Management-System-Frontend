@@ -4,33 +4,42 @@ import rcms_logo_small from "../images/rcms_logo_small.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import usersStore from "../stores/usersStore";
 
 const ForgotPassword = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const schema = yup.object().shape({
+    email: yup.string().min(3).max(50).required(),
+    currentPassword: yup.string().required(),
+    newPassword: yup.string().min(3).max(50).required(),
+    confirmedPassword: yup.string().min(3).max(50).required(),
+  });
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
+  const { getUsers, addUsers, updateUsers, deleteUsers } = usersStore();
 
-  const handleNewPasswordChange = (event) => {
-    setNewPassword(event.target.value);
-  };
-
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value);
-  };
-
-  const handleResetPassword = (event) => {
-    event.preventDefault();
-    // Handle reset password logic here
-    console.log("Reset password button clicked");
+  const onSubmitHandler = async (data) => {
+    try {
+      // Save the user data
+      await addUsers(data);
+      console.log("User Data --->");
+      console.log(data);
+      reset();
+      console.log("User saved successfully.");
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
   };
 
   return (
@@ -54,7 +63,7 @@ const ForgotPassword = () => {
               className="w-auto h-100"
             />
           </div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="mb-4">
               <div className="relative">
                 <FontAwesomeIcon
@@ -66,8 +75,7 @@ const ForgotPassword = () => {
                   id="username"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Username"
-                  value={username}
-                  onChange={handleUsernameChange}
+                  {...register("username")}
                 />
               </div>
             </div>
@@ -82,8 +90,7 @@ const ForgotPassword = () => {
                   id="email"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Email"
-                  value={email}
-                  onChange={handleEmailChange}
+                  {...register("email")}
                 />
               </div>
             </div>
@@ -98,8 +105,7 @@ const ForgotPassword = () => {
                   id="new-password"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="New Password"
-                  value={newPassword}
-                  onChange={handleNewPasswordChange}
+                  {...register("newPassword")}
                 />
               </div>
             </div>
@@ -114,8 +120,7 @@ const ForgotPassword = () => {
                   id="confirm-password"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
+                  {...register("confirmPassword")}
                 />
               </div>
             </div>
@@ -123,7 +128,6 @@ const ForgotPassword = () => {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:shadow-outline"
                 type="submit"
-                onClick={handleResetPassword}
               >
                 Reset Password
               </button>

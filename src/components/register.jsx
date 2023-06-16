@@ -9,42 +9,49 @@ import {
   faEnvelope,
   faPhone,
 } from "@fortawesome/free-solid-svg-icons";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import usersStore from "../stores/usersStore";
 
 const Register = () => {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const schema = yup.object().shape({
+    firstName: yup.string().min(3).max(50).required(),
+    lastName: yup.string().min(3).max(50).required(),
+    email: yup.string().min(5).max(255).required(),
+    phone: yup.string().min(10).max(10).required(),
+    userName: yup.string().min(3).max(50).required(),
+    password: yup.string().min(8).max(1024).required(),
+    lastLoggedIn: yup.string().default(() => new Date().toISOString()),
+    isActive: yup.boolean().default(true),
+    role: yup.string(),
+    updatedBy: yup.string().default("6489a3abbb5ca82bca72dd4b"),
+    updatedAt: yup.string().default(() => new Date().toISOString()),
+  });
 
-  const handleFirstnameChange = (event) => {
-    setFirstname(event.target.value);
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-  const handleLastnameChange = (event) => {
-    setLastname(event.target.value);
-  };
+  const { getUsers, addUsers, updateUsers, deleteUsers } = usersStore();
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePhoneChange = (event) => {
-    setPhone(event.target.value);
-  };
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleRegister = (event) => {
-    event.preventDefault();
-    // Perform registration logic here
+  const onSubmitHandler = async (data) => {
+    try {
+      // Save the user data
+      await addUsers(data);
+      console.log("User Data --->");
+      console.log(data);
+      reset();
+      console.log("User saved successfully.");
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
   };
 
   return (
@@ -68,7 +75,7 @@ const Register = () => {
               className="w-auto h-100"
             />
           </div>
-          <form>
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
             <div className="mb-4 flex">
               <div className="w-1/2 pr-2">
                 <div className="relative">
@@ -81,8 +88,7 @@ const Register = () => {
                     id="firstname"
                     className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="First Name"
-                    value={firstname}
-                    onChange={handleFirstnameChange}
+                    {...register("firstName")}
                   />
                 </div>
               </div>
@@ -97,8 +103,7 @@ const Register = () => {
                     id="lastname"
                     className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Last Name"
-                    value={lastname}
-                    onChange={handleLastnameChange}
+                    {...register("lastName")}
                   />
                 </div>
               </div>
@@ -114,8 +119,7 @@ const Register = () => {
                   id="email"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Email"
-                  value={email}
-                  onChange={handleEmailChange}
+                  {...register("email")}
                 />
               </div>
             </div>
@@ -130,8 +134,7 @@ const Register = () => {
                   id="phone"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Phone"
-                  value={phone}
-                  onChange={handlePhoneChange}
+                  {...register("phone")}
                 />
               </div>
             </div>
@@ -146,8 +149,7 @@ const Register = () => {
                   id="username"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Username"
-                  value={username}
-                  onChange={handleUsernameChange}
+                  {...register("userName")}
                 />
               </div>
             </div>
@@ -162,8 +164,7 @@ const Register = () => {
                   id="password"
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Password"
-                  value={password}
-                  onChange={handlePasswordChange}
+                  {...register("password")}
                 />
               </div>
             </div>
@@ -171,7 +172,6 @@ const Register = () => {
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full focus:outline-none focus:shadow-outline"
                 type="submit"
-                onClick={handleRegister}
               >
                 Register
               </button>

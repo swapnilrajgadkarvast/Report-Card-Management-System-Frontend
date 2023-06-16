@@ -35,7 +35,8 @@ function App() {
       !window.location.pathname.includes("about") &&
       !window.location.pathname.includes("login") &&
       !window.location.pathname.includes("register") &&
-      !window.location.pathname.includes("forgot-password")
+      !window.location.pathname.includes("forgot-password") &&
+      !window.location.pathname.includes("login-error-page")
     );
   }
 
