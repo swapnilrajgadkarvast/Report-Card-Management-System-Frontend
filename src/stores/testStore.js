@@ -15,6 +15,7 @@ const testStore = create((set) => {
       try {
         const response = await http.get("/tests");
         const { data } = response.data;
+        console.log(data);
         set({ tests: data, error: null });
       } catch (error) {
         set({ error: error.message });

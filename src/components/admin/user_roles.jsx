@@ -24,7 +24,8 @@ const UserRoles = () => {
   const {
     userroles,
     userRolesDataToDisplay,
-    username,
+    userRoleIds,
+    users,
     roles,
     subjects,
     standards,
@@ -84,6 +85,8 @@ const UserRoles = () => {
     console.log(selectedYear);
   };
 
+ 
+
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logic for handling form submission
@@ -102,11 +105,34 @@ const UserRoles = () => {
       subject: selectedSubject,
       year: selectedYear,
     };
-    console.log(userrolesobj);
-    addUserRole(userrolesobj);
-
-    // Reset form after submission
-  };
+       
+    let found = false;
+    for (let i = 0; i < userroles.length; i++) {
+      let currentObj = userroles[i];
+      delete currentObj._id;
+      console.log(userrolesobj)
+      console.log(currentObj)  
+      console.log("++++++++++++++++++++++++");     
+      // Compare the current object with the input object
+      if (
+        userrolesobj.user === currentObj.user &&
+        userrolesobj.role === currentObj.role &&
+        userrolesobj.standard === currentObj.standard &&
+        userrolesobj.division === currentObj.division &&
+        userrolesobj.subject === currentObj.subject &&
+        userrolesobj.year === currentObj.year
+      ) {
+        found = true;
+        console.log(found);
+        break; // No need to continue iterating if a match is found
+      }
+    }
+    
+    if (!found) {
+      addUserRole(userrolesobj);
+    }
+  // Reset form after submission
+}
   const handleDeleteUserRole = async (userRoleId) => {
     try {
       await deleteUserRole(userRoleId);
@@ -120,6 +146,7 @@ const UserRoles = () => {
   const [modalDivision, setModalDivision] = useState("");
   const [modalSubject, setModalSubject] = useState("");
   const [modalYear, setModalYear] = useState("");
+
   const openModal = (role) => {
     setIsOpen(true);
     //setModalRoleId(role._id);
@@ -242,7 +269,7 @@ const UserRoles = () => {
                               style={{ width: "450px", padding: "8px" }}
                             >
                               <option value="">Select a User</option>
-                              {username.map((username) => (
+                              {users.map((username) => (
                                 <option key={username._id} value={username._id}>
                                   {username.firstName +
                                     "   " +

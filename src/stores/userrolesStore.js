@@ -6,8 +6,9 @@ const http = axios.create({ baseURL: "http://127.0.0.1:3030/" });
 
 const userrolesStore = create((set) => ({
   userroles: [],
+  userRoleIds: [],
   userRolesDataToDisplay: [],
-  username: [],
+  users: [],
   roles: [],
   subjects: [],
   standards: [],
@@ -20,92 +21,115 @@ const userrolesStore = create((set) => ({
     try {
       const response = await http.get("/userroles");
       const { data } = response.data;
-      //console.log(data);
+      console.log("Data is =>");
+      console.log(data);
+      console.log("data");
 
-      const userIds = data.map((userRole) => userRole.user);
+      const userroleIds = data.map((userRole) => userRole.user);
       //console.log(userIds);
 
       const response1 = await http.get("/users");
-      const userdata = response1.data;
+      const usersdata = response1.data;
+      console.log(usersdata.data);
 
-      console.log("User Role Data To Display");
+      //console.log("User Role Data To Display");
       // console.log(userRolesDataToDisplay);
 
       const response2 = await http.get("/roles");
       const rolesdata = response2.data;
-      // console.log(rolesdata.data);
+      console.log(rolesdata.data);
 
       const response3 = await http.get("/standard");
       const standarddata = response3.data;
-      // console.log(standarddata.data);
+      console.log(standarddata.data);
 
       const response4 = await http.get("/division");
       const divisiondata = response4.data;
-      // console.log(divisiondata.data);
+      console.log(divisiondata.data);
 
       const response5 = await http.get("/subjects");
       const subjectsdata = response5.data;
-      // console.log(subjectsdata.data);
+      console.log(subjectsdata.data);
 
       let userRolesDataToDisplay1 = [];
+      for (const item of data) {
+        //  console.log(item);
+        // console.log(item._id)
+        // console.log(item.user)
+        // console.log(item.role)
+        // console.log(item.standard)
+        // console.log(item.division)
+        // console.log(item.subject)
+        // console.log(item.subject)
 
-      data.forEach(function (item, index) {
-        //console.log(item, index);
-
-        const Id = item._id;
-
-        const searchObjectUser = userdata.data.find(
+        // const searchObjectUser = usersdata.data
+        //console.log("Search Object");
+        // console.log(searchObjectUser);
+        const searchObjectUser = usersdata.data.find(
           (userobj) => userobj._id === item.user
         );
-        //console.log(searchObjectUser.firstName+" "+searchObjectUser.lastName);
-        const username =
-          searchObjectUser.firstName + " " + searchObjectUser.lastName;
+        if (searchObjectUser) {
+          const Id = item._id;
+          console.log("Id is=>", Id);
+          //console.log("1");
+          //console.log(user1)
+          //console.log(typeof(user1))
+          const { firstName, lastName } = searchObjectUser;
+          //  console.log(firstName+" "+lastName);
+          const username = firstName + " " + lastName;
+          console.log(username);
 
-        const searchObjectRole = rolesdata.data.find(
-          (roleobj) => roleobj._id === item.role
-        );
-        // console.log(searchObjectRole.name);
-        const role = searchObjectRole.name;
+          const searchObjectRole = rolesdata.data.find(
+            (roleobj) => roleobj._id === item.role
+          );
+          const role = searchObjectRole.name;
+          console.log(role);
 
-        const searchObjectStandard = standarddata.data.find(
-          (standardobj) => standardobj._id === item.standard
-        );
-        //console.log(searchObjectStandard.name);
-        const standard = searchObjectStandard.name;
+          const searchObjectStandard = standarddata.data.find(
+            (standardobj) => standardobj._id === item.standard
+          );
+          const standard = searchObjectStandard.name;
+          console.log(standard);
 
-        const searchObjectDivision = divisiondata.data.find(
-          (divisionobj) => divisionobj._id === item.division
-        );
-        //console.log(searchObjectDivision.name);
-        const division = searchObjectDivision.name;
+          const searchObjectDivision = divisiondata.data.find(
+            (divisionobj) => divisionobj._id === item.division
+          );
+          const division = searchObjectDivision.name;
+          console.log(division);
 
-        const searchObjectsubject = subjectsdata.data.find(
-          (subjectobj) => subjectobj._id === item.subject
-        );
-        //console.log(searchObjectsubject.name);
-        const subject = searchObjectsubject.name;
+          const searchObjectsubject = subjectsdata.data.find(
+            (subjectobj) => subjectobj._id === item.subject
+          );
+          const subject = searchObjectsubject.name;
+          console.log(subject);
 
-        const year = item.year;
-        //console.log(item.year);
+          const year = item.year;
+          console.log(item.year);
 
-        const userData = {
-          Id,
-          username,
-          role,
-          standard,
-          division,
-          subject,
-          year,
-        };
-        //console.log(userData);
+          console.log("=============================");
 
-        userRolesDataToDisplay1.push(userData);
-      });
+          const userData = {
+            Id,
+            username,
+            role,
+            standard,
+            division,
+            subject,
+            year,
+          };
+          console.log(userData);
+          userRolesDataToDisplay1.push(userData);
+        }
 
-      console.log(userRolesDataToDisplay1);
+        
+      }
+      // // console.log("userRolesDataToDisplay1");
+      // //  console.log(userRolesDataToDisplay1);
       set({ userRolesDataToDisplay: userRolesDataToDisplay1, error: null });
+
       set({ userroles: data, error: null });
-      set({ username: userdata.data, error: null });
+      set({ userRoleIds: userroleIds, error: null });
+      set({ users: usersdata.data, error: null });
       set({ roles: rolesdata.data, error: null });
       set({ standards: standarddata.data, error: null });
       set({ divisions: divisiondata.data, error: null });
@@ -126,6 +150,7 @@ const userrolesStore = create((set) => ({
           { userroles: [...state.userroles, response.data] }, { error: null }
         )
       );
+      
       console.log("New User role added");
     } catch (error) {
       set({ error: error.message });

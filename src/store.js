@@ -1,7 +1,7 @@
 import create from "zustand";
 import axios from "axios";
 
-const useStore = create((set) => ({
+const useStore = axios.create((set) => ({
   testResults: [],
 
   fetchTestResults: async () => {
