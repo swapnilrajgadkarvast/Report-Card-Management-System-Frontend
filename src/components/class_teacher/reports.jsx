@@ -20,6 +20,10 @@ import "jspdf-autotable";
 import { Chart } from "chart.js/auto";
 import html2canvas from "html2canvas";
 
+import axios from "axios";
+
+const http = axios.create({ baseURL: "http://127.0.0.1:3030/" });
+
 const Reports = () => {
   const {
     students,
@@ -27,6 +31,7 @@ const Reports = () => {
     divisions,
     tests,
     getReports,
+    addReport,
     // deleteStudent,
     // updateStudent,
     // addStudent,
@@ -35,51 +40,86 @@ const Reports = () => {
     getReports();
   }, []);
 
-  let div = "";
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandardReport, setSelectedStandard] = useState("");
-  const [selectedDivisionReport, setSelectedDivision] = useState("");
+  const [selectedStandard, setSelectedStandard] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [filteredStudents, setFilteredStudents] = useState([]);
+  const [filteredTests, setFilteredTests] = useState([]);
+
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
+  const [filteredResults, setFilteredResults] = useState([]);
 
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
+  const [obtainedMarks, setObtainedMarks] = useState([]);
+  const [obtainedMarksGrade, setObtainedMarksGrade] = useState([]);
+  const [highestMarks, setHighestMarks] = useState([]);
+  const [averageMarks, setAverageMarks] = useState([]);
 
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
+  const [remark, setRemark] = useState("");
 
-  const handleStandardChange = (e) => {
-    console.log(e.target.value);
-    setSelectedStandard(e.target.value);
-    console.log(selectedStandardReport);
-    console.log(students);
-    const searchObjectStudent = students.filter(
-      (studentobj) => studentobj.standard === e.target.value
+  const handleStandardChange = (event) => {
+    const selectedStandard = event.target.value;
+    setSelectedStandard(selectedStandard);
+
+    // Filter students based on the selected standard and division
+    const filteredStudents = students.filter(
+      (student) =>
+        student.standard === selectedStandard &&
+        student.division === selectedDivision
     );
 
-    const searchObjectDivisionwiseStudent = searchObjectStudent.filter(
-      (studentobj) => studentobj.division === div
+    // console.log(
+    //   "Filter students based on the selected standard and division -->"
+    // );
+    // console.log(filteredStudents);
+
+    setSelectedStudent("");
+    setFilteredStudents(filteredStudents);
+
+    // Filter tests based on the selected standard and division
+    const filteredTests = tests.filter(
+      (testName) =>
+        testName.standard === selectedStandard &&
+        testName.division === selectedDivision
     );
 
-    console.log(searchObjectStudent);
-    console.log(searchObjectDivisionwiseStudent);
+    // console.log("Filter tests based on the selected standard and division -->");
+    // console.log(filteredTests);
+
+    setSelectedTest("");
+    setFilteredTests(filteredTests);
   };
 
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-    div = e.target.vlaue;
+  const handleDivisionChange = (event) => {
+    const selectedDivision = event.target.value;
+    setSelectedDivision(selectedDivision);
+
+    // Filter students based on the selected standard and division
+    const filteredStudents = students.filter(
+      (student) =>
+        student.standard === selectedStandard &&
+        student.division === selectedDivision
+    );
+
+    // console.log(
+    //   "Filter students based on the selected standard and division -->"
+    // );
+    // console.log(filteredStudents);
+
+    setSelectedStudent("");
+    setFilteredStudents(filteredStudents);
+
+    // Filter tests based on the selected standard and division
+    const filteredTests = tests.filter(
+      (testName) =>
+        testName.standard === selectedStandard &&
+        testName.division === selectedDivision
+    );
+
+    // console.log("Filter tests based on the selected standard and division -->");
+    // console.log(filteredTests);
+
+    setSelectedTest("");
+    setFilteredTests(filteredTests);
   };
 
   const handleStudentChange = (e) => {
@@ -87,70 +127,273 @@ const Reports = () => {
   };
 
   const handleTestChange = (e) => {
+    // fetchFilteredResults();
     setSelectedTest(e.target.value);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  // Filtered student and test data based on selected values
+  const filteredStudent = students.find(
+    (student) => student._id === selectedStudent
+  );
+  const filteredTestsonDropdown = tests.filter(
+    (test) => test.name === selectedTest
+  );
+
+  console.log("filteredStudent on dropdown");
+  console.log(filteredStudent);
+
+  // console.log("filteredTestsonDropdown on dropdown");
+  // console.log(filteredTestsonDropdown);
+
+  const filteredTestsonDropdownIds =
+    filteredTestsonDropdown.length > 0
+      ? filteredTestsonDropdown.map((test) => test._id)
+      : [];
+
+  // console.log("filteredTestsonDropdownIds on dropdown");
+  // console.log(filteredTestsonDropdownIds);
+
+  const fetchFilteredResults = async () => {
+    try {
+      const response = await http.get("/student-test-result");
+      const studentTestResults = response.data.data;
+
+      console.log("studentTestResults:", studentTestResults);
+      // console.log("filteredStudent._id:", filteredStudent._id);
+      // console.log("filteredTestsonDropdownIds:", filteredTestsonDropdownIds);
+
+      const filteredResults = studentTestResults.filter(
+        (result) =>
+          result.student === filteredStudent._id &&
+          filteredTestsonDropdownIds.includes(result.tests)
+      );
+
+      console.log("Filtered Results:", filteredResults);
+      setFilteredResults(filteredResults); // Set the filtered results in state
+
+      // Call pdfData with the filtered results
+      const { obtainedMarks, obtainedMarksGrade, highestMarks, averageMarks } =
+        await pdfData(filteredResults);
+
+      console.log("Obtained Marks:", obtainedMarks);
+      console.log("Obtained Marks Grade", obtainedMarksGrade);
+      console.log("Highest Marks:", highestMarks);
+      console.log("Average Marks:", averageMarks);
+
+      setObtainedMarks(obtainedMarks);
+      setObtainedMarksGrade(obtainedMarksGrade);
+      setHighestMarks(highestMarks);
+      setAverageMarks(averageMarks);
+    } catch (error) {
+      console.error("Error fetching filtered results:", error);
+    }
   };
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
+  useEffect(() => {
+    fetchFilteredResults();
+  }, [selectedTest]);
+
+  const pdfData = async (filteredResults) => {
+    const obtainedMarks = filteredResults.map((result) => result.obtainedMarks);
+    const obtainedMarksGrade = obtainedMarks.map((marks) => {
+      if (marks >= 90 && marks <= 100) {
+        return "A+";
+      } else if (marks >= 80 && marks < 90) {
+        return "A";
+      } else if (marks >= 70 && marks < 80) {
+        return "B+";
+      } else if (marks >= 60 && marks < 70) {
+        return "B";
+      } else if (marks >= 50 && marks < 60) {
+        return "C";
+      } else if (marks >= 35 && marks < 50) {
+        return "D";
+      } else {
+        return "Fail";
+      }
+    });
+
+    const testIds = filteredResults.map((result) => result.tests);
+    try {
+      const response = await http.get("/tests");
+      const testData = response.data.data;
+
+      const highestMarks = testIds.map((testId) => {
+        const test = testData.find((test) => test._id === testId);
+        return test ? test.highestMarks : null;
+      });
+
+      const averageMarks = testIds.map((testId) => {
+        const test = testData.find((test) => test._id === testId);
+        return test ? test.averageMarks : null;
+      });
+
+      // console.log("Obtained Marks:", obtainedMarks);
+      // console.log("Highest Marks:", highestMarks);
+      // console.log("Average Marks:", averageMarks);
+
+      return {
+        obtainedMarks,
+        obtainedMarksGrade,
+        highestMarks,
+        averageMarks,
+      };
+    } catch (error) {
+      console.error("Error in pdfData:", error);
+      return null; // Return null or handle the error appropriately
+    }
   };
+
+  // Separate component that renders the filtered results table
+  const FilteredResultsTable = ({ filteredResults }) => {
+    const [testsData, setTestsData] = useState([]);
+    const [subjectData, setSubjectData] = useState([]);
+    const [subjects, setSubjects] = useState([]);
+
+    const fetchData = async () => {
+      try {
+        const testsApi = await http.get("/tests");
+        const testsData = testsApi.data.data;
+        console.log("Tests Data");
+        console.log(testsData);
+        setTestsData(testsData);
+
+        const subjectsApi = await http.get("/subjects");
+        const subjectData = subjectsApi.data.data;
+        // console.log("Subject Data");
+        // console.log(subjectData);
+
+        const subjectNames = subjectData.map((subject) => subject.name);
+        console.log("Subject Names");
+        console.log(subjectNames);
+        setSubjects(subjectNames);
+
+        // console.log("Filtered Results :");
+        // console.log(filteredResults);
+        setSubjectData(subjectData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
+
+    return (
+      <table className="w-full h-20 border border-white mb-2">
+        <thead>
+          <tr>
+            {filteredResults.map((result, index) => {
+              const test = testsData.find((test) => test._id === result.tests);
+              // console.log("Test : ", test);
+              const subject = subjectData.find(
+                (subject) => subject._id === test.subject
+              );
+              // console.log("Subject :", subject);
+              const subjectName = subject ? subject.name : "Unknown";
+
+              return (
+                <th
+                  className="border-b border-r border-white text-center"
+                  key={index}
+                >
+                  {subjectName}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {filteredResults.map((result, index) => (
+              <td
+                className="border-b border-r border-white text-center font-bold"
+                key={index}
+              >
+                {result.obtainedMarks}/100
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    );
+  };
+
+  const fetchObtainedFinalResult = (filteredResults) => {
+    let totalMarks = 0;
+    let obtainedMarks = 0;
+    let grade = "";
+
+    // Calculate total marks and obtained marks
+    filteredResults.forEach((result) => {
+      totalMarks += 100; // Assuming each test is out of 100 marks
+      obtainedMarks += result.obtainedMarks;
+    });
+
+    // Calculate percentage
+    const percentage = (obtainedMarks / totalMarks) * 100;
+
+    // Determine the grade based on the percentage
+    if (percentage > 70) {
+      grade = "Distinction";
+    } else if (percentage >= 35) {
+      grade = "Pass";
+    } else {
+      grade = "Fail";
+    }
+
+    // Render the total marks, percentage, and grade
+    const resultCalculation = (
+      <div className="flex justify-between mt-4">
+        <div>
+          Total Marks: <br />
+          <span className="font-bold">{obtainedMarks}</span>
+        </div>
+        <div>
+          Percentage : <br />
+          <span className="font-bold">{percentage.toFixed(2)}%</span>
+        </div>
+        <div>
+          Grade: <br />
+          <span
+            className={
+              grade === "Fail"
+                ? "font-bold text-red-600"
+                : grade === "Pass"
+                ? "font-bold text-green-600"
+                : "font-bold text-purple-900"
+            }
+          >
+            {grade}
+          </span>
+        </div>
+      </div>
+    );
+
+    // Return an object with JSX element and grade property
+    return {
+      resultCalculation,
+      grade,
+    };
+  };
+  const result = fetchObtainedFinalResult(filteredResults);
+  const grade = result.grade;
+  // console.log("Grade", grade);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic for handling form submission
-  };
+    // Retrieve the necessary form data
+    const reportData = {
+      student: filteredStudent._id,
+      remark: remark,
+      reportFilePath: "\\reports",
+      rcn: filteredStudent._id + filteredTestsonDropdownIds[0],
+    };
 
-  const studentDatas = [
-    {
-      id: 1,
-      image: random_profile_pic1,
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: {
-        parentName: "Subhash Rajgadkar",
-        phoneNumber: 8889991110,
-        parentEmail: "subhash@gmail.com",
-        parentAddress: "Pragati Nagar, Wani-445304",
-        relation: "Father",
-      },
-      averageMarks: {
-        English: 65,
-        Hindi: 65,
-        Marathi: 65,
-        Science: 65,
-        Math: 65,
-      },
-      highestMarks: {
-        English: 93,
-        Hindi: 93,
-        Marathi: 93,
-        Science: 93,
-        Math: 93,
-      },
-      obtainedMarks: {
-        English: 67,
-        Hindi: 78,
-        Marathi: 63,
-        Science: 79,
-        Math: 83,
-      },
-      totalMarks: 370,
-      percentage: 74,
-      grade: "Distinction",
-    },
-  ];
+    // Call the addReport function and pass the reportData
+    addReport(reportData);
+  };
 
   const generatePDF = async () => {
     const doc = new jsPDF({
@@ -163,25 +406,30 @@ const Reports = () => {
     doc.text("Student Report", 10, 10);
 
     doc.setFontSize(12);
-    doc.text("Student Name: " + studentDatas[0].studentName, 10, 20);
-    doc.text("Grade: " + studentDatas[0].grade, 10, 30);
+    doc.text(
+      "Student Name: " +
+        `${filteredStudent.firstName} ${filteredStudent.middleName} ${filteredStudent.lastName} `,
+      10,
+      20
+    );
+    doc.text("Grade: " + grade, 10, 30);
 
     doc.setFontSize(14);
-    doc.text("Obtained Marks", 10, 40);
+    doc.text("Obtained Grade", 10, 40);
 
-    const obtainedMarksData = [
-      ["Subject", "Obtained Marks"],
-      ["English", studentDatas[0].obtainedMarks.English],
-      ["Hindi", studentDatas[0].obtainedMarks.Hindi],
-      ["Marathi", studentDatas[0].obtainedMarks.Marathi],
-      ["Science", studentDatas[0].obtainedMarks.Science],
-      ["Math", studentDatas[0].obtainedMarks.Math],
+    const obtainedMarksGradeData = [
+      ["Subject", "Obtained Marks Grade"],
+      ["English", obtainedMarksGrade[0]],
+      ["Hindi", obtainedMarksGrade[1]],
+      ["Marathi", obtainedMarksGrade[2]],
+      ["Science", obtainedMarksGrade[3]],
+      ["Mathematics", obtainedMarksGrade[4]],
     ];
 
     doc.autoTable({
       startY: 50,
       head: [["Subject", "Obtained Marks"]],
-      body: obtainedMarksData.slice(1),
+      body: obtainedMarksGradeData.slice(1),
     });
 
     doc.setFontSize(14);
@@ -218,45 +466,27 @@ const Reports = () => {
     const marksChart = new Chart(chartCanvas, {
       type: "bar",
       data: {
-        labels: ["English", "Hindi", "Marathi", "Science", "Math"],
+        labels: ["English", "Hindi", "Marathi", "Science", "Mathematics"],
         datasets: [
           {
             label: "Obtained Marks",
-            data: [
-              studentDatas[0].obtainedMarks.English,
-              studentDatas[0].obtainedMarks.Hindi,
-              studentDatas[0].obtainedMarks.Marathi,
-              studentDatas[0].obtainedMarks.Science,
-              studentDatas[0].obtainedMarks.Math,
-            ],
-            backgroundColor: "rgba(	78, 60, 111, 1)",
+            data: obtainedMarks,
+            backgroundColor: "rgba(78, 60, 111, 1)",
             borderColor: "rgba(255, 255, 255, 1)",
             borderWidth: 1,
           },
           {
             label: "Average Marks",
-            data: [
-              studentDatas[0].averageMarks.English,
-              studentDatas[0].averageMarks.Hindi,
-              studentDatas[0].averageMarks.Marathi,
-              studentDatas[0].averageMarks.Science,
-              studentDatas[0].averageMarks.Math,
-            ],
+            data: averageMarks,
             backgroundColor: "rgba(75, 192, 192, 1)",
             borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,
           },
           {
             label: "Highest Marks",
-            data: [
-              studentDatas[0].highestMarks.English,
-              studentDatas[0].highestMarks.Hindi,
-              studentDatas[0].highestMarks.Marathi,
-              studentDatas[0].highestMarks.Science,
-              studentDatas[0].highestMarks.Math,
-            ],
-            backgroundColor: "rgba(	21, 103, 96, 1)",
-            borderColor: "rgba(	21, 103, 96, 0.2)",
+            data: highestMarks,
+            backgroundColor: "rgba(21, 103, 96, 1)",
+            borderColor: "rgba(21, 103, 96, 0.2)",
             borderWidth: 1,
           },
         ],
@@ -331,7 +561,7 @@ const Reports = () => {
                 <div className="flex items-center">
                   <div className="mr-4">
                     <select
-                      value={selectedStandardReport}
+                      value={selectedStandard}
                       onChange={handleStandardChange}
                       className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       style={{ width: "230px", padding: "8px" }}
@@ -350,7 +580,7 @@ const Reports = () => {
                 <div className="flex items-center">
                   <div>
                     <select
-                      value={selectedDivisionReport}
+                      value={selectedDivision}
                       onChange={handleDivisionChange}
                       className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       style={{ width: "230px", padding: "8px" }}
@@ -366,6 +596,7 @@ const Reports = () => {
                 </div>
               </div>
             </div>
+
             <div className=" grid grid-cols-12 mt-4 ml-1">
               <div className="col-span-10 flex">
                 <div className="mt-4">
@@ -384,7 +615,7 @@ const Reports = () => {
                               style={{ width: "230px", padding: "8px" }}
                             >
                               <option value="">Select Student</option>
-                              {students.map((student) => (
+                              {filteredStudents.map((student) => (
                                 <option key={student._id} value={student._id}>
                                   {student.firstName + " " + student.lastName}
                                 </option>
@@ -404,17 +635,20 @@ const Reports = () => {
                               onChange={handleTestChange}
                               className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                               style={{ width: "230px", padding: "8px" }}
+                              disabled={
+                                selectedStudent.length > 0 ? false : true
+                              }
                             >
                               <option value="">Select Test</option>
-                              {tests.map(
-                                (
-                                  testName // Iterate over test names
-                                ) => (
-                                  <option key={testName} value={testName}>
-                                    {testName}
-                                  </option>
-                                )
-                              )}
+                              {[
+                                ...new Set(
+                                  filteredTests.map((test) => test.name)
+                                ),
+                              ].map((testName) => (
+                                <option key={testName} value={testName}>
+                                  {testName}
+                                </option>
+                              ))}
                             </select>
                           </div>
                         </div>
@@ -444,16 +678,15 @@ const Reports = () => {
             </div>
 
             {/* <div className="grid grid-cols-12 mt-4 ml-1 bg-purple-300 p-3 rounded-lg"> */}
-            {studentDatas
-              .filter((student) => student.id === 2)
-              .map((student) => (
+            <form onSubmit={handleSubmit}>
+              {filteredStudent && (
                 <div
                   className="grid grid-cols-12 mt-4 ml-1 bg-purple-300 p-3 rounded-lg"
-                  key={student.id}
+                  key={filteredStudent.id}
                 >
                   <div className="col-span-2 grid" style={{ height: "160px" }}>
                     <img
-                      src={student.image}
+                      src={random_profile_pic1}
                       alt="Student"
                       className="w-full h-auto mb-2"
                     />
@@ -462,79 +695,18 @@ const Reports = () => {
                         icon={faUserGraduate}
                         className="text-purple-900 mr-2"
                       />
-                      <strong>{student.studentName}</strong>
+                      <strong>{`${filteredStudent.firstName} ${filteredStudent.lastName}`}</strong>
                     </div>
                   </div>
 
                   <div className="col-span-6 grid flex-cols-5 ml-8">
                     <div className="text-start mb-2">
-                      <strong>Roll No: {student.rollNo}</strong>
+                      <strong>Roll No: {filteredStudent.rollNumber}</strong>
                     </div>
-                    <table className="w-full h-20 border border-white mb-2">
-                      <thead>
-                        <tr>
-                          <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[0]}
-                          </th>
-                          <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[1]}
-                          </th>
-                          <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[2]}
-                          </th>
-                          <th className="border-b border-r border-white text-center">
-                            {Object.keys(student.marks)[3]}
-                          </th>
-                          <th className="border-b border-white text-center">
-                            {Object.keys(student.marks)[4]}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[0]}/100
-                          </td>
-                          <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[1]}/100
-                          </td>
-                          <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[2]}/100
-                          </td>
-                          <td className="border-b border-r border-white text-center font-bold">
-                            {Object.values(student.marks)[3]}/100
-                          </td>
-                          <td className="border-b border-white text-center font-bold">
-                            {Object.values(student.marks)[4]}/100
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <FilteredResultsTable filteredResults={filteredResults} />
+                    {result.resultCalculation}
+                    {/* {fetchObtainedFinalResult(filteredResults)} */}
 
-                    <div className="flex justify-between mt-4">
-                      <div>
-                        Total Marks: <br />
-                        <span className="font-bold">{student.totalMarks}</span>
-                      </div>
-                      <div>
-                        Percentage : <br />
-                        <span className="font-bold">{student.percentage}%</span>
-                      </div>
-                      <div>
-                        Grade: <br />
-                        <span
-                          className={
-                            student.grade === "Fail"
-                              ? "font-bold text-red-600"
-                              : student.grade === "Pass"
-                              ? "font-bold text-green-600"
-                              : "font-bold text-purple-900"
-                          }
-                        >
-                          {student.grade}
-                        </span>
-                      </div>
-                    </div>
                     <div className="mt-2">
                       Parent Details :
                       <div className="flex flex-col">
@@ -544,8 +716,8 @@ const Reports = () => {
                             className="text-purple-900 mr-2"
                           />
                           <span className="font-bold">
-                            {student.parentDetails.parentName} (
-                            {student.parentDetails.relation})
+                            {`${filteredStudent.parent.firstName} ${filteredStudent.parent.lastName}`}{" "}
+                            ({filteredStudent.parent.relationship})
                           </span>
                         </div>
                         <div>
@@ -554,7 +726,7 @@ const Reports = () => {
                             className="text-purple-900 mr-2"
                           />
                           <span className="font-bold">
-                            {student.parentDetails.phoneNumber}
+                            {filteredStudent.parent.phone}
                           </span>
                         </div>
                         <div>
@@ -563,7 +735,7 @@ const Reports = () => {
                             className="text-purple-900 mr-2"
                           />
                           <span className="font-bold">
-                            {student.parentDetails.parentEmail}
+                            {filteredStudent.parent.email}
                           </span>
                         </div>
                         <div>
@@ -572,7 +744,7 @@ const Reports = () => {
                             className="text-purple-900 mr-2"
                           />
                           <span className="font-bold">
-                            {student.parentDetails.parentAddress}
+                            {`${filteredStudent.parent.addressLine1}, ${filteredStudent.parent.addressLine2}, ${filteredStudent.parent.area}, ${filteredStudent.parent.city}, ${filteredStudent.parent.state}, ${filteredStudent.parent.zipcode}`}
                           </span>
                         </div>
                       </div>
@@ -584,6 +756,8 @@ const Reports = () => {
                       type="text"
                       className="w-full h-64 rounded-md border-gray-300 border px-3 py-1 mb-2"
                       placeholder="Enter remarks..."
+                      value={remark}
+                      onChange={(e) => setRemark(e.target.value)}
                     />
                     <div className="flex justify-end">
                       <button
@@ -601,12 +775,12 @@ const Reports = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              )}
+            </form>
           </div>
         </div>
       </div>
     </div>
-    // </div>
   );
 };
 
