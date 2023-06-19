@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -17,20 +16,30 @@ import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
 
 import studentTestResultStore from "../../stores/studentTestResultStore";
-import Modal from "../../modals/Modal";
+
+import Modal1 from "../../modals/Modal1";
+import Modal2 from "../../modals/Modal1";
+
+const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+// console.log(loginData);
+const role = loginData.user.role;
+const user = loginData.user;
+console.log("logged in user in subject-teacher/test is");
+console.log(user);
 
 const Result = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
+  const [selectedGrade, setSelectedGrade] = useState("");
 
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
+  // const handleProfileClick = () => {
+  //   setShowProfile(!showProfile);
+  // };
 
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
+  // const handleLogout = () => {
+  //   // Logic for handling logout
+  // };
 
   const handleStudentChange = (e) => {
     setSelectedStudent(e.target.value);
@@ -40,67 +49,109 @@ const Result = () => {
     setSelectedTest(e.target.value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic for handling form submission
+  const handleGradeChange = (e) => {
+    setSelectedGrade(e.target.value);
+    console.log("Selected grade is");
+    console.log(e.target.value);
   };
 
-  const [student, setStudent] = useState("");
-  const [test, setTest] = useState("");
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Logic for handling form submission
+  // };
+
+  // const [student, setStudent] = useState("");
+  // const [test, setTest] = useState("");
 
   const {
     studentTestResult,
     studentData,
     testData,
+    grades,
     getStudentTestResult,
+    studentDataForDropdown,
     addStudentTestResult,
     updateStudentTestResult,
     deleteStudentTestResult,
+    DataToDisplay,
   } = studentTestResultStore();
 
-  const [obtainedMarks, setobtainedMarks] = useState("");
+  const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
+  const [studTestResultId,setStudTestResultId]=useState("");
+
+
+  console.log("Data To Display in JSX ");
+  console.log(DataToDisplay);
 
   useEffect(() => {
-    const subjectTeacher = {
-      _id: "6487fbe7f93e19c016ccc90e",
-      user: "6475e344901674242794807b",
-      role: "6487fb1b0b1c73ffda1d7098",
-      standard: "646362d64d9b660377d2aec5",
-      division: "646364974d9b660377d2aecb",
-      subject: "646363164d9b660377d2aec6",
-      year: 2023,
-    };
-
-    getStudentTestResult(subjectTeacher).catch((error) => {
+    getStudentTestResult(user).catch((error) => {
       // Handle the error, e.g., display an error message
       console.log("Error fetching test results:", error);
     });
   }, []);
 
-  console.log("studentTestResult.....");
-  console.log(studentTestResult);
+  // console.log("studentTestResult.....");
+  // console.log(studentTestResult);
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalObtainedMarksId, setModalObtainedMarksId] = useState("");
   const [modalObtainedMarks, setModalObtainedMarks] = useState("");
 
-  const openModal = (studentTestResult) => {
-    setIsOpen(true);
-    setModalObtainedMarksId(studentTestResult._id);
-    setModalObtainedMarks(studentTestResult.obtainedMarks);
+  const [isOpen1, setIsOpen1] = useState(false);
+  const [modal1StudentId, setModal1StudentID] = useState("");
+  const [modal1TestId, setModal1TestId] = useState("");
+  const [modale1ObtainedMarks, setMoadal1ObtainedMarks] = useState("");
+  // const [modal1ObtainedGrade,setModal1ObtainedGrade]=useState("")
 
-    console.log(studentTestResult);
+  const openModal1 = () => {
+    setIsOpen1(true);
+    // setModalObtainedMarksId(studentTestResult._id);
+    //setModalObtainedMarks(studentTestResult.obtainedMarks);
+
+    //console.log(studentTestResult);
+  };
+
+  const closeModal1 = () => {
+    setIsOpen1(false);
+    //setModalObtainedMarksId("");
+    //setModalObtainedMarks("");
+  };
+
+  const openModal = (Id,obtainedMarks) => {
+    setIsOpen(true);
+    setObtainedMarksModal2(obtainedMarks);
+    setStudTestResultId(Id);
+    console.log("Marks updated successfully");
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    setModalObtainedMarksId("");
-    setModalObtainedMarks("");
+    
+  };
+
+  const handleAddMarks = async () => {
+    try {
+      const studentTestResultObj = {
+        student: selectedStudent,
+        tests: selectedTest,
+        obtainedMarks: parseInt(modale1ObtainedMarks),
+        obtainedGrade: selectedGrade,
+      };
+
+      console.log("New Test result object to add is");
+      console.log(studentTestResultObj);
+      await addStudentTestResult(studentTestResultObj);
+      // Handle success or display a success message
+      closeModal1();
+    } catch (error) {
+      // Handle error or display an error message
+    }
   };
 
   const handleUpdateMarks = async () => {
+    let parsedMarks=parseInt(obtainedMarksMpodal2)
     try {
-      await updateStudentTestResult(modalObtainedMarksId, modalObtainedMarks);
+      await updateStudentTestResult(studTestResultId,obtainedMarksMpodal2);
       // Handle success or display a success message
       closeModal();
     } catch (error) {
@@ -110,30 +161,77 @@ const Result = () => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={closeModal}>
-        <div className="items-center justify-center">
-          <div className="my-5">
-            <h2 className="text-lg font-bold">Update Obtained Marks</h2>
-            <label htmlFor="obtainedMarks" className="block mt-2 text-sm">
-              Obtained Marks:
+      <Modal1 isOpen={isOpen1} onClose={closeModal1}>
+        <div>
+          <div className="mb-2">
+            <label htmlFor="">Name of the Student : </label>
+            <label htmlFor="">Kshama</label>
+          </div>
+          <div className="mb-2">
+            <label htmlFor="">Test Name : </label>
+            <label htmlFor="" className="mb-4">
+              Class Test 1
             </label>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="obtainedMarks">Obtained Marks : </label>
             <input
               type="text"
               id="obtainedMarks"
-              value={modalObtainedMarks}
-              onChange={(e) => setModalObtainedMarks(e.target.value)}
-              className="rounded-lg border border-gray-300 px-2 py-1
-                             focus:outline-none focus:ring-2 focus:ring-purple-500"
+              value={modale1ObtainedMarks}
+              onChange={(e) => setMoadal1ObtainedMarks(e.target.value)}
             />
           </div>
-          <button
-            className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-            onClick={handleUpdateMarks}
-          >
-            Update Marks
-          </button>
+          <div className="mb-4">
+            <label htmlFor="grade">Obtained Grade : </label>
+            <select
+              value={selectedGrade}
+              onChange={handleGradeChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ width: "230px", padding: "8px" }}
+            >
+              <option value="">Select Grade</option>
+              {grades.map((grade) => (
+                <option key={grade._id} value={grade._id}>
+                  {grade.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="">
+            <button
+              className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+              onClick={()=>handleAddMarks}
+            >
+              Add Marks
+            </button>
+          </div>
         </div>
-      </Modal>
+      </Modal1>
+
+      <Modal2 isOpen={isOpen} onClose={closeModal}>
+        <div className="my-5">
+          <h2 className="text-lg font-bold">Update Obtained Marks</h2>
+          <label htmlFor="obtainedMarks" className="block mt-2 text-sm">
+            Obtained Marks:
+          </label>
+          <input
+            type="text"
+            id="obtainedMarks"
+            value={obtainedMarksMpodal2}
+            onChange={(e) => setObtainedMarksModal2(e.target.value)}
+            className="rounded-lg border border-gray-300 px-2 py-1
+                             focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+         </div>
+        <button
+          className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+          onClick={handleUpdateMarks}
+        >
+          Update Marks
+        </button>
+      </Modal2>
+
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
           <div className="grid grid-cols-12">
@@ -169,7 +267,9 @@ const Result = () => {
                 <div className="col-span-10 flex">
                   <div className="mt-4">
                     <div className="bg-purple-300 p-3 rounded-lg">
-                      <form onSubmit={handleSubmit}>
+                      <form
+                      //onSubmit={handleSubmit}
+                      >
                         <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
                           <div className="col-span-6">
                             <label htmlFor="student_name">
@@ -182,8 +282,8 @@ const Result = () => {
                               style={{ width: "230px", padding: "8px" }}
                             >
                               <option value="">Select Student</option>
-                              {studentData.map((student) => (
-                                <option key={student.id} value={student.id}>
+                              {studentDataForDropdown.map((student) => (
+                                <option key={student._id} value={student._id}>
                                   {student.firstName} {student.lastName}
                                 </option>
                               ))}
@@ -219,6 +319,7 @@ const Result = () => {
                         className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center w-40 h-16"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
                         // onClick={handleAddStudentResult}
+                        onClick={() => openModal1()}
                       >
                         <FontAwesomeIcon
                           icon={faPlus}
@@ -236,14 +337,14 @@ const Result = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {studentData.map((student) => {
+                      {DataToDisplay.map((student) => {
                         const studentTestResultData = studentTestResult.filter(
                           (result) => result.student === student._id
                         );
                         return (
                           <div
                             className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                            key={student._id}
+                            key={student.Id}
                           >
                             <div className="flex items-start">
                               <div className="col-span-2 grid">
@@ -264,7 +365,7 @@ const Result = () => {
                                       icon={faUserGraduate}
                                       className="text-purple-900 mr-2"
                                     />
-                                    {student.firstName} {student.lastName}
+                                    {student.studentname}
                                   </div>
                                   <div className="col-span-2">
                                     <strong>Roll No:</strong> <br />
@@ -299,9 +400,7 @@ const Result = () => {
                                     icon={faUser}
                                     className="text-purple-900 mr-2"
                                   />
-                                  {student.parent.firstName}{" "}
-                                  {student.parent.lastName} - (
-                                  {student.parent.relationship})
+                                  {student.parentDetails})
                                 </div>
                               </div>
                               <div className="ml-4">
@@ -314,7 +413,7 @@ const Result = () => {
                                     icon={faMapMarkerAlt}
                                     className="text-purple-900 mr-2"
                                   />
-                                  {student.parent.addressLine1}
+                                  {student.address}
                                 </div>
                               </div>
                               <div className="ml-4">
@@ -323,27 +422,13 @@ const Result = () => {
                                   style={{ width: "70px" }}
                                 >
                                   <strong>Marks:</strong>
-                                  {studentTestResultData.length > 0 ? (
-                                    studentTestResultData.map((result) => (
-                                      <div key={result._id}>
-                                        {result.obtainedMarks}
-                                        <input
-                                          type="text"
-                                          placeholder=""
-                                          className="bg-purple-300 w-10 h-10 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                        />
-                                      </div>
-                                    ))
-                                  ) : (
-                                    <span>-</span>
-                                  )}
+                                  <div>{student.obtainedMarks}</div>
                                 </div>
                               </div>
-
                               <div className="ml-4 flex items-center">
                                 <button
                                   className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2"
-                                  onClick={() => openModal(studentTestResult)}
+                                  onClick={() => openModal(student.Id,student.obtainedMarks)}
                                 >
                                   <FontAwesomeIcon
                                     icon={faEdit}

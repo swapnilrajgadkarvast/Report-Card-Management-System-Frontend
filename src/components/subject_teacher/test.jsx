@@ -11,18 +11,27 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 import testStore from "../../stores/testStore";
 import Modal from "../../modals/Modal";
+const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  // console.log(loginData);
+  const role = loginData.user.role;
+  const user = loginData.user;  
+  console.log("logged in user in subject-teacher/test is")
+  console.log(user);
+
 
 const Test = () => {
+  
+
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
   const [studentData, setStudentData] = useState({});
-  const { tests, loading, error, getTests, addTest, updateTest, deleteTest } =
+  const { tests,userroles, loading, error, getTests, addTest, updateTest, deleteTest } =
     testStore();
   const [name, setName] = useState("");
 
   useEffect(() => {
-    getTests();
+    getTests(user);
   }, []);
 
   const handleProfileClick = () => {
@@ -62,9 +71,9 @@ const Test = () => {
     const newTest = {
       name: name,
       totalMarks: 100, // Add the totalMarks value here
-      subject: "646363164d9b660377d2aec6", // Replace with the appropriate subject ID
-      standard: "646362d64d9b660377d2aec5", // Replace with the appropriate standard ID
-      division: "646364974d9b660377d2aecb", // Replace with the appropriate division ID
+      subject: userroles[0].subject, // Replace with the appropriate subject ID
+      standard: userroles[0].standard, // Replace with the appropriate standard ID
+      division: userroles[0].division, // Replace with the appropriate division ID
       year: 2023, // Replace with the appropriate year value
     };
 
@@ -119,9 +128,9 @@ const Test = () => {
   // Filter the tests array based on the provided criteria
   const filteredTests = tests.filter((test) => {
     return (
-      test.standard === "646362d64d9b660377d2aec5" &&
-      test.division === "646364974d9b660377d2aecb" &&
-      test.subject === "646363164d9b660377d2aec6"
+      test.standard === userroles[0].standard &&
+      test.division === userroles[0].division &&
+      test.subject === userroles[0].subject
     );
   });
 
