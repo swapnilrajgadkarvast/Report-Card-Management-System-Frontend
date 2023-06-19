@@ -17,7 +17,7 @@ import { useEffect } from "react";
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
 import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
-import studentStore1 from "../../stores/studentstore1";
+import studentStore from "../../stores/studentStore";
 import Modal from "../../modals/Modal";
 import Modal1 from "../../modals/Modal";
 
@@ -25,19 +25,23 @@ const Students = () => {
   const {
     standards,
     divisions,
-    studentDetails,
+    students,
     getStudents,
     deleteStudent,
     updateStudent,
     addStudent,
-  } = studentStore1();
+  } = studentStore();
   useEffect(() => {
     getStudents();
   }, []);
 
   const [showProfile, setShowProfile] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedStandard, setSelectedStandard] = useState("");
+  const [filteredStudents, setFilteredStudents] = useState([]);
+
   const [selectedDivision, setSelectedDivision] = useState("");
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
@@ -71,30 +75,30 @@ const Students = () => {
     setIsOpen1(false);
   };
 
-  const openModal = (studentData) => {
+  const openModal = (filteredStudent) => {
     setIsOpen(true);
-    setStudentId(studentData._id);
-    setFirstName(studentData.firstName);
-    setMiddleName(studentData.middleName);
-    setLastName(studentData.lastName);
-   // setStandard(studentData.standard);
-    //setDivision(studentData.division);
-    setSelectedStandard(studentData.standard)
-    setSelectedDivision(studentData.division)
-    setRollNumber(studentData.rollNumber);
-    setYear(studentData.year);
-    setDOB(studentData.dateOfBirth);
-    setpfirstName(studentData.parent.firstName);
-    setplasttName(studentData.parent.lastName);
-    setpphone(studentData.parent.phone);
-    setpemail(studentData.parent.email);
-    setpaddressLine1(studentData.parent.addressLine1);
-    setpaddressLine2(studentData.parent.addressLine2);
-    setparea(studentData.parent.area);
-    setpcity(studentData.parent.city);
-    setpstate(studentData.parent.state);
-    setpzipcode(studentData.parent.zipcode);
-    setprelationship(studentData.parent.relationship);
+    setStudentId(filteredStudent._id);
+    setFirstName(filteredStudent.firstName);
+    setMiddleName(filteredStudent.middleName);
+    setLastName(filteredStudent.lastName);
+    // setStandard(filteredStudent.standard);
+    //setDivision(filteredStudent.division);
+    setSelectedStandard(filteredStudent.standard);
+    setSelectedDivision(filteredStudent.division);
+    setRollNumber(filteredStudent.rollNumber);
+    setYear(filteredStudent.year);
+    setDOB(filteredStudent.dateOfBirth);
+    setpfirstName(filteredStudent.parent.firstName);
+    setplasttName(filteredStudent.parent.lastName);
+    setpphone(filteredStudent.parent.phone);
+    setpemail(filteredStudent.parent.email);
+    setpaddressLine1(filteredStudent.parent.addressLine1);
+    setpaddressLine2(filteredStudent.parent.addressLine2);
+    setparea(filteredStudent.parent.area);
+    setpcity(filteredStudent.parent.city);
+    setpstate(filteredStudent.parent.state);
+    setpzipcode(filteredStudent.parent.zipcode);
+    setprelationship(filteredStudent.parent.relationship);
   };
 
   const closeModal = () => {
@@ -107,29 +111,51 @@ const Students = () => {
     setShowProfile(!showProfile);
   };
 
-  const handleLogout = () => {
-    // Logic for handling logout
+  console.log("students");
+  console.log(students);
+
+  const handleStandardChange = (event) => {
+    const selectedStandard = event.target.value;
+    setSelectedStandard(selectedStandard);
+
+    // Filter students based on the selected standard and division
+    const filteredStudents = students.filter(
+      (student) =>
+        student.standard === selectedStandard &&
+        student.division === selectedDivision
+    );
+
+    console.log(
+      "Filter students based on the selected standard and division -->"
+    );
+    console.log(filteredStudents);
+
+    setSelectedStudent("");
+    setFilteredStudents(filteredStudents);
   };
 
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
+  const handleDivisionChange = (event) => {
+    const selectedDivision = event.target.value;
+    setSelectedDivision(selectedDivision);
+
+    // Filter students based on the selected standard and division
+    const filteredStudents = students.filter(
+      (student) =>
+        student.standard === selectedStandard &&
+        student.division === selectedDivision
+    );
+
+    console.log(
+      "Filter students based on the selected standard and division -->"
+    );
+    console.log(filteredStudents);
+
+    setSelectedStudent("");
+    setFilteredStudents(filteredStudents);
   };
-
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setStudentData((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //   }));
-  // };
-
   // const handleImageUpload = (e) => {
   //   const file = e.target.files[0];
-  //   setStudentData((prevState) => ({
+  //   setfilteredStudent((prevState) => ({
   //     ...prevState,
   //     image: file,
   //   }));
@@ -202,7 +228,7 @@ const Students = () => {
                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 style={{ width: "230px", padding: "8px" }}
               >
-               // <option value="">Select Standard</option>
+                // <option value="">Select Standard</option>
                 {standards.map((standard) => (
                   <option key={standard._id} value={standard._id}>
                     {standard.name}
@@ -423,8 +449,8 @@ const Students = () => {
                   firstName,
                   middleName,
                   lastName,
-                  standard:selectedStandard,
-                  division:selectedDivision,
+                  standard: selectedStandard,
+                  division: selectedDivision,
                   rollNumber,
                   year,
                   dateOfBirth,
@@ -838,116 +864,125 @@ const Students = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-200 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {studentDetails.map((studentData) => (
-                        <div
-                          className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                          key={studentData._id}
-                        >
-                          <div className="flex items-start">
-                            <div className="col-span-2 grid">
-                              <img
-                                src={""}
-                                alt="Student"
-                                className="w-36 border h-28"
-                              />
-                            </div>
-                            <div className="ml-4">
-                              <div
-                                className="grid grid-cols-2"
-                                style={{ width: "160px" }}
-                              >
-                                <div className="col-span-2">
-                                  <strong>Student </strong> <br />
+                      {filteredStudents.length > 0 ? (
+                        filteredStudents.map((filteredStudent) => (
+                          <div
+                            className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
+                            key={filteredStudent._id}
+                          >
+                            <div className="flex items-start">
+                              <div className="col-span-2 grid">
+                                <img
+                                  src={""}
+                                  alt="Student"
+                                  className="w-36 border h-28"
+                                />
+                              </div>
+                              <div className="ml-4">
+                                <div
+                                  className="grid grid-cols-2"
+                                  style={{ width: "160px" }}
+                                >
+                                  <div className="col-span-2">
+                                    <strong>Student </strong> <br />
+                                    <FontAwesomeIcon
+                                      icon={faUserGraduate}
+                                      className="text-purple-900 mr-2"
+                                    />
+                                    {filteredStudent.firstName +
+                                      " " +
+                                      filteredStudent.lastName}
+                                  </div>
+                                  <div className="col-span-2">
+                                    <strong>Roll No </strong> <br />
+                                    <FontAwesomeIcon
+                                      icon={faAward}
+                                      className="text-purple-900 mr-2"
+                                    />
+                                    {filteredStudent.rollNumber}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="ml-4">
+                                <div
+                                  className="col-span-2"
+                                  style={{ width: "130px" }}
+                                >
+                                  <strong>Birth Date </strong> <br />
                                   <FontAwesomeIcon
-                                    icon={faUserGraduate}
+                                    icon={faCalendar}
                                     className="text-purple-900 mr-2"
                                   />
-                                  {studentData.firstName +
+                                  {filteredStudent.dateOfBirth}
+                                </div>
+                              </div>
+                              <div className="ml-4">
+                                <div
+                                  className="col-span-2"
+                                  style={{ width: "175px" }}
+                                >
+                                  <strong>Parent Details </strong> <br />
+                                  <FontAwesomeIcon
+                                    icon={faUser}
+                                    className="text-purple-900 mr-2"
+                                  />
+                                  {filteredStudent.parent.firstName +
                                     " " +
-                                    studentData.lastName}
+                                    filteredStudent.parent.lastName +
+                                    "  " +
+                                    filteredStudent.parent.phone +
+                                    " " +
+                                    filteredStudent.parent.email}
                                 </div>
-                                <div className="col-span-2">
-                                  <strong>Roll No </strong> <br />
+                              </div>
+                              <div className="ml-4">
+                                <div
+                                  className="col-span-2"
+                                  style={{ width: "170px" }}
+                                >
+                                  <strong>Address </strong> <br />
                                   <FontAwesomeIcon
-                                    icon={faAward}
+                                    icon={faMapMarkerAlt}
                                     className="text-purple-900 mr-2"
                                   />
-                                  {studentData.rollNumber}
+                                  {filteredStudent.parent.addressLine1 +
+                                    " " +
+                                    filteredStudent.parent.addressLine2}
                                 </div>
                               </div>
-                            </div>
-                            <div className="ml-4">
-                              <div
-                                className="col-span-2"
-                                style={{ width: "130px" }}
-                              >
-                                <strong>Birth Date </strong> <br />
-                                <FontAwesomeIcon
-                                  icon={faCalendar}
-                                  className="text-purple-900 mr-2"
-                                />
-                                {studentData.dateOfBirth}
-                              </div>
-                            </div>
-                            <div className="ml-4">
-                              <div
-                                className="col-span-2"
-                                style={{ width: "175px" }}
-                              >
-                                <strong>Parent Details </strong> <br />
-                                <FontAwesomeIcon
-                                  icon={faUser}
-                                  className="text-purple-900 mr-2"
-                                />
-                                {studentData.parent.firstName +
-                                  " " +
-                                  studentData.parent.lastName +
-                                  "  " +
-                                  studentData.parent.phone +
-                                  " " +
-                                  studentData.parent.email}
-                              </div>
-                            </div>
-                            <div className="ml-4">
-                              <div
-                                className="col-span-2"
-                                style={{ width: "170px" }}
-                              >
-                                <strong>Address </strong> <br />
-                                <FontAwesomeIcon
-                                  icon={faMapMarkerAlt}
-                                  className="text-purple-900 mr-2"
-                                />
-                                {studentData.parent.addressLine1 +
-                                  " " +
-                                  studentData.parent.addressLine2}
-                              </div>
-                            </div>
-                            <div className="ml-4 flex items-center">
-                              <button
-                                className="rounded-full bg-purple-900 text-white px-6 py-2
+                              <div className="ml-4 flex items-center">
+                                <button
+                                  className="rounded-full bg-purple-900 text-white px-6 py-2
                              flex flex-col items-center justify-center mr-2"
-                                onClick={() => openModal(studentData)}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faEdit}
-                                  style={{ fontSize: "24px" }}
-                                />
-                              </button>
-                              <button
-                                className="rounded-full bg-purple-900 text-white px-6 py-2 
+                                  onClick={() => openModal(filteredStudent)}
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faEdit}
+                                    style={{ fontSize: "24px" }}
+                                  />
+                                </button>
+                                <button
+                                  className="rounded-full bg-purple-900 text-white px-6 py-2 
                             flex flex-col items-center justify-center"
-                                onClick={() => deleteStudent(studentData._id)}
-                              >
-                                <FontAwesomeIcon
-                                  icon={faTrash}
-                                  style={{ fontSize: "24px" }}
-                                />
-                              </button>
+                                  onClick={() =>
+                                    deleteStudent(filteredStudent._id)
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faTrash}
+                                    style={{ fontSize: "24px" }}
+                                  />
+                                </button>
+                              </div>
                             </div>
                           </div>
+                        ))
+                      ) : (
+                        <div style={{ fontWeight: "bold" }}>
+                          No Student Data Available <br />
+                          (Select Standard & Division To Show Student Data.)
                         </div>
-                      ))}
+                      )}
                     </div>
                   </div>
                 </div>

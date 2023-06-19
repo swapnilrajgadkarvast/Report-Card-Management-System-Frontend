@@ -67,10 +67,10 @@ const Reports = () => {
         student.division === selectedDivision
     );
 
-    // console.log(
-    //   "Filter students based on the selected standard and division -->"
-    // );
-    // console.log(filteredStudents);
+    console.log(
+      "Filter students based on the selected standard and division -->"
+    );
+    console.log(filteredStudents);
 
     setSelectedStudent("");
     setFilteredStudents(filteredStudents);
@@ -100,10 +100,10 @@ const Reports = () => {
         student.division === selectedDivision
     );
 
-    // console.log(
-    //   "Filter students based on the selected standard and division -->"
-    // );
-    // console.log(filteredStudents);
+    console.log(
+      "Filter students based on the selected standard and division -->"
+    );
+    console.log(filteredStudents);
 
     setSelectedStudent("");
     setFilteredStudents(filteredStudents);
@@ -381,20 +381,6 @@ const Reports = () => {
   const grade = result.grade;
   // console.log("Grade", grade);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Retrieve the necessary form data
-    const reportData = {
-      student: filteredStudent._id,
-      remark: remark,
-      reportFilePath: "\\reports",
-      rcn: filteredStudent._id + filteredTestsonDropdownIds[0],
-    };
-
-    // Call the addReport function and pass the reportData
-    addReport(reportData);
-  };
-
   const generatePDF = async () => {
     const doc = new jsPDF({
       orientation: "p",
@@ -520,12 +506,32 @@ const Reports = () => {
 
     doc.setFontSize(14);
     doc.text("Remarks", 10, doc.autoTable.previous.finalY + 100);
-    doc.text("Good Job.", 10, doc.autoTable.previous.finalY + 110);
+    doc.text(remark, 10, doc.autoTable.previous.finalY + 110);
 
-    doc.save("student_report.pdf");
+    doc.save(
+      `${filteredStudent.firstName}_${filteredStudent.lastName}_report.pdf`
+    );
 
     // Clean up
     document.body.removeChild(chartContainer);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Generate the PDF
+    await generatePDF();
+
+    // Retrieve the necessary form data
+    const reportData = {
+      student: filteredStudent._id,
+      remark: remark,
+      reportFilePath: "//report",
+      rcn: filteredStudent._id + filteredTestsonDropdownIds[0],
+    };
+
+    // Call the addReport function and pass the reportData
+    addReport(reportData);
   };
 
   return (
@@ -769,6 +775,7 @@ const Reports = () => {
                       <button
                         type="submit"
                         className="rounded-md bg-purple-900 text-white px-12 py-2"
+                        onClick={generatePDF}
                       >
                         Submit
                       </button>
