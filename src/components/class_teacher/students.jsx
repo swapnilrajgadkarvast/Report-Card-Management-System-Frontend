@@ -790,9 +790,6 @@ const Students = () => {
                     className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
                   />
                 </div>
-                <button className="ml-2 rounded-full bg-purple-900 text-white px-4 py-2">
-                  Delete Student
-                </button>
               </div>
               <div className="grid grid-cols-12 mt-4 ml-1">
                 <div className="col-span-3">
