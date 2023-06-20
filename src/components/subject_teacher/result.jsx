@@ -20,14 +20,14 @@ import studentTestResultStore from "../../stores/studentTestResultStore";
 import Modal1 from "../../modals/Modal1";
 import Modal2 from "../../modals/Modal1";
 
-const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-// console.log(loginData);
-const role = loginData.user.role;
-const user = loginData.user;
-console.log("logged in user in subject-teacher/test is");
-console.log(user);
-
 const Result = () => {
+  const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  // console.log(loginData);
+  const role = loginData.user.role;
+  const user = loginData.user;
+  console.log("logged in user in subject-teacher/test is");
+  console.log(user);
+
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
@@ -77,8 +77,7 @@ const Result = () => {
   } = studentTestResultStore();
 
   const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
-  const [studTestResultId,setStudTestResultId]=useState("");
-
+  const [studTestResultId, setStudTestResultId] = useState("");
 
   console.log("Data To Display in JSX ");
   console.log(DataToDisplay);
@@ -117,7 +116,7 @@ const Result = () => {
     //setModalObtainedMarks("");
   };
 
-  const openModal = (Id,obtainedMarks) => {
+  const openModal = (Id, obtainedMarks) => {
     setIsOpen(true);
     setObtainedMarksModal2(obtainedMarks);
     setStudTestResultId(Id);
@@ -126,7 +125,6 @@ const Result = () => {
 
   const closeModal = () => {
     setIsOpen(false);
-    
   };
 
   const handleAddMarks = async () => {
@@ -149,9 +147,9 @@ const Result = () => {
   };
 
   const handleUpdateMarks = async () => {
-    let parsedMarks=parseInt(obtainedMarksMpodal2)
+    let parsedMarks = parseInt(obtainedMarksMpodal2);
     try {
-      await updateStudentTestResult(studTestResultId,obtainedMarksMpodal2);
+      await updateStudentTestResult(studTestResultId, obtainedMarksMpodal2);
       // Handle success or display a success message
       closeModal();
     } catch (error) {
@@ -201,7 +199,7 @@ const Result = () => {
           <div className="">
             <button
               className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-              onClick={()=>handleAddMarks}
+              onClick={() => handleAddMarks}
             >
               Add Marks
             </button>
@@ -223,7 +221,7 @@ const Result = () => {
             className="rounded-lg border border-gray-300 px-2 py-1
                              focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
-         </div>
+        </div>
         <button
           className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
           onClick={handleUpdateMarks}
@@ -428,7 +426,9 @@ const Result = () => {
                               <div className="ml-4 flex items-center">
                                 <button
                                   className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2"
-                                  onClick={() => openModal(student.Id,student.obtainedMarks)}
+                                  onClick={() =>
+                                    openModal(student.Id, student.obtainedMarks)
+                                  }
                                 >
                                   <FontAwesomeIcon
                                     icon={faEdit}

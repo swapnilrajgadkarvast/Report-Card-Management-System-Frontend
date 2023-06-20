@@ -11,60 +11,30 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 import testStore from "../../stores/testStore";
 import Modal from "../../modals/Modal";
-const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-  // console.log(loginData);
-  const role = loginData.user.role;
-  const user = loginData.user;  
-  console.log("logged in user in subject-teacher/test is")
-  console.log(user);
-
 
 const Test = () => {
+  const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  // console.log(loginData);
+  const role = loginData.user.role;
+  const user = loginData.user;
+  console.log("logged in user in subject-teacher/test is");
+  console.log(user);
   
-
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({});
-  const { tests,userroles, loading, error, getTests, addTest, updateTest, deleteTest } =
-    testStore();
+  const {
+    tests,
+    userroles,
+    loading,
+    error,
+    getTests,
+    addTest,
+    updateTest,
+    deleteTest,
+  } = testStore();
   const [name, setName] = useState("");
 
   useEffect(() => {
     getTests(user);
   }, []);
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
-  };
-
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -17,6 +17,17 @@ const Standards = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalStandardId, setModalStandardId] = useState("");
   const [modalStandardName, setModalStandardName] = useState("");
+  const {
+    standards,
+    loading,
+    error,
+    getStandards,
+    addStandard,
+    deleteStandard,
+    updateStandard,
+  } = standardStore();
+
+  const [name, setName] = useState("");
 
   const openModal = (standard) => {
     setIsOpen(true);
@@ -30,75 +41,13 @@ const Standards = () => {
     setModalStandardName("");
   };
 
-  const [showProfile, setShowProfile] = useState(false);
-  const [name, setName] = useState("");
-
-  const {
-    standards,
-    loading,
-    error,
-    getStandards,
-    addStandard,
-    deleteStandard,
-    updateStandard,
-  } = standardStore();
-
   useEffect(() => {
     getStandards();
   }, [getStandards]);
 
-  
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  if (!standards) {
-    return null; // Or show a loading indicator
-  }
-  //  else
-  // console.log(standards.data);
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  // const handleInputChange = (e) => {
-  //  const { name, value } = e.target;
-  //   setStudentData((prevState) => ({
-  //     ...prevState,
-  //     [name]: value,
-  //  }));
-  // };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic for handling form submission
-    //console.log(studentData);
-    // Reset form after submission
-    // setStudentData({
-    //   student_name: "",
-    //   birth_date: "",
-
-    //   parent_name: "",
-    //   contact: "",
-    //   roll_no: "",
-    //   email: "",
-    //   address: "",
-    //   image: null,
-    // });
-  };
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    addStandard(name);
+    await addStandard(name);
     setName("");
   };
 
@@ -169,21 +118,21 @@ const Standards = () => {
                   <div className="mt-4 w-full">
                     <div className="bg-purple-300 p-3 rounded-lg">
                       <form onSubmit={handleSubmit}>
-                        <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
-                          <div className="col-span-6">
-                            <label htmlFor="standard_name">
-                              <strong>Standard &nbsp; </strong>
-                            </label>
-                            <input
-                              type="text"
-                              id="standard_name"
-                              name="standard_name"
-                              value={name}
-                              placeholder="Enter standard"
-                              onChange={(e) => setName(e.target.value)}
-                              className="rounded-lg border border-gray-300 px-2 py-1
-                             focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            />
+                        <div className="grid grid-cols-2 gap-16">
+                          <div className="flex items-center">
+                            <span className="font-bold text-lg mr-2 ml-2">
+                              Standard{" "}
+                            </span>
+                            <div className="mr-4 ml-2">
+                              <input
+                                type="text"
+                                placeholder="Enter Division"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                style={{ width: "230px", padding: "8px" }}
+                              />
+                            </div>
                           </div>
                         </div>
                       </form>
@@ -195,10 +144,9 @@ const Standards = () => {
                     <div className="col-span-2 ml-6 flex items-end justify-end">
                       <button
                         type="submit"
-                        className="rounded-full bg-purple-900 text-white px-6 py-2 
-                      flex flex-col items-center justify-center"
+                        className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
-                        onClick={handleClick}
+                        onClick={handleSubmit}
                       >
                         <FontAwesomeIcon
                           icon={faPlus}
