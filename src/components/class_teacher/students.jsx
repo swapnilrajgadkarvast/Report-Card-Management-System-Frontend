@@ -105,6 +105,10 @@ const Students = () => {
     //setModalRoleName("");
   };
 
+  const handleProfileClick = () => {
+    setShowProfile(!showProfile);
+  };
+
   console.log("students");
   console.log(students);
 

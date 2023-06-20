@@ -49,7 +49,7 @@ const studentTestResultStore = create((set) => ({
       // console.log("studnet data for dropdown")
       // console.log(studentDataForDropdown)
 
-      //grade datafor dropdown
+      //grade data for dropdown 
       const gradesResponse = await http.get("/grades");
       //console.log("data for grades dropdown in modal1")
       // console.log(gradesResponse.data.data);
@@ -126,36 +126,43 @@ const studentTestResultStore = create((set) => ({
             (studentTestResultMarksObj) =>
               studentTestResultMarksObj.student === searchObjectStudentData._id
           );
+         
+          const searchObjectTestName = tests.find(
+            (test) => test._id === item.tests
+          );
 
-          console.log("Array of marks");
-          console.log(searchObjectMarks);
+          console.log("Test Name is")
+          console.log(searchObjectTestName.name)
+          
+          console.log("Array of marks")
+          console.log(searchObjectMarks)
 
           console.log("=============================");
-          const Data = {
-            Id,
-            studentname,
-            rollNumber,
-            dateOfBirth,
-            parentDetails,
-            address,
-            student: item.student,
-            tests: item.tests,
-            obtainedMarks: "",
-          };
-          console.log(Data);
-          DataToDisplay1.push(Data);
-        }
-      }
-      console.log(DataToDisplay1);
-      for (const item of DataToDisplay1) {
-        const searchObjectTestMarks = filteredData.find(
-          (searchObjectTestMarksObj) =>
-            searchObjectTestMarksObj.tests === item.tests &&
-            searchObjectTestMarksObj.student === item.student
-        );
-        item.obtainedMarks = searchObjectTestMarks.obtainedMarks;
-      }
-      console.log(DataToDisplay1);
+                      const Data = {
+                        Id,
+                        studentname,
+                        rollNumber,
+                        dateOfBirth,
+                        parentDetails,
+                        address,
+                        student:item.student,
+                        tests:item.tests,
+                        testName:searchObjectTestName.name,
+                        obtainedMarks:"",
+                      };
+                      console.log(Data);
+                      DataToDisplay1.push(Data);
+                    }    
+           }
+         console.log(DataToDisplay1)
+       for(const item of DataToDisplay1 )
+       {
+         const searchObjectTestMarks= filteredData.find(
+              (searchObjectTestMarksObj) => searchObjectTestMarksObj.tests === item.tests && searchObjectTestMarksObj.student===item.student 
+            );
+           item.obtainedMarks=searchObjectTestMarks.obtainedMarks
+       }
+       console.log(DataToDisplay1)
 
       set({
         user: loginUserData.user,
