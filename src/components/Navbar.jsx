@@ -129,6 +129,7 @@ const Navbar = ({ setLogin }) => {
       </div>
       <div className="flex items-center space-x-4">
         <div className="relative">
+          <div className="text-white">{user.username}</div>
           <button
             onClick={handleProfileClick}
             className="flex items-center focus:outline-none"

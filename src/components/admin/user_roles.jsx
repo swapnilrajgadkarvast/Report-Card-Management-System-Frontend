@@ -19,7 +19,8 @@ import logo from "../../images/rcms_logo_small.jpg";
 import userrolesStore from "../../stores/userrolesStore";
 import { useEffect } from "react";
 import Modal from "../../modals/Modal";
-
+import Modal1 from "../../modals/Modal1";
+import { set } from "date-fns";
 const UserRoles = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
@@ -40,6 +41,7 @@ const UserRoles = () => {
     getUserRoles,
     addUserRole,
     deleteUserRole,
+    updateUserRole,
   } = userrolesStore();
 
   useEffect(() => {
@@ -121,90 +123,174 @@ const UserRoles = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [modalUserName, setModalUserName] = useState("");
+  const [modalUserId, setModalUserId] = useState("");
+  const [modalRoleId, setModalRoleId] = useState("");
   const [modalRole, setModalRole] = useState("");
+  const [modalStandardId, setModalStandardId] = useState("");
   const [modalStandard, setModalStandard] = useState("");
+  const [modalDivisionId, setModalDivisionId] = useState("");
   const [modalDivision, setModalDivision] = useState("");
+  const [modalSubjectId, setModalSubjectId] = useState("");
   const [modalSubject, setModalSubject] = useState("");
   const [modalYear, setModalYear] = useState("");
+  const [modalUserRoleId, setModalUserRoleId] = useState("");
 
-  const openModal = (role) => {
+  const openModal = (data) => {
+    setSelectedUser("");
+    setSelectedRole("");
+    setSelectedStandard("");
+    setSelectedDivision("");
+    setSelectedSubject("");
+    setSelectedYear("");
+  
     setIsOpen(true);
-    //setModalRoleId(role._id);
-    //setModalRoleName(role.name);
+    setModalUserRoleId(data.Id);
+    setModalUserId(data.userId);
+    setModalUserName(data.username);
+    setModalRoleId(data.roleId);
+    setModalRole(data.role);
+    setModalStandardId(data.standardId);
+    setModalStandard(data.standard);
+    setModalDivisionId(data.divisionId);
+    setModalDivision(data.division);
+    setModalSubjectId(data.subjectId);
+    setModalSubject(data.subject);
+    setModalYear(data.year);
   };
 
   const closeModal = () => {
     setIsOpen(false);
-    //setModalRoleId("");
-    //setModalRoleName("");
-  };
+    setModalUserRoleId("");
+    setModalUserId("");
+    setModalUserName("");
+    setModalRoleId("");
+    setModalRole("");
+    setModalStandardId("");
+    setModalStandard("");
+    setModalDivisionId("");
+    setModalDivision("");
+    setModalSubjectId("");
+    setModalSubject("");
+    setModalYear("")  };
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onClose={closeModal}
-        // data={modalGradeId}
-        // data2={modalGradeName}
-        // data3={modalGradeStart}
-        // data4={modalGradeEnd}
-      >
+      <Modal1 isOpen={isOpen} onClose={closeModal}>
         <div className="mb-2 bg-slate-200">
           <div className="h-10 w-40 mb-2">
             <h2 className="text-xl ">Update User Role</h2>
           </div>
           <div className="mb-2">
             <label className="ml-8">Enter User Name :</label>
-            <input
-              type="text"
-              value={modalUserName}
-              onChange={(e) => {
-                //setModalUserName(e.target.value);
-              }}
-              className="mr-2 rounded-lg border border-gray-300 px-2 py-1
-                         focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+            <select
+              value={selectedUser}
+              onChange={handleUserChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 
+                              focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ width: "200px", padding: "8px" }}
+            >
+              <option value={modalUserId}>{modalUserName}</option>
+              {users.map((username) => (
+                <option key={username._id} value={username._id}>
+                  {username.firstName + "   " + username.lastName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="mb-2">
-            <label>Enter Role :</label>
-            <input
-              type="text"
-              //  value={modalGradeStart}
-              onChange={(e) => {
-                // setModalGradeStart(e.target.value);
-              }}
-              className="rounded-lg border border-gray-300 px-2 py-1
-                         focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+            <label className="ml-16 ">Enter Role  :</label>
+            <select
+              value={selectedRole}
+              onChange={handleRoleChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ width: "200px", padding: "8px" }}
+            >
+              <option value={modalRoleId}>{modalRole}</option>
+              {roles.map((role) => (
+                <option key={role._id} value={role._id}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
           </div>
-          <div>
-            <label>Standard :</label>
-            <input
-              type="text"
-              // value={modalGradeEnd}
-              onChange={(e) => {
-                // setModalGradeEnd(e.target.value);
-              }}
-              className="rounded-lg border border-gray-300 px-2 py-1
-                         focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+          <div className="mb-2">
+            <label className="ml-16">Standard :</label>
+            <select
+              value={selectedStandard}
+              onChange={handleStandardChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none 
+                            focus:ring-2 focus:ring-purple-500"
+              style={{ width: "200px", padding: "8px" }}
+            >
+              <option value={modalStandardId}>{modalStandard}</option>
+              {standards.map((standard) => (
+                <option key={standard._id} value={standard._id}>
+                  {standard.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="ml-8">Enter Division :</label>
+            <select
+              value={selectedDivision}
+              onChange={handleStandardChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none 
+                            focus:ring-2 focus:ring-purple-500"
+              style={{ width: "200px", padding: "8px" }}
+            >
+              <option value={modalDivisionId}>{modalDivision}</option>
+              {divisions.map((division) => (
+                <option key={division._id} value={division._id}>
+                  {division.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="ml-8">Enter Subject :</label>
+            <select
+              value={selectedSubject}
+              onChange={handleSubjectChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 
+                            focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ width: "200px", padding: "8px" }}
+            >
+              <option value={modalSubjectId}>{modalSubject}</option>
+              {subjects.map((subject) => (
+                <option key={subject._id} value={subject._id}>
+                  {subject.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="ml-16">Enter Year :</label>
+            <select
+              value={selectedYear}
+              onChange={handleYearChange}
+              className="rounded-lg border border-gray-300 px-2 py-1 
+                            focus:outline-none focus:ring-2 focus:ring-purple-500"
+              style={{ width: "200px", padding: "8px" }}
+            >
+              <option value={modalYear}>{modalYear}</option>
+              <option value="2022" key="2022">
+                2022
+              </option>
+              <option value="2023" key="2023">
+                2023
+              </option>
+            </select>
           </div>
         </div>
         <button
           className="rounded-full bg-purple-900 text-white px-6 py-2 
-                        flex flex-col items-center justify-center"
-          // onClick={() =>{
-          //   console.log(modalGradeName);
-          //   updateGrade(modalGradeId, {
-          //     name:modalGradeName,
-          //     start:modalGradeStart,
-          //     end:modalGradeEnd,
-          //   })}
-          // }
+                        flex flex-col items-center justify-center ml-28"
+          onClick={handleUpdateUserRole}
         >
           Update
         </button>
-      </Modal>
+      </Modal1>
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
           <div className="grid grid-cols-12">

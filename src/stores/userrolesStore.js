@@ -46,36 +46,47 @@ const userrolesStore = create((set) => ({
         );
         if (searchObjectUser) {
           const { firstName, lastName } = searchObjectUser;
+          const userId=searchObjectUser._id
+          
+          //  console.log(firstName+" "+lastName);
           const username = firstName + " " + lastName;
 
           const searchObjectRole = rolesdata.find(
             (roleobj) => roleobj._id === item.role
           );
           const role = searchObjectRole.name;
+          console.log(role);
 
           const searchObjectStandard = standarddata.find(
             (standardobj) => standardobj._id === item.standard
           );
           const standard = searchObjectStandard.name;
+          console.log(standard);
 
           const searchObjectDivision = divisiondata.find(
             (divisionobj) => divisionobj._id === item.division
           );
           const division = searchObjectDivision.name;
+          console.log(division);
 
           const searchObjectSubject = subjectsdata.find(
             (subjectobj) => subjectobj._id === item.subject
           );
-          const subject = searchObjectSubject.name;
+          const subject = searchObjectsubject.name;
+          console.log(subject);
 
           const year = item.year;
 
           const userData = {
-            Id: item._id,
+            Id,
             username,
+            roleId,
             role,
+            standardId,
             standard,
+            divisionId,
             division,
+            subjectId,
             subject,
             year,
           };
@@ -131,13 +142,23 @@ const userrolesStore = create((set) => ({
     set({ loading: false });
   },
 
-  updateUserRole: async (id, name) => {
+  updateUserRole: async (id, userRoleObj) => {
     set({ loading: true });
-    console.log(id + " " + name);
+   // console.log(id + " " + name);
     try {
-      const response = await http.patch(`/userroles/${id}`, { name });
-      //console.log(response.data)
+      const response = await http.patch(`/userroles/${id}`, userRoleObj);
+      console.log("Patch completed successfully")
+      console.log(response.data)
       set((state) => ({ userroles: [...state.userroles] }));
+
+      // set((state) => ({
+      //   userroles: state.userroles.map((userrole) =>
+      //   userrole._id === id ? { ...userrole, name: updatedName } : userrole
+      //   ),
+      //   error: null,
+      // }));
+
+
     } catch (error) {
       set({ error: error.message });
     }
