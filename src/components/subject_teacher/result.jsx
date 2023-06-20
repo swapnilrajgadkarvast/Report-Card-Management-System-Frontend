@@ -104,8 +104,6 @@ const Result = () => {
     console.log("In open modal 1")
     console.log(studentName)
     console.log(testName)
-    setModal1StudentName(studentName)
-    setModal1TestName(testName)
     //console.log(studentTestResult);
   };
 
@@ -425,7 +423,7 @@ const Result = () => {
                                   style={{ width: "70px" }}
                                 >
                                   <strong>Marks:</strong>
-                                  <div>{student.obtainedMarks}{student.testName}</div>
+                                  <div>{student.obtainedMarks}</div>
 
                                 </div>
                               </div>
