@@ -14,9 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
-
 import studentTestResultStore from "../../stores/studentTestResultStore";
-
 import Modal1 from "../../modals/Modal1";
 import Modal2 from "../../modals/Modal1";
 
