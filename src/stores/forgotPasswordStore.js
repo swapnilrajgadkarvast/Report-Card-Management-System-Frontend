@@ -13,7 +13,7 @@ const forgotPasswordStore = create((set) => ({
     email,
     temporaryPassword,
     newPassword,
-    confirmPassword
+    confirmedPassword
   ) => {
     set({ loading: true });
 
@@ -22,7 +22,7 @@ const forgotPasswordStore = create((set) => ({
         email,
         temporaryPassword,
         newPassword,
-        confirmPassword,
+        confirmedPassword,
       });
       const { data } = response;
       console.log(data);
@@ -30,6 +30,7 @@ const forgotPasswordStore = create((set) => ({
         forgotPassword: [...state.forgotPassword, data],
         error: null,
       }));
+      console.log("Password set successfully");
     } catch (error) {
       set({ error: error.message });
     }

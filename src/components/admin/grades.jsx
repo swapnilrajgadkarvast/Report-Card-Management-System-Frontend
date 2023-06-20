@@ -13,7 +13,7 @@ import logo from "../../images/rcms_logo_small.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 import { useEffect } from "react";
 import gradesStore from "../../stores/gradesStore";
-import Modal from "../../modals/Modal";
+import Modal from "../../modals/Modal1";
 
 const Grades = () => {
   const [isOpen, setIsOpen] = useState(false);

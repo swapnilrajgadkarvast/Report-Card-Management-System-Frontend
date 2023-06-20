@@ -11,7 +11,7 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 import rolesStore from "../../stores/rolesStore";
 import { useEffect } from "react";
-import Modal from "../../modals/Modal";
+import Modal from "../../modals/Modal1";
 
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";

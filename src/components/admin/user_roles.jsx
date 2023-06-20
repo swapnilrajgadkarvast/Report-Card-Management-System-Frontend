@@ -18,9 +18,8 @@ import logo from "../../images/rcms_logo_small.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 import userrolesStore from "../../stores/userrolesStore";
 import { useEffect } from "react";
-import Modal from "../../modals/Modal";
 import Modal1 from "../../modals/Modal1";
-import { set } from "date-fns";
+
 const UserRoles = () => {
   const {
     userroles,
