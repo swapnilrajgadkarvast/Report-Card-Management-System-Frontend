@@ -71,33 +71,35 @@ const Result = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
   const [studTestResultId,setStudTestResultId]=useState("");
-
   
   const [isOpen1, setIsOpen1] = useState(false);
   const [modale1ObtainedMarks, setMoadal1ObtainedMarks] = useState("");
   const [modal1StudentName,setModal1StudentName]=useState("")
   const [modal1TestName,setModal1TestName]=useState("")
 
-  const openModal1 = () => {
+  const openModal1 = (studentName,testName) => {
     setIsOpen1(true);
-    // setModalObtainedMarksId(studentTestResult._id);
-    //setModalObtainedMarks(studentTestResult.obtainedMarks);
-
+    console.log("In open modal 1")
+    console.log(studentName)
+    console.log(testName)
+    setModal1StudentName(studentName)
+    setModal1TestName(testName)
     //console.log(studentTestResult);
   };
 
   const closeModal1 = () => {
     setIsOpen1(false);
-    //setModalObtainedMarksId("");
-    //setModalObtainedMarks("");
-  };
+     };
 
   const openModal = (Id,obtainedMarks) => {
+    console.log("In open modal")
     setIsOpen(true);
     setObtainedMarksModal2(obtainedMarks);
     setStudTestResultId(Id);
-   // console.log("Marks updated successfully");
+    // console.log("Marks updated successfully");
   };
+
+
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("");
@@ -121,6 +123,7 @@ const Result = () => {
       console.log("New Test result object to add is");
       console.log(studentTestResultObj);
       await addStudentTestResult(studentTestResultObj);
+      console.log("Student Marks added successfully")
        closeModal1();
     } catch (error) {
       // Handle error or display an error message
@@ -142,16 +145,16 @@ const Result = () => {
     {/* Modal for Addition */}
       <Modal1 isOpen={isOpen1} onClose={closeModal1}>
         <div>
-          <div className="mb-2">
+          {/* <div className="mb-2"> 
             <label htmlFor="">Name of the Student : </label>
-            <label htmlFor="">{selectedStudent}</label>
+            <label htmlFor="">{modal1StudentName}</label>
           </div>
           <div className="mb-2">
             <label htmlFor="">Test Name : </label>
             <label htmlFor="" className="mb-4">
-              {selectedTest}
+              {modal1TestName}
             </label>
-          </div>
+          </div>  */}
           <div className="mb-4">
             <label htmlFor="obtainedMarks">Obtained Marks : </label>
             <input
@@ -179,8 +182,9 @@ const Result = () => {
           </div>
           <div className="">
             <button
-              className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-              onClick={()=>handleAddMarks}
+              className="rounded-full bg-purple-900 text-white px-6 py-2 
+              flex flex-col items-center justify-center ml-28"
+              onClick={handleAddMarks}
             >
               Add Marks
             </button>
@@ -298,7 +302,6 @@ const Result = () => {
                         type="submit"
                         className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center w-40 h-16"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
-                        // onClick={handleAddStudentResult}
                         onClick={() => openModal1()}
                       >
                         <FontAwesomeIcon
@@ -402,7 +405,8 @@ const Result = () => {
                                   style={{ width: "70px" }}
                                 >
                                   <strong>Marks:</strong>
-                                  <div>{student.obtainedMarks}</div>
+                                  <div>{student.obtainedMarks}{student.testName}</div>
+
                                 </div>
                               </div>
                               <div className="ml-4 flex items-center">

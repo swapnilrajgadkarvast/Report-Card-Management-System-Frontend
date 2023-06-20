@@ -47,7 +47,7 @@ const studentTestResultStore = create((set) => ({
      // console.log("studnet data for dropdown")
      // console.log(studentDataForDropdown)
 
-      //grade datafor dropdown 
+      //grade data for dropdown 
       const gradesResponse = await http.get("/grades");
       //console.log("data for grades dropdown in modal1")
      // console.log(gradesResponse.data.data);
@@ -99,14 +99,14 @@ const studentTestResultStore = create((set) => ({
         );
         if (searchObjectStudentData) {
           const Id = item._id;
-         // console.log("Test result Id is=>", Id);
+          // console.log("Test result Id is=>", Id);
           //console.log("1");
           //console.log(user1)
           //console.log(typeof(user1))
           const { firstName, lastName } = searchObjectStudentData;
           //  console.log(firstName+" "+lastName);
           const studentname = firstName + " " + lastName;
-         // console.log(studentname);
+          // console.log(studentname);
 
           const rollNumber=searchObjectStudentData.rollNumber
 
@@ -120,6 +120,13 @@ const studentTestResultStore = create((set) => ({
             (studentTestResultMarksObj) => studentTestResultMarksObj.student === searchObjectStudentData._id
           );
          
+          const searchObjectTestName = tests.find(
+            (test) => test._id === item.tests
+          );
+
+          console.log("Test Name is")
+          console.log(searchObjectTestName.name)
+          
           console.log("Array of marks")
           console.log(searchObjectMarks)
 
@@ -133,6 +140,7 @@ const studentTestResultStore = create((set) => ({
                         address,
                         student:item.student,
                         tests:item.tests,
+                        testName:searchObjectTestName.name,
                         obtainedMarks:"",
                       };
                       console.log(Data);
