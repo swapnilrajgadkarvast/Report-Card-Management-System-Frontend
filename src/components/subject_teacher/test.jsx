@@ -11,36 +11,37 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 import testStore from "../../stores/testStore";
 import Modal from "../../modals/Modal";
-const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-  // console.log(loginData);
-  const role = loginData.user.role;
-  const user = loginData.user;  
-  console.log("logged in user in subject-teacher/test is")
-  console.log(user);
-
 
 const Test = () => {
+  const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  // console.log(loginData);
+  const role = loginData.user.role;
+  const user = loginData.user;
+  console.log("logged in user in subject-teacher/test is");
+  console.log(user);
   
-
-  const [showProfile, setShowProfile] = useState(false);
-
-  const { tests,userroles, loading, error, getTests, addTest, updateTest, deleteTest } = testStore();
+  const {
+    tests,
+    userroles,
+    loading,
+    error,
+    getTests,
+    addTest,
+    updateTest,
+    deleteTest,
+  } = testStore();
   const [name, setName] = useState("");
 
   useEffect(() => {
     getTests(user);
   }, []);
 
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newTest = {
       name: name,
-      totalMarks: 100, 
-      ct: userroles[0].subject, // Replace with the appropriate subject ID
+      totalMarks: 100, // Add the totalMarks value here
+      subject: userroles[0].subject, // Replace with the appropriate subject ID
       standard: userroles[0].standard, // Replace with the appropriate standard ID
       division: userroles[0].division, // Replace with the appropriate division ID
       year: 2023, // Replace with the appropriate year value
@@ -55,6 +56,7 @@ const Test = () => {
       newTest.division,
       newTest.year
     );
+
     setName("");
   };
 

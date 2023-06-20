@@ -17,25 +17,13 @@ import Modal from "../../modals/Modal";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 
 const Roles = () => {
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
-
   const { roles, loading, error, getRoles, addRole, deleteRole, updateRole } =
-  rolesStore();
+    rolesStore();
+
   const [name, setName] = useState("");
+
   useEffect(() => {
-  getRoles();
+    getRoles();
   }, [getRoles]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -54,74 +42,13 @@ const Roles = () => {
     setModalRoleName("");
   };
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
-
-  if (!roles) {
-    return null; // Or show a loading indicator
-  }
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
-  };
-
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
-
-  const handleClick = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    addRole(name);
+    // Logic for handling form submission
+    await addRole(name);
     setName("");
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic for handling form submission
-    console.log(studentData);
-    // Reset form after submission
-    setStudentData({
-      student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
-  };
-
-  
   return (
     <>
       <Modal
@@ -189,8 +116,8 @@ const Roles = () => {
                 <div className="col-span-10 flex">
                   <div className="mt-4">
                     <div className="bg-purple-300 p-3 rounded-lg">
-                      <div className="grid grid-cols-2 gap-16">
-                        <div>
+                      <form onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-2 gap-16">
                           <div className="flex items-center">
                             <span className="font-bold text-lg mr-2 ml-2">
                               Role{" "}
@@ -209,13 +136,14 @@ const Roles = () => {
                               />
                             </div>
                           </div>
-                        </div>
-                        <div>
-                          <div className="flex items-center">
-                            <div className="mr-4 ml-2"></div>
+
+                          <div>
+                            <div className="flex items-center">
+                              <div className="mr-4 ml-2"></div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -227,7 +155,7 @@ const Roles = () => {
                         type="submit"
                         className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center w-60"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
-                        onClick={handleClick}
+                        onClick={handleSubmit}
                       >
                         <FontAwesomeIcon
                           icon={faPlus}

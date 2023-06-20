@@ -133,7 +133,7 @@ const UserRoles = () => {
       addUserRole(userrolesobj);
     }
     // Reset form after submission
-    
+
     setSelectedUser("");
     setSelectedRole("");
     setSelectedStandard("");
@@ -212,7 +212,7 @@ const UserRoles = () => {
     setSelectedDivision("");
     setSelectedSubject("");
     setSelectedYear("");
-  
+
     setIsOpen(true);
     setModalUserRoleId(data.Id);
     setModalUserId(data.userId);
@@ -241,7 +241,8 @@ const UserRoles = () => {
     setModalDivision("");
     setModalSubjectId("");
     setModalSubject("");
-    setModalYear("")  };
+    setModalYear("");
+  };
 
   return (
     <>
@@ -268,7 +269,7 @@ const UserRoles = () => {
             </select>
           </div>
           <div className="mb-2">
-            <label className="ml-16 ">Enter Role  :</label>
+            <label className="ml-16 ">Enter Role :</label>
             <select
               value={selectedRole}
               onChange={handleRoleChange}

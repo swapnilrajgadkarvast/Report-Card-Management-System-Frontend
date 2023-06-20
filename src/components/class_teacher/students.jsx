@@ -35,13 +35,11 @@ const Students = () => {
     getStudents();
   }, []);
 
-  const [showProfile, setShowProfile] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedStandard, setSelectedStandard] = useState("");
   const [filteredStudents, setFilteredStudents] = useState([]);
 
   const [selectedDivision, setSelectedDivision] = useState("");
-  const [filteredResults, setFilteredResults] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen1, setIsOpen1] = useState(false);
@@ -152,20 +150,6 @@ const Students = () => {
 
     setSelectedStudent("");
     setFilteredStudents(filteredStudents);
-  };
-  // const handleImageUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   setfilteredStudent((prevState) => ({
-  //     ...prevState,
-  //     image: file,
-  //   }));
-  // };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic for handling form submission
-
-    // Reset form after submission
   };
 
   return (

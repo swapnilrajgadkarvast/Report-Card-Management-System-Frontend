@@ -22,6 +22,39 @@ const Grades = () => {
   const [modalGradeStart, setModalGradeStart] = useState("");
   const [modalGradeEnd, setModalGradeEnd] = useState("");
 
+  const {
+    grades,
+    loading,
+    error,
+    getGrades,
+    addGrade,
+    deleteGrade,
+    updateGrade,
+  } = gradesStore();
+
+  const [name, setName] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+
+  useEffect(() => {
+    getGrades(getGrades);
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Logic for handling form submission
+    const grade = {
+      name,
+      start,
+      end,
+    };
+    console.log(grade);
+    await addGrade(grade.name, grade.start, grade.end);
+    setName("");
+    setStart("");
+    setEnd("");
+  };
+
   const openModal = (grade) => {
     setIsOpen(true);
     setModalGradeId(grade._id);
@@ -37,130 +70,6 @@ const Grades = () => {
     setModalGradeStart("");
     setModalGradeEnd("");
   };
-
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
-
-  const [name, setName] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const {
-    grades,
-    loading,
-    error,
-    getGrades,
-    addGrade,
-    deleteGrade,
-    updateGrade,
-  } = gradesStore();
-  useEffect(() => {
-    getGrades();
-  }, [getGrades]);
-
-  const handleClick = (e) => {
-    e.preventDefault();
-    const grade = {
-      name,
-      start,
-      end,
-    };
-    console.log(grade);
-    addGrade(grade);
-    setName("");
-    setStart("");
-    setEnd("");
-  };
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
-  };
-
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic for handling form submission
-    console.log(studentData);
-    // Reset form after submission
-    setStudentData({
-      student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
-  };
-
-  const studentDatas = [
-    {
-      id: 1,
-      image: null,
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: "Subhash Rajgadkar (Father)",
-      address: "Pragati Nagar, Wani-445304",
-    },
-    {
-      id: 2,
-      image: null,
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: "Rama Khamkar (Mother)",
-      address: "Pashan, Pune",
-    },
-    {
-      id: 3,
-      image: "",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
-  ];
 
   return (
     <>
@@ -216,14 +125,14 @@ const Grades = () => {
         <button
           className="rounded-full bg-purple-900 text-white px-6 py-2 
                             flex flex-col items-center justify-center"
-          onClick={() =>{
+          onClick={() => {
             console.log(modalGradeName);
             updateGrade(modalGradeId, {
-              name:modalGradeName,
-              start:modalGradeStart,
-              end:modalGradeEnd,
-            })}
-          }
+              name: modalGradeName,
+              start: modalGradeStart,
+              end: modalGradeEnd,
+            });
+          }}
         >
           Update Grade
         </button>
@@ -260,8 +169,8 @@ const Grades = () => {
                 <div className="col-span-10 flex">
                   <div className="mt-4">
                     <div className="bg-purple-300 p-3 rounded-lg">
-                      <div className="grid grid-cols-2 gap-16">
-                        <div>
+                      <form onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-2 gap-16">
                           <div className="flex items-center">
                             <span className="font-bold text-lg mr-2 ml-2">
                               Grade{" "}
@@ -279,42 +188,43 @@ const Grades = () => {
                               />
                             </div>
                           </div>
-                        </div>
-                        <div>
-                          <div className="flex items-center">
-                            <span className="font-bold text-lg mr-2 ml-2">
-                              Min{" "}
-                            </span>
-                            <div className="mr-4 ml-2">
-                              <input
-                                type="text"
-                                placeholder=""
-                                id="min_marks"
-                                name="max_martks"
-                                value={start}
-                                onChange={(e) => setStart(e.target.value)}
-                                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                style={{ width: "100px", padding: "8px" }}
-                              />
-                            </div>
-                            <span className="font-bold text-lg mr-2 ml-2">
-                              Max{" "}
-                            </span>
-                            <div className="mr-4 ml-2">
-                              <input
-                                type="text"
-                                placeholder=""
-                                id="max_marks"
-                                name="max_marks"
-                                value={end}
-                                onChange={(e) => setEnd(e.target.value)}
-                                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                                style={{ width: "100px", padding: "8px" }}
-                              />
+
+                          <div>
+                            <div className="flex items-center">
+                              <span className="font-bold text-lg mr-2 ml-2">
+                                Min{" "}
+                              </span>
+                              <div className="mr-4 ml-2">
+                                <input
+                                  type="text"
+                                  placeholder=""
+                                  id="min_marks"
+                                  name="max_martks"
+                                  value={start}
+                                  onChange={(e) => setStart(e.target.value)}
+                                  className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                  style={{ width: "100px", padding: "8px" }}
+                                />
+                              </div>
+                              <span className="font-bold text-lg mr-2 ml-2">
+                                Max{" "}
+                              </span>
+                              <div className="mr-4 ml-2">
+                                <input
+                                  type="text"
+                                  placeholder=""
+                                  id="max_marks"
+                                  name="max_marks"
+                                  value={end}
+                                  onChange={(e) => setEnd(e.target.value)}
+                                  className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                  style={{ width: "100px", padding: "8px" }}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -330,7 +240,7 @@ const Grades = () => {
                           borderRadius: "8px",
                           width: "100px",
                         }}
-                        onClick={handleClick}
+                        onClick={handleSubmit}
                       >
                         <FontAwesomeIcon
                           icon={faPlus}

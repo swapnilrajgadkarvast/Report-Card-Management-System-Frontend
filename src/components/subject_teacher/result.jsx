@@ -14,19 +14,32 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
+
 import studentTestResultStore from "../../stores/studentTestResultStore";
+
 import Modal1 from "../../modals/Modal1";
 import Modal2 from "../../modals/Modal1";
 
-const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-// console.log(loginData);
-const role = loginData.user.role;
-const user = loginData.user;
-console.log("logged in user in subject-teacher/test is");
-console.log(user);
-
 const Result = () => {
-   
+  const loginData = JSON.parse(sessionStorage.getItem("loginData"));
+  // console.log(loginData);
+  const role = loginData.user.role;
+  const user = loginData.user;
+  console.log("logged in user in subject-teacher/test is");
+  console.log(user);
+  const [showProfile, setShowProfile] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedTest, setSelectedTest] = useState("");
+  const [selectedGrade, setSelectedGrade] = useState("");
+
+  // const handleProfileClick = () => {
+  //   setShowProfile(!showProfile);
+  // };
+
+  // const handleLogout = () => {
+  //   // Logic for handling logout
+  // };
+
   const handleStudentChange = (e) => {
     setSelectedStudent(e.target.value);
   };
@@ -41,7 +54,15 @@ const Result = () => {
     console.log(e.target.value);
   };
 
-    const {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Logic for handling form submission
+  // };
+
+  // const [student, setStudent] = useState("");
+  // const [test, setTest] = useState("");
+
+  const {
     studentTestResult,
     studentData,
     testData,
@@ -60,7 +81,7 @@ const Result = () => {
 
   useEffect(() => {
     getStudentTestResult(user).catch((error) => {
-      //  display an error message
+      // Handle the error, e.g., display an error message
       console.log("Error fetching test results:", error);
     });
   }, []);
@@ -73,9 +94,10 @@ const Result = () => {
   const [studTestResultId,setStudTestResultId]=useState("");
   
   const [isOpen1, setIsOpen1] = useState(false);
+  const [modal1StudentId, setModal1StudentID] = useState("");
+  const [modal1TestId, setModal1TestId] = useState("");
   const [modale1ObtainedMarks, setMoadal1ObtainedMarks] = useState("");
-  const [modal1StudentName,setModal1StudentName]=useState("")
-  const [modal1TestName,setModal1TestName]=useState("")
+  // const [modal1ObtainedGrade,setModal1ObtainedGrade]=useState("")
 
   const openModal1 = (studentName,testName) => {
     setIsOpen1(true);
@@ -91,24 +113,23 @@ const Result = () => {
     setIsOpen1(false);
      };
 
-  const openModal = (Id,obtainedMarks) => {
+   const openModal = (Id,obtainedMarks) => {
     console.log("In open modal")
     setIsOpen(true);
     setObtainedMarksModal2(obtainedMarks);
     setStudTestResultId(Id);
+    console.log("Marks updated successfully");
     // console.log("Marks updated successfully");
   };
 
 
-  const [selectedStudent, setSelectedStudent] = useState("");
-  const [selectedTest, setSelectedTest] = useState("");
-  const [selectedGrade, setSelectedGrade] = useState("");
+  // const [selectedStudent, setSelectedStudent] = useState("");
+  // const [selectedTest, setSelectedTest] = useState("");
+  // const [selectedGrade, setSelectedGrade] = useState("");
 
 
   const closeModal = () => {
     setIsOpen(false);
-    setObtainedMarksModal2("");
-    setStudTestResultId("");    
   };
 
   const handleAddMarks = async () => {
@@ -131,9 +152,10 @@ const Result = () => {
   };
 
   const handleUpdateMarks = async () => {
-    //let parsedMarks=parseInt(obtainedMarksMpodal2)
+    let parsedMarks = parseInt(obtainedMarksMpodal2);
     try {
-      await updateStudentTestResult(studTestResultId,obtainedMarksMpodal2);
+      await updateStudentTestResult(studTestResultId, obtainedMarksMpodal2);
+      // Handle success or display a success message
       closeModal();
     } catch (error) {
       // Handle error or display an error message
@@ -142,7 +164,6 @@ const Result = () => {
 
   return (
     <>
-    {/* Modal for Addition */}
       <Modal1 isOpen={isOpen1} onClose={closeModal1}>
         <div>
           {/* <div className="mb-2"> 
@@ -192,7 +213,6 @@ const Result = () => {
         </div>
       </Modal1>
 
-      {/* Modal for updation */}
       <Modal2 isOpen={isOpen} onClose={closeModal}>
         <div className="my-5">
           <h2 className="text-lg font-bold">Update Obtained Marks</h2>
@@ -207,7 +227,7 @@ const Result = () => {
             className="rounded-lg border border-gray-300 px-2 py-1
                              focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
-         </div>
+        </div>
         <button
           className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
           onClick={handleUpdateMarks}
@@ -412,7 +432,9 @@ const Result = () => {
                               <div className="ml-4 flex items-center">
                                 <button
                                   className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2"
-                                  onClick={() => openModal(student.Id,student.obtainedMarks)}
+                                  onClick={() =>
+                                    openModal(student.Id, student.obtainedMarks)
+                                  }
                                 >
                                   <FontAwesomeIcon
                                     icon={faEdit}

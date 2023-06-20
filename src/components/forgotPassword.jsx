@@ -7,15 +7,19 @@ import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import usersStore from "../stores/usersStore";
+
+import axios from "axios";
+import forgotPasswordStore from "../stores/forgotPasswordStore";
 
 const ForgotPassword = () => {
   const schema = yup.object().shape({
     email: yup.string().min(3).max(50).required(),
-    currentPassword: yup.string().required(),
+    temporaryPassword: yup.string().required(),
     newPassword: yup.string().min(3).max(50).required(),
     confirmedPassword: yup.string().min(3).max(50).required(),
   });
+
+  const { addForgotPassword } = forgotPasswordStore();
 
   const {
     register,
@@ -27,18 +31,15 @@ const ForgotPassword = () => {
     resolver: yupResolver(schema),
   });
 
-  const { getUsers, addUsers, updateUsers, deleteUsers } = usersStore();
-
-  const onSubmitHandler = async (data) => {
+  const onSubmitHandler = async () => {
     try {
-      // Save the user data
-      await addUsers(data);
-      console.log("User Data --->");
-      console.log(data);
+      addForgotPassword(email, temporaryPassword, newPassword, confirmPassword);
+      console.log("Password updated successfully.");
+
+      // Reset the form
       reset();
-      console.log("User saved successfully.");
     } catch (error) {
-      console.error("Error saving user:", error);
+      console.error("Error updating password:", error);
     }
   };
 
@@ -67,21 +68,6 @@ const ForgotPassword = () => {
             <div className="mb-4">
               <div className="relative">
                 <FontAwesomeIcon
-                  icon={faUser}
-                  className="text-blue-500 absolute top-3 left-3"
-                />
-                <input
-                  type="text"
-                  id="username"
-                  className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  placeholder="Username"
-                  {...register("username")}
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <div className="relative">
-                <FontAwesomeIcon
                   icon={faEnvelope}
                   className="text-blue-500 absolute top-3 left-3"
                 />
@@ -91,6 +77,21 @@ const ForgotPassword = () => {
                   className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   placeholder="Email"
                   {...register("email")}
+                />
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="relative">
+                <FontAwesomeIcon
+                  icon={faLock}
+                  className="text-blue-500 absolute top-3 left-3"
+                />
+                <input
+                  type="password"
+                  id="temporary-password"
+                  className="pl-10 shadow appearance-none rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  placeholder="Temporary Password"
+                  {...register("temporaryPassword")}
                 />
               </div>
             </div>

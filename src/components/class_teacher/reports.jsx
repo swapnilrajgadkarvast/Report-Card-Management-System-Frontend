@@ -339,8 +339,10 @@ const Reports = () => {
       grade = "Distinction";
     } else if (percentage >= 35) {
       grade = "Pass";
-    } else {
+    } else if (percentage > 0) {
       grade = "Fail";
+    } else {
+      grade = "--";
     }
 
     // Render the total marks, percentage, and grade
@@ -509,7 +511,7 @@ const Reports = () => {
     doc.text(remark, 10, doc.autoTable.previous.finalY + 110);
 
     doc.save(
-      `${filteredStudent.firstName}_${filteredStudent.lastName}_report.pdf`
+      `${filteredStudent.firstName}_${filteredStudent.lastName}_${filteredTestsonDropdown[0].name}_report.pdf`
     );
 
     // Clean up
@@ -526,7 +528,7 @@ const Reports = () => {
     const reportData = {
       student: filteredStudent._id,
       remark: remark,
-      reportFilePath: "//report",
+      reportFilePath: `D:/Report Card Management/rcms_frontend/src/ReportPDFs/${filteredStudent.firstName}_${filteredStudent.lastName}_${filteredTestsonDropdown[0].name}_report.pdf`,
       rcn: filteredStudent._id + filteredTestsonDropdownIds[0],
     };
 

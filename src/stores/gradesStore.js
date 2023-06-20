@@ -23,21 +23,22 @@ const gradesStore = create((set) => ({
     set({ loading: false });
   },
 
-  addGrade: async (grade) => {
+  addGrade: async (name, start, end) => {
     set({ loading: true });
+
     try {
-      console.log(grade);
-      const response = await http.post(`/grades`, grade);
-      console.log(response.data);
-      set(
-        (state) => (
-          { grades: [...state.grades, response.data] }, { error: null }
-        )
-      );
+      const response = await http.post(`/grades`, { name, start, end });
+      const { data } = response;
+
+      // Update the local state with the new grade
+      set((state) => ({
+        grades: [...state.grades, data],
+        error: null,
+        loading: false,
+      }));
     } catch (error) {
-      set({ error: error.message });
+      set({ error: error.message, loading: false });
     }
-    set({ loading: false });
   },
 
   deleteGrade: async (id) => {

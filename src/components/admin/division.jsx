@@ -19,6 +19,16 @@ const Division = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalDivisionId, setModalDivisionId] = useState("");
   const [modalDivisionName, setModalDivisionName] = useState("");
+  const {
+    divisions,
+    loading,
+    error,
+    getDivisions,
+    addDivision,
+    deleteDivision,
+    updateDivision,
+  } = divisionStore();
+  const [name, setName] = useState("");
 
   const openModal = (division) => {
     setIsOpen(true);
@@ -32,120 +42,16 @@ const Division = () => {
     setModalDivisionName("");
   };
 
-  const {
-    divisions,
-    loading,
-    error,
-    getDivisions,
-    addDivision,
-    deleteDivision,
-    updateDivision,
-  } = divisionStore();
-
   useEffect(() => {
     getDivisions();
   }, [getDivisions]);
 
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({
-    student_name: "",
-    birth_date: "",
-    parent_name: "",
-    contact: "",
-    roll_no: "",
-    email: "",
-    address: "",
-    image: null,
-  });
-
-  const [name, setName] = useState("");
-  const handleClick = (e) => {
-    e.preventDefault();
-    addDivision(name);
-    setName("");
-  };
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
-  };
-
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Logic for handling form submission
-    console.log(studentData);
-    // Reset form after submission
-    setStudentData({
-      student_name: "",
-      birth_date: "",
-      parent_name: "",
-      contact: "",
-      roll_no: "",
-      email: "",
-      address: "",
-      image: null,
-    });
+    await addDivision(name);
+    setName("");
   };
-
-  const studentDatas = [
-    {
-      id: 1,
-      image: null,
-      studentName: "Swapnil Rajgadkar",
-      rollNo: "01",
-      birthDate: "30-09-1998",
-      parentDetails: "Subhash Rajgadkar (Father)",
-      address: "Pragati Nagar, Wani-445304",
-    },
-    {
-      id: 2,
-      image: null,
-      studentName: "Kshama Khamkar",
-      rollNo: "02",
-      birthDate: "14-02-1997",
-      parentDetails: "Rama Khamkar (Mother)",
-      address: "Pashan, Pune",
-    },
-    {
-      id: 3,
-      image: "",
-      studentName: "Rahul Sharma",
-      rollNo: "03",
-      birthDate: "14-02-1997",
-      parentDetails: "Rohit Sharma (Father)",
-      address: "Pashan, Pune",
-    },
-    // Add more student data here...
-  ];
 
   return (
     <>
@@ -215,8 +121,8 @@ const Division = () => {
                 <div className="col-span-10 flex">
                   <div className="mt-4">
                     <div className="bg-purple-300 p-3 rounded-lg">
-                      <div className="grid grid-cols-2 gap-16">
-                        <div>
+                      <form onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-2 gap-16">
                           <div className="flex items-center">
                             <span className="font-bold text-lg mr-2 ml-2">
                               Division{" "}
@@ -233,7 +139,7 @@ const Division = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </form>
                     </div>
                   </div>
                 </div>
@@ -245,7 +151,7 @@ const Division = () => {
                         type="submit"
                         className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
-                        onClick={() => addDivision(name)}
+                        onClick={handleSubmit}
                       >
                         <FontAwesomeIcon
                           icon={faPlus}
