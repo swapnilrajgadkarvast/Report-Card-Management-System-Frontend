@@ -1,22 +1,24 @@
 import React, { useState } from "react";
-import forgotPasswordImage from "../images/forgotPassword.jpg";
-import rcms_logo_small from "../images/rcms_logo_small.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-
-import axios from "axios";
 import forgotPasswordStore from "../stores/forgotPasswordStore";
+import rcms_logo_small from "../images/rcms_logo_small.jpg";
+import forgotPasswordImage from "../images/forgotPassword.jpg";
 
 const ForgotPassword = () => {
   const schema = yup.object().shape({
-    email: yup.string().min(3).max(50).required(),
+    email: yup.string().required().email(),
     temporaryPassword: yup.string().required(),
-    newPassword: yup.string().min(3).max(50).required(),
-    confirmedPassword: yup.string().min(3).max(50).required(),
+    newPassword: yup.string().required().min(6),
+    confirmPassword: yup
+      .string()
+      .required()
+      .min(6)
+      .oneOf([yup.ref("newPassword"), null], "Passwords must match"),
   });
 
   const { addForgotPassword } = forgotPasswordStore();
@@ -25,19 +27,28 @@ const ForgotPassword = () => {
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     reset,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const onSubmitHandler = async () => {
+  const [passwordUpdated, setPasswordUpdated] = useState(false);
+
+  const onSubmitHandler = async (data) => {
     try {
-      addForgotPassword(email, temporaryPassword, newPassword, confirmPassword);
+      const { email, temporaryPassword, newPassword, confirmPassword } = data;
+
+      await addForgotPassword(
+        email,
+        temporaryPassword,
+        newPassword,
+        confirmPassword
+      );
       console.log("Password updated successfully.");
 
       // Reset the form
       reset();
+      setPasswordUpdated(true);
     } catch (error) {
       console.error("Error updating password:", error);
     }
@@ -79,6 +90,7 @@ const ForgotPassword = () => {
                   {...register("email")}
                 />
               </div>
+              {errors.email && <p>{errors.email.message}</p>}
             </div>
             <div className="mb-4">
               <div className="relative">
@@ -94,6 +106,9 @@ const ForgotPassword = () => {
                   {...register("temporaryPassword")}
                 />
               </div>
+              {errors.temporaryPassword && (
+                <p>{errors.temporaryPassword.message}</p>
+              )}
             </div>
             <div className="mb-4">
               <div className="relative">
@@ -109,6 +124,7 @@ const ForgotPassword = () => {
                   {...register("newPassword")}
                 />
               </div>
+              {errors.newPassword && <p>{errors.newPassword.message}</p>}
             </div>
             <div className="mb-4">
               <div className="relative">
@@ -124,6 +140,9 @@ const ForgotPassword = () => {
                   {...register("confirmPassword")}
                 />
               </div>
+              {errors.confirmPassword && (
+                <p>{errors.confirmPassword.message}</p>
+              )}
             </div>
             <div className="flex items-center justify-between mb-4">
               <button
@@ -133,6 +152,11 @@ const ForgotPassword = () => {
                 Reset Password
               </button>
             </div>
+            {passwordUpdated && (
+              <p className="text-green-700 text-center font-bold">
+                Password changed successfully !
+              </p>
+            )}
             <div id="alreadyuser" className="form-text m-2 text-xl">
               <span>
                 Back To{" "}

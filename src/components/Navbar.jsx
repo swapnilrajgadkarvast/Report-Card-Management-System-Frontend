@@ -128,11 +128,14 @@ const Navbar = ({ setLogin }) => {
         </div>
       </div>
       <div className="flex items-center space-x-4">
-        <div className="relative">
-          <div className="text-white">{user.username}</div>
+        <div className="relative flex items-center">
+          <div>
+            <p className="text-white font-bold text-xl">{`${user.firstName} ${user.lastName}`}</p>
+            <p className="text-white ">{user.role}</p>
+          </div>
           <button
             onClick={handleProfileClick}
-            className="flex items-center focus:outline-none"
+            className="flex items-center focus:outline-none ml-4"
           >
             <img
               src={random_profile_pic1}
@@ -142,7 +145,7 @@ const Navbar = ({ setLogin }) => {
           </button>
           {/* Dropdown menu */}
           {showProfile && (
-            <div className="absolute right-0 mt-2 w-[26rem] bg-white rounded-md shadow-lg overflow-hidden z-10">
+            <div className="absolute right-0 mt-80 w-[26rem] bg-white rounded-md shadow-lg overflow-hidden z-30">
               <div className="py-4 px-4">
                 <div className="flex items-start space-x-4">
                   <div className="mr-4">

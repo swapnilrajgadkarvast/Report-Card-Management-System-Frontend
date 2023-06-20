@@ -41,14 +41,17 @@ const Register = () => {
 
   const { getUsers, addUsers, updateUsers, deleteUsers } = usersStore();
 
+  const [registered, setRegistered] = useState(false);
+
   const onSubmitHandler = async (data) => {
     try {
       // Save the user data
       await addUsers(data);
-      console.log("User Data --->");
-      console.log(data);
+      // console.log(data);
       reset();
       console.log("User saved successfully.");
+      // Set the success message state
+      setRegistered(true);
     } catch (error) {
       console.error("Error saving user:", error);
     }
@@ -176,6 +179,11 @@ const Register = () => {
                 Register
               </button>
             </div>
+            {registered && (
+              <p className="text-green-700 text-center font-bold">
+                Registered successfully!
+              </p>
+            )}
             <div id="alreadyuser" className="form-text m-2 text-xl">
               <span>
                 Already Registered{" "}

@@ -11,7 +11,7 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
-import Modal from "../../modals/Modal";
+import Modal1 from "../../modals/Modal1";
 
 const Standards = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,7 +53,7 @@ const Standards = () => {
 
   return (
     <>
-      <Modal
+      <Modal1
         isOpen={isOpen}
         onClose={closeModal}
         data={modalStandardId}
@@ -85,7 +85,7 @@ const Standards = () => {
             Update Standard
           </button>
         </div>
-      </Modal>
+      </Modal1>
 
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
