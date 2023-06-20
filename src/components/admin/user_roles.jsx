@@ -22,13 +22,6 @@ import Modal from "../../modals/Modal";
 import Modal1 from "../../modals/Modal1";
 import { set } from "date-fns";
 const UserRoles = () => {
-  const [selectedUser, setSelectedUser] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [selectedSubject, setSelectedSubject] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-
   const {
     userroles,
     userRolesDataToDisplay,
@@ -48,38 +41,62 @@ const UserRoles = () => {
     getUserRoles();
   }, []);
 
+  const [showProfile, setShowProfile] = useState(false);
+
+  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedRole, setSelectedRole] = useState("");
+  const [selectedStandard, setSelectedStandard] = useState("");
+  const [selectedDivision, setSelectedDivision] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+
+  const handleProfileClick = () => {
+    setShowProfile(!showProfile);
+  };
+
+  const handleLogout = () => {
+    // Logic for handling logout
+  };
+
   const handleUserChange = (e) => {
     setSelectedUser(e.target.value);
-    // console.log(selectedUser);
+    console.log(selectedUser);
   };
 
   const handleRoleChange = (e) => {
     setSelectedRole(e.target.value);
-    // console.log(selectedRole);
+    console.log(selectedRole);
   };
 
   const handleStandardChange = (e) => {
     setSelectedStandard(e.target.value);
-    // console.log(selectedStandard);
+    console.log(selectedStandard);
   };
 
   const handleDivisionChange = (e) => {
     setSelectedDivision(e.target.value);
-    // console.log(selectedDivision);
+    console.log(selectedDivision);
   };
 
   const handleSubjectChange = (e) => {
     setSelectedSubject(e.target.value);
-    // console.log(selectedSubject);
+    console.log(selectedSubject);
   };
 
   const handleYearChange = (e) => {
     setSelectedYear(e.target.value);
-    // console.log(selectedYear);
+    console.log(selectedYear);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    // Logic for handling form submission
+    // console.log("Selected User:", selectedUser);
+    // console.log("Selected Role:", selectedRole);
+    // console.log("Selected Standard:", selectedStandard);
+    // console.log("Selected Division:", selectedDivision);
+    // console.log("Selected Subject:", selectedSubject);
+    // console.log("Selected Year:", selectedYear);
 
     const userrolesobj = {
       user: selectedUser,
@@ -90,28 +107,81 @@ const UserRoles = () => {
       year: selectedYear,
     };
 
-    const isDuplicate = userroles.some((currentObj) => {
+    let found = false;
+    for (let i = 0; i < userroles.length; i++) {
+      let currentObj = userroles[i];
+      delete currentObj._id;
+      console.log(userrolesobj);
+      console.log(currentObj);
+      console.log("++++++++++++++++++++++++");
       // Compare the current object with the input object
-      return (
+      if (
         userrolesobj.user === currentObj.user &&
         userrolesobj.role === currentObj.role &&
         userrolesobj.standard === currentObj.standard &&
         userrolesobj.division === currentObj.division &&
         userrolesobj.subject === currentObj.subject &&
         userrolesobj.year === currentObj.year
-      );
-    });
-
-    if (!isDuplicate) {
-      try {
-        await addUserRole(userrolesobj);
-        console.log("New User role added");
-
-        // Reset form after successful submission
-        // Reset your form fields here if needed
-      } catch (error) {
-        console.error("Error adding user role:", error);
+      ) {
+        found = true;
+        console.log(found);
+        break; // No need to continue iterating if a match is found
       }
+    }
+
+    if (!found) {
+      addUserRole(userrolesobj);
+    }
+    // Reset form after submission
+
+    setSelectedUser("");
+    setSelectedRole("");
+    setSelectedStandard("");
+    setSelectedDivision("");
+    setSelectedSubject("");
+    setSelectedYear("");
+  };
+
+  const handleUpdateUserRole = async () => {
+    try {
+      let user = "";
+      let role = "";
+      let standard = "";
+      let division = "";
+      let subject = "";
+      let year = "";
+      if (selectedUser) user = selectedUser;
+      else user = modalUserId;
+
+      if (selectedRole) role = selectedRole;
+      else role = modalRoleId;
+
+      if (selectedStandard) standard = selectedStandard;
+      else standard = modalStandardId;
+
+      if (selectedDivision) division = selectedDivision;
+      else division = modalDivisionId;
+
+      if (selectedSubject) subject = selectedSubject;
+      else subject = modalSubjectId;
+
+      if (selectedYear) year = selectedYear;
+      else year = modalYear;
+
+      const userrolesobj = {
+        user,
+        role,
+        standard,
+        division,
+        subject,
+        year,
+      };
+      console.log(userrolesobj);
+      await updateUserRole(modalUserRoleId, userrolesobj);
+      // Handle success or display a success message
+      closeModal();
+    } catch (error) {
+      // Handle error or display an error message
     }
   };
 
@@ -142,7 +212,7 @@ const UserRoles = () => {
     setSelectedDivision("");
     setSelectedSubject("");
     setSelectedYear("");
-  
+
     setIsOpen(true);
     setModalUserRoleId(data.Id);
     setModalUserId(data.userId);
@@ -171,7 +241,8 @@ const UserRoles = () => {
     setModalDivision("");
     setModalSubjectId("");
     setModalSubject("");
-    setModalYear("")  };
+    setModalYear("");
+  };
 
   return (
     <>
@@ -198,7 +269,7 @@ const UserRoles = () => {
             </select>
           </div>
           <div className="mb-2">
-            <label className="ml-16 ">Enter Role  :</label>
+            <label className="ml-16 ">Enter Role :</label>
             <select
               value={selectedRole}
               onChange={handleRoleChange}
@@ -435,13 +506,12 @@ const UserRoles = () => {
                             </select>
                           </div>
                         </div>
-                        <div className="col-span-2 ml-6 mt-4 flex items-end justify-end">
+                        <div className="col-span-2 ml-6 flex items-end justify-end">
                           <button
                             type="submit"
                             className="rounded-full bg-purple-900 text-white
                            px-6 py-2 flex flex-col items-center justify-center"
                             style={{ fontSize: "13px", borderRadius: "8px" }}
-                            onSubmit={handleSubmit}
                           >
                             <FontAwesomeIcon
                               icon={faPlus}

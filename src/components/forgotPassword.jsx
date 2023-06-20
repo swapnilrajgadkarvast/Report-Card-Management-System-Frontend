@@ -31,14 +31,9 @@ const ForgotPassword = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmitHandler = async (data) => {
+  const onSubmitHandler = async () => {
     try {
-      addForgotPassword(
-        data.email,
-        data.temporaryPassword,
-        data.newPassword,
-        data.confirmPassword
-      );
+      addForgotPassword(email, temporaryPassword, newPassword, confirmPassword);
       console.log("Password updated successfully.");
 
       // Reset the form
