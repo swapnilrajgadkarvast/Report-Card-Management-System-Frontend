@@ -27,8 +27,10 @@ const divisionStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await http.post(`/division`,{name});
-      console.log(response.data)
-      set((state)=>({ divisions:[...state.divisions,response.data]},{error: null}));
+      
+      const {data}=response.data
+      console.log(data)
+      set((state)=>({ divisions:[...state.divisions,data]},{error: null}));
     } catch (error) {
       set({ error: error.message });
     }
@@ -53,7 +55,12 @@ const divisionStore = create((set) => ({
     try {
       const response = await http.patch(`/division/${id}`,{name});
       //console.log(response.data)
-      set((state)=>({divisions:[...state.divisions]}))
+      set((state) => ({
+        divisions: state.divisions.map((division) =>
+        division._id === id ? { ...division, name: name } : division
+        ),
+    }))
+     // set((state)=>({divisions:[...state.divisions]}))
     } catch (error) {
       set({ error: error.message });
     }

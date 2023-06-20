@@ -23,11 +23,8 @@ const Test = () => {
   
 
   const [showProfile, setShowProfile] = useState(false);
-  const [selectedStandard, setSelectedStandard] = useState("");
-  const [selectedDivision, setSelectedDivision] = useState("");
-  const [studentData, setStudentData] = useState({});
-  const { tests,userroles, loading, error, getTests, addTest, updateTest, deleteTest } =
-    testStore();
+
+  const { tests,userroles, loading, error, getTests, addTest, updateTest, deleteTest } = testStore();
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -38,40 +35,12 @@ const Test = () => {
     setShowProfile(!showProfile);
   };
 
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
-
-  const handleStandardChange = (e) => {
-    setSelectedStandard(e.target.value);
-  };
-
-  const handleDivisionChange = (e) => {
-    setSelectedDivision(e.target.value);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    setStudentData((prevState) => ({
-      ...prevState,
-      image: file,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     const newTest = {
       name: name,
-      totalMarks: 100, // Add the totalMarks value here
-      subject: userroles[0].subject, // Replace with the appropriate subject ID
+      totalMarks: 100, 
+      ct: userroles[0].subject, // Replace with the appropriate subject ID
       standard: userroles[0].standard, // Replace with the appropriate standard ID
       division: userroles[0].division, // Replace with the appropriate division ID
       year: 2023, // Replace with the appropriate year value
@@ -86,7 +55,6 @@ const Test = () => {
       newTest.division,
       newTest.year
     );
-
     setName("");
   };
 

@@ -76,6 +76,8 @@ const userrolesStore = create((set) => ({
           //console.log(user1)
           //console.log(typeof(user1))
           const { firstName, lastName } = searchObjectUser;
+          const userId=searchObjectUser._id
+          
           //  console.log(firstName+" "+lastName);
           const username = firstName + " " + lastName;
           console.log(username);
@@ -84,24 +86,28 @@ const userrolesStore = create((set) => ({
             (roleobj) => roleobj._id === item.role
           );
           const role = searchObjectRole.name;
+          const roleId=searchObjectRole._id
           console.log(role);
 
           const searchObjectStandard = standarddata.data.find(
             (standardobj) => standardobj._id === item.standard
           );
           const standard = searchObjectStandard.name;
+          const standardId=searchObjectStandard._id
           console.log(standard);
 
           const searchObjectDivision = divisiondata.data.find(
             (divisionobj) => divisionobj._id === item.division
           );
           const division = searchObjectDivision.name;
+          const divisionId=searchObjectDivision._id
           console.log(division);
 
           const searchObjectsubject = subjectsdata.data.find(
             (subjectobj) => subjectobj._id === item.subject
           );
           const subject = searchObjectsubject.name;
+          const subjectId=searchObjectsubject._id
           console.log(subject);
 
           const year = item.year;
@@ -111,10 +117,15 @@ const userrolesStore = create((set) => ({
 
           const userData = {
             Id,
+            userId,
             username,
+            roleId,
             role,
+            standardId,
             standard,
+            divisionId,
             division,
+            subjectId,
             subject,
             year,
           };
@@ -174,13 +185,23 @@ const userrolesStore = create((set) => ({
     set({ loading: false });
   },
 
-  updateUserRole: async (id, name) => {
+  updateUserRole: async (id, userRoleObj) => {
     set({ loading: true });
-    console.log(id + " " + name);
+   // console.log(id + " " + name);
     try {
-      const response = await http.patch(`/userroles/${id}`, { name });
-      //console.log(response.data)
+      const response = await http.patch(`/userroles/${id}`, userRoleObj);
+      console.log("Patch completed successfully")
+      console.log(response.data)
       set((state) => ({ userroles: [...state.userroles] }));
+
+      // set((state) => ({
+      //   userroles: state.userroles.map((userrole) =>
+      //   userrole._id === id ? { ...userrole, name: updatedName } : userrole
+      //   ),
+      //   error: null,
+      // }));
+
+
     } catch (error) {
       set({ error: error.message });
     }

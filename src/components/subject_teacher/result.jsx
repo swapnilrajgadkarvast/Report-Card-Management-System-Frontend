@@ -14,9 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
 import random_profile_pic1 from "../../images/random_profile_pic.jpg";
-
 import studentTestResultStore from "../../stores/studentTestResultStore";
-
 import Modal1 from "../../modals/Modal1";
 import Modal2 from "../../modals/Modal1";
 
@@ -28,19 +26,7 @@ console.log("logged in user in subject-teacher/test is");
 console.log(user);
 
 const Result = () => {
-  const [showProfile, setShowProfile] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState("");
-  const [selectedTest, setSelectedTest] = useState("");
-  const [selectedGrade, setSelectedGrade] = useState("");
-
-  // const handleProfileClick = () => {
-  //   setShowProfile(!showProfile);
-  // };
-
-  // const handleLogout = () => {
-  //   // Logic for handling logout
-  // };
-
+   
   const handleStudentChange = (e) => {
     setSelectedStudent(e.target.value);
   };
@@ -55,15 +41,7 @@ const Result = () => {
     console.log(e.target.value);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Logic for handling form submission
-  // };
-
-  // const [student, setStudent] = useState("");
-  // const [test, setTest] = useState("");
-
-  const {
+    const {
     studentTestResult,
     studentData,
     testData,
@@ -76,16 +54,13 @@ const Result = () => {
     DataToDisplay,
   } = studentTestResultStore();
 
-  const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
-  const [studTestResultId,setStudTestResultId]=useState("");
-
 
   console.log("Data To Display in JSX ");
   console.log(DataToDisplay);
 
   useEffect(() => {
     getStudentTestResult(user).catch((error) => {
-      // Handle the error, e.g., display an error message
+      //  display an error message
       console.log("Error fetching test results:", error);
     });
   }, []);
@@ -94,14 +69,14 @@ const Result = () => {
   // console.log(studentTestResult);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [modalObtainedMarksId, setModalObtainedMarksId] = useState("");
-  const [modalObtainedMarks, setModalObtainedMarks] = useState("");
+  const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
+  const [studTestResultId,setStudTestResultId]=useState("");
 
+  
   const [isOpen1, setIsOpen1] = useState(false);
-  const [modal1StudentId, setModal1StudentID] = useState("");
-  const [modal1TestId, setModal1TestId] = useState("");
   const [modale1ObtainedMarks, setMoadal1ObtainedMarks] = useState("");
-  // const [modal1ObtainedGrade,setModal1ObtainedGrade]=useState("")
+  const [modal1StudentName,setModal1StudentName]=useState("")
+  const [modal1TestName,setModal1TestName]=useState("")
 
   const openModal1 = () => {
     setIsOpen1(true);
@@ -121,12 +96,17 @@ const Result = () => {
     setIsOpen(true);
     setObtainedMarksModal2(obtainedMarks);
     setStudTestResultId(Id);
-    console.log("Marks updated successfully");
+   // console.log("Marks updated successfully");
   };
+  const [selectedStudent, setSelectedStudent] = useState("");
+  const [selectedTest, setSelectedTest] = useState("");
+  const [selectedGrade, setSelectedGrade] = useState("");
+
 
   const closeModal = () => {
     setIsOpen(false);
-    
+    setObtainedMarksModal2("");
+    setStudTestResultId("");    
   };
 
   const handleAddMarks = async () => {
@@ -141,18 +121,16 @@ const Result = () => {
       console.log("New Test result object to add is");
       console.log(studentTestResultObj);
       await addStudentTestResult(studentTestResultObj);
-      // Handle success or display a success message
-      closeModal1();
+       closeModal1();
     } catch (error) {
       // Handle error or display an error message
     }
   };
 
   const handleUpdateMarks = async () => {
-    let parsedMarks=parseInt(obtainedMarksMpodal2)
+    //let parsedMarks=parseInt(obtainedMarksMpodal2)
     try {
       await updateStudentTestResult(studTestResultId,obtainedMarksMpodal2);
-      // Handle success or display a success message
       closeModal();
     } catch (error) {
       // Handle error or display an error message
@@ -161,16 +139,17 @@ const Result = () => {
 
   return (
     <>
+    {/* Modal for Addition */}
       <Modal1 isOpen={isOpen1} onClose={closeModal1}>
         <div>
           <div className="mb-2">
             <label htmlFor="">Name of the Student : </label>
-            <label htmlFor="">Kshama</label>
+            <label htmlFor="">{selectedStudent}</label>
           </div>
           <div className="mb-2">
             <label htmlFor="">Test Name : </label>
             <label htmlFor="" className="mb-4">
-              Class Test 1
+              {selectedTest}
             </label>
           </div>
           <div className="mb-4">
@@ -209,6 +188,7 @@ const Result = () => {
         </div>
       </Modal1>
 
+      {/* Modal for updation */}
       <Modal2 isOpen={isOpen} onClose={closeModal}>
         <div className="my-5">
           <h2 className="text-lg font-bold">Update Obtained Marks</h2>
