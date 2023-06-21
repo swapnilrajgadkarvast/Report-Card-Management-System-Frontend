@@ -16,7 +16,6 @@ import logo from "../../images/rcms_logo_small.jpg";
 import student_profile_pic from "../../images/student_profile_pic.png";
 
 import studentTestResultStore from "../../stores/studentTestResultStore";
-
 import Modal1 from "../../modals/Modal1";
 import Modal2 from "../../modals/Modal1";
 
@@ -103,9 +102,11 @@ const Result = () => {
 
   const openModal1 = () => {
     setIsOpen1(true);
-    // setModalObtainedMarksId(studentTestResult._id);
-    //setModalObtainedMarks(studentTestResult.obtainedMarks);
-
+    console.log("In open modal 1")
+    console.log(studentName)
+    console.log(testName)
+    setModal1StudentName(studentName)
+    setModal1TestName(testName)
     //console.log(studentTestResult);
   };
 
@@ -419,7 +420,8 @@ const Result = () => {
                                   style={{ width: "70px" }}
                                 >
                                   <strong>Marks:</strong>
-                                  <div>{student.obtainedMarks}</div>
+                                  <div>{student.obtainedMarks}{student.testName}</div>
+
                                 </div>
                               </div>
                               <div className="ml-4 flex items-center">
