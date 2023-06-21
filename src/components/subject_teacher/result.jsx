@@ -16,8 +16,7 @@ import logo from "../../images/rcms_logo_small.jpg";
 import student_profile_pic from "../../images/student_profile_pic.png";
 
 import studentTestResultStore from "../../stores/studentTestResultStore";
-import Modal1 from "../../modals/Modal1";
-import Modal2 from "../../modals/Modal1";
+import Modal from "../../modals/Modal1";
 
 const Result = () => {
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
@@ -26,18 +25,10 @@ const Result = () => {
   const user = loginData.user;
   console.log("logged in user in subject-teacher/test is");
   console.log(user);
-  const [showProfile, setShowProfile] = useState(false);
+
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("");
-
-  // const handleProfileClick = () => {
-  //   setShowProfile(!showProfile);
-  // };
-
-  // const handleLogout = () => {
-  //   // Logic for handling logout
-  // };
 
   const handleStudentChange = (e) => {
     setSelectedStudent(e.target.value);
@@ -52,14 +43,6 @@ const Result = () => {
     console.log("Selected grade is");
     console.log(e.target.value);
   };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Logic for handling form submission
-  // };
-
-  // const [student, setStudent] = useState("");
-  // const [test, setTest] = useState("");
 
   const {
     studentTestResult,
@@ -102,11 +85,9 @@ const Result = () => {
 
   const openModal1 = () => {
     setIsOpen1(true);
-    console.log("In open modal 1")
-    console.log(studentName)
-    console.log(testName)
-    setModal1StudentName(studentName)
-    setModal1TestName(testName)
+    // setModalObtainedMarksId(studentTestResult._id);
+    //setModalObtainedMarks(studentTestResult.obtainedMarks);
+
     //console.log(studentTestResult);
   };
 
@@ -159,7 +140,7 @@ const Result = () => {
 
   return (
     <>
-      <Modal1 isOpen={isOpen1} onClose={closeModal1}>
+      <Modal isOpen={isOpen1} onClose={closeModal1}>
         <div>
           <div className="mb-2">
             <label htmlFor="">Name of the Student : </label>
@@ -205,9 +186,9 @@ const Result = () => {
             </button>
           </div>
         </div>
-      </Modal1>
+      </Modal>
 
-      <Modal2 isOpen={isOpen} onClose={closeModal}>
+      <Modal isOpen={isOpen} onClose={closeModal}>
         <div className="my-5">
           <h2 className="text-lg font-bold">Update Obtained Marks</h2>
           <label htmlFor="obtainedMarks" className="block mt-2 text-sm">
@@ -228,7 +209,7 @@ const Result = () => {
         >
           Update Marks
         </button>
-      </Modal2>
+      </Modal>
 
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
@@ -420,8 +401,7 @@ const Result = () => {
                                   style={{ width: "70px" }}
                                 >
                                   <strong>Marks:</strong>
-                                  <div>{student.obtainedMarks}{student.testName}</div>
-
+                                  <div>{student.obtainedMarks}</div>
                                 </div>
                               </div>
                               <div className="ml-4 flex items-center">

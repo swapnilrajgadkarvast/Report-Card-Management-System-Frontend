@@ -544,22 +544,7 @@ const Reports = () => {
             <img src={logo} alt="Logo" className="w-44 h-20" />
           </div>
           <div className="col-span-10">
-            <div className="flex items-center justify-between mt-4">
-              <div className="relative">
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"
-                />
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                />
-              </div>
+            <div className="flex items-end justify-end mt-4">
               <button className="ml-2 rounded-full bg-purple-900 text-white px-4 py-2">
                 Delete Student
               </button>

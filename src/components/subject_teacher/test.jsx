@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
 import testStore from "../../stores/testStore";
-import Modal from "../../modals/Modal";
+import Modal from "../../modals/Modal1";
 
 const Test = () => {
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
@@ -19,7 +19,7 @@ const Test = () => {
   const user = loginData.user;
   console.log("logged in user in subject-teacher/test is");
   console.log(user);
-  
+
   const {
     tests,
     userroles,
@@ -31,6 +31,7 @@ const Test = () => {
     deleteTest,
   } = testStore();
   const [name, setName] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     getTests(user);
@@ -104,7 +105,14 @@ const Test = () => {
     );
   });
 
-  console.log(filteredTests);
+  // console.log("Filtered Tests : ");
+  // console.log(filteredTests);
+
+  // Filter the tests based on the search text
+  const searchedTests = filteredTests.filter((test) =>
+    test.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  // console.log(searchedTests)
 
   return (
     <>
@@ -150,16 +158,21 @@ const Test = () => {
                   <input
                     type="text"
                     placeholder="Search"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
                     className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                  />
+                  {searchText && (
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                      onClick={() => setSearchText("")}
+                    />
+                  )}
                 </div>
                 <div>
                   <p>
-                    There are {filteredTests.length} tests in this{" "}
+                    There are {searchedTests.length} tests in this{" "}
                     <strong>Class</strong>.
                   </p>
                 </div>
@@ -215,7 +228,7 @@ const Test = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {filteredTests.map((test) => (
+                      {searchedTests.map((test) => (
                         <div
                           className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
                           key={test.id}

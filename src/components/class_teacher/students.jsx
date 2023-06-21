@@ -20,7 +20,6 @@ import logo from "../../images/rcms_logo_small.jpg";
 import student_profile_pic from "../../images/student_profile_pic.png";
 import studentStore from "../../stores/studentStore";
 import Modal from "../../modals/Modal";
-import Modal1 from "../../modals/Modal";
 
 const Students = () => {
   const {
@@ -147,6 +146,28 @@ const Students = () => {
 
     setSelectedStudent("");
     setFilteredStudents(filteredStudents);
+  };
+
+  const [searchText, setSearchText] = useState("");
+
+  const handleSearch = (e) => {
+    const searchText = e.target.value;
+    const searchTextLower = searchText.toLowerCase();
+
+    if (searchText) {
+      const searchedStudents = students.filter((student) => {
+        const firstNameLower = student.firstName.toLowerCase();
+        return firstNameLower.includes(searchTextLower);
+      });
+
+      setFilteredStudents(searchedStudents);
+    } else {
+      setFilteredStudents(students);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchText("");
   };
 
   return (
@@ -450,7 +471,7 @@ const Students = () => {
         </div>
       </Modal>
 
-      <Modal1
+      <Modal
         isOpen={isOpen1}
         onClose={closeModal1}
         // Other props...
@@ -746,7 +767,7 @@ const Students = () => {
             </button>
           </div>
         </div>
-      </Modal1>
+      </Modal>
 
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
@@ -765,11 +786,15 @@ const Students = () => {
                     type="text"
                     placeholder="Search"
                     className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    onChange={handleSearch}
                   />
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                  />
+                  {searchText && (
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                      onClick={handleClearSearch}
+                    />
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-12 mt-4 ml-1">
@@ -786,6 +811,7 @@ const Students = () => {
                       onChange={handleStandardChange}
                       className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                       style={{ width: "230px", padding: "8px" }}
+                      disabled={standards.length <= 1}
                     >
                       <option value="">Select Standard</option>
                       {standards.map((standard) => (
@@ -803,6 +829,7 @@ const Students = () => {
                           onChange={handleDivisionChange}
                           className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                           style={{ width: "230px", padding: "8px" }}
+                          disabled={divisions.length <= 1}
                         >
                           <option value="">Select Division</option>
                           {divisions.map((division) => (
