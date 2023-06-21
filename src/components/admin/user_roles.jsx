@@ -389,138 +389,129 @@ const UserRoles = () => {
                   />
                 </div>
               </div>
-              <div className=" grid grid-cols-12 mt-4 ml-1">
-                <div className="col-span-12 grid">
-                  <div className="mt-4">
-                    <div className="bg-purple-300 p-3 rounded-lg col-span-12">
-                      <form onSubmit={handleSubmit}>
-                        <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
-                          <div className="col-span-8 ">
-                            <label htmlFor="student_name">User </label>
-                            <select
-                              value={selectedUser}
-                              onChange={handleUserChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "426px", padding: "8px" }}
-                            >
-                              <option value="">Select a User</option>
-                              {users.map((username) => (
-                                <option key={username._id} value={username._id}>
-                                  {username.firstName +
-                                    "   " +
-                                    username.lastName}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="col-span-4">
-                            <label htmlFor="role">Roles </label>
-                            <select
-                              value={selectedRole}
-                              onChange={handleRoleChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "200px", padding: "8px" }}
-                            >
-                              <option value="">Select a role</option>
-                              {roles.map((role) => (
-                                <option key={role._id} value={role._id}>
-                                  {role.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <div className="col-span-2">
-                            <label htmlFor="standard">Std </label>
-                            <select
-                              value={selectedStandard}
-                              onChange={handleStandardChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none 
+              <div className="grid grid-cols-12 mt-4 ml-1">
+                <div className="col-span-10">
+                  <div className="bg-purple-300 p-3 rounded-lg col-span-12">
+                    <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
+                      <div className="col-span-8">
+                        <strong htmlFor="user">User </strong>
+                        <select
+                          value={selectedUser}
+                          onChange={handleUserChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          style={{ width: "426px", padding: "8px" }}
+                        >
+                          <option value="">Select a User</option>
+                          {users.map((username) => (
+                            <option key={username._id} value={username._id}>
+                              {username.firstName + "   " + username.lastName}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-span-4">
+                        <strong htmlFor="role">Roles </strong>
+                        <select
+                          value={selectedRole}
+                          onChange={handleRoleChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          style={{ width: "200px", padding: "8px" }}
+                        >
+                          <option value="">Select a role</option>
+                          {roles.map((role) => (
+                            <option key={role._id} value={role._id}>
+                              {role.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-span-2">
+                        <strong htmlFor="standard">Standard </strong>
+                        <select
+                          value={selectedStandard}
+                          onChange={handleStandardChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none 
                             focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "100px", padding: "8px" }}
-                            >
-                              <option value="">Select</option>
-                              {standards.map((standard) => (
-                                <option key={standard._id} value={standard._id}>
-                                  {standard.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="col-span-2">
-                            <label htmlFor="division">Div </label>
-
-                            <select
-                              value={selectedDivision}
-                              onChange={handleDivisionChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1
-                             focus:outline-none focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "100px", padding: "8px" }}
-                            >
-                              <option value="">Select</option>
-                              {divisions.map((division) => (
-                                <option key={division._id} value={division._id}>
-                                  {division.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="col-span-2">
-                            <label htmlFor="subject">Sub </label>
-
-                            <select
-                              value={selectedSubject}
-                              onChange={handleSubjectChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 
+                          style={{ width: "100px", padding: "8px" }}
+                        >
+                          <option value="">Select</option>
+                          {standards.map((standard) => (
+                            <option key={standard._id} value={standard._id}>
+                              {standard.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-span-2">
+                        <strong htmlFor="division">Division </strong>
+                        <select
+                          value={selectedDivision}
+                          onChange={handleDivisionChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1
+ focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          style={{ width: "100px", padding: "8px" }}
+                        >
+                          <option value="">Select</option>
+                          {divisions.map((division) => (
+                            <option key={division._id} value={division._id}>
+                              {division.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-span-2">
+                        <strong htmlFor="subject">Subject </strong>
+                        <select
+                          value={selectedSubject}
+                          onChange={handleSubjectChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 
                             focus:outline-none focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "100px", padding: "8px" }}
-                            >
-                              <option value="">Select</option>
-                              {subjects.map((subject) => (
-                                <option key={subject._id} value={subject._id}>
-                                  {subject.name}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="col-span-2">
-                            <label htmlFor="year">Year</label>
-
-                            <select
-                              value={selectedYear}
-                              onChange={handleYearChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 
+                          style={{ width: "100px", padding: "8px" }}
+                        >
+                          <option value="">Select</option>
+                          {subjects.map((subject) => (
+                            <option key={subject._id} value={subject._id}>
+                              {subject.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div className="col-span-2">
+                        <strong htmlFor="year">Year </strong>
+                        <select
+                          value={selectedYear}
+                          onChange={handleYearChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 
                             focus:outline-none focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "100px", padding: "8px" }}
-                            >
-                              <option value="">Select</option>
-                              <option value="2022" key="2022">
-                                2022
-                              </option>
-                              <option value="2023" key="2023">
-                                2023
-                              </option>
-                              {/* Add more division options as needed */}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-span-2 ml-6 flex items-end justify-end">
-                          <button
-                            type="submit"
-                            className="rounded-full bg-purple-900 text-white
-                           px-6 py-2 flex flex-col items-center justify-center"
-                            style={{ fontSize: "13px", borderRadius: "8px" }}
-                          >
-                            <FontAwesomeIcon
-                              icon={faPlus}
-                              className="text-white"
-                              style={{ fontSize: "24px" }}
-                            />
-                            <span style={{ marginTop: "4px" }}>Add User</span>
-                          </button>
-                        </div>
-                      </form>
+                          style={{ width: "100px", padding: "8px" }}
+                        >
+                          <option value="">Select</option>
+                          <option value="2022" key="2022">
+                            2022
+                          </option>
+                          <option value="2023" key="2023">
+                            2023
+                          </option>
+                        </select>
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div className="col-span-2">
+                  <div className="ml-6 flex items-end justify-end">
+                    <button
+                      type="submit"
+                      className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+                      style={{ fontSize: "13px", borderRadius: "8px" }}
+                      onClick={handleSubmit}
+                    >
+                      <FontAwesomeIcon
+                        icon={faPlus}
+                        className="text-white"
+                        style={{ fontSize: "24px" }}
+                      />
+                      <span style={{ marginTop: "4px" }}>Add User</span>
+                    </button>
                   </div>
                 </div>
               </div>
