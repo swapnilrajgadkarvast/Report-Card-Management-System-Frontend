@@ -11,12 +11,13 @@ import {
   faMapMarkerAlt,
   faAward,
   faUserGraduate,
+  faPhone,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { useEffect } from "react";
 import logo from "../../images/rcms_logo_small.jpg";
-import random_profile_pic1 from "../../images/random_profile_pic.jpg";
-import random_profile_pic2 from "../../images/random_profile_pic2.jpg";
+import student_profile_pic from "../../images/student_profile_pic.png";
 import studentStore from "../../stores/studentStore";
 import Modal from "../../modals/Modal";
 import Modal1 from "../../modals/Modal";
@@ -103,10 +104,6 @@ const Students = () => {
     setIsOpen(false);
     //setModalRoleId("");
     //setModalRoleName("");
-  };
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
   };
 
   console.log("students");
@@ -854,9 +851,9 @@ const Students = () => {
                             <div className="flex items-start">
                               <div className="col-span-2 grid">
                                 <img
-                                  src={""}
+                                  src={student_profile_pic}
                                   alt="Student"
-                                  className="w-36 border h-28"
+                                  className="w-28 h-24"
                                 />
                               </div>
                               <div className="ml-4">
@@ -900,20 +897,33 @@ const Students = () => {
                               <div className="ml-4">
                                 <div
                                   className="col-span-2"
-                                  style={{ width: "175px" }}
+                                  style={{ width: "210px" }}
                                 >
                                   <strong>Parent Details </strong> <br />
-                                  <FontAwesomeIcon
-                                    icon={faUser}
-                                    className="text-purple-900 mr-2"
-                                  />
-                                  {filteredStudent.parent.firstName +
-                                    " " +
-                                    filteredStudent.parent.lastName +
-                                    "  " +
-                                    filteredStudent.parent.phone +
-                                    " " +
-                                    filteredStudent.parent.email}
+                                  <div>
+                                    <FontAwesomeIcon
+                                      icon={faUser}
+                                      className="text-purple-900 mr-2"
+                                    />
+                                    <span>
+                                      {`${filteredStudent.parent.firstName} ${filteredStudent.parent.lastName}`}{" "}
+                                      ({filteredStudent.parent.relationship})
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <FontAwesomeIcon
+                                      icon={faPhone}
+                                      className="text-purple-900 mr-2"
+                                    />
+                                    <span>{filteredStudent.parent.phone}</span>
+                                  </div>
+                                  <div>
+                                    <FontAwesomeIcon
+                                      icon={faEnvelope}
+                                      className="text-purple-900 mr-2"
+                                    />
+                                    <span>{filteredStudent.parent.email}</span>
+                                  </div>
                                 </div>
                               </div>
                               <div className="ml-4">

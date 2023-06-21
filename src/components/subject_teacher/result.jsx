@@ -13,7 +13,7 @@ import {
   faUserGraduate,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-import random_profile_pic1 from "../../images/random_profile_pic.jpg";
+import student_profile_pic from "../../images/student_profile_pic.png";
 
 import studentTestResultStore from "../../stores/studentTestResultStore";
 
@@ -75,6 +75,8 @@ const Result = () => {
     DataToDisplay,
   } = studentTestResultStore();
 
+  const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
+  const [studTestResultId, setStudTestResultId] = useState("");
 
   console.log("Data To Display in JSX ");
   console.log(DataToDisplay);
@@ -90,43 +92,35 @@ const Result = () => {
   // console.log(studentTestResult);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
-  const [studTestResultId,setStudTestResultId]=useState("");
-  
+  const [modalObtainedMarksId, setModalObtainedMarksId] = useState("");
+  const [modalObtainedMarks, setModalObtainedMarks] = useState("");
+
   const [isOpen1, setIsOpen1] = useState(false);
   const [modal1StudentId, setModal1StudentID] = useState("");
   const [modal1TestId, setModal1TestId] = useState("");
   const [modale1ObtainedMarks, setMoadal1ObtainedMarks] = useState("");
   // const [modal1ObtainedGrade,setModal1ObtainedGrade]=useState("")
 
-  const openModal1 = (studentName,testName) => {
+  const openModal1 = () => {
     setIsOpen1(true);
-    console.log("In open modal 1")
-    console.log(studentName)
-    console.log(testName)
-    setModal1StudentName(studentName)
-    setModal1TestName(testName)
+    // setModalObtainedMarksId(studentTestResult._id);
+    //setModalObtainedMarks(studentTestResult.obtainedMarks);
+
     //console.log(studentTestResult);
   };
 
   const closeModal1 = () => {
     setIsOpen1(false);
-     };
+    //setModalObtainedMarksId("");
+    //setModalObtainedMarks("");
+  };
 
-   const openModal = (Id,obtainedMarks) => {
-    console.log("In open modal")
+  const openModal = (Id, obtainedMarks) => {
     setIsOpen(true);
     setObtainedMarksModal2(obtainedMarks);
     setStudTestResultId(Id);
     console.log("Marks updated successfully");
-    // console.log("Marks updated successfully");
   };
-
-
-  // const [selectedStudent, setSelectedStudent] = useState("");
-  // const [selectedTest, setSelectedTest] = useState("");
-  // const [selectedGrade, setSelectedGrade] = useState("");
-
 
   const closeModal = () => {
     setIsOpen(false);
@@ -144,8 +138,8 @@ const Result = () => {
       console.log("New Test result object to add is");
       console.log(studentTestResultObj);
       await addStudentTestResult(studentTestResultObj);
-      console.log("Student Marks added successfully")
-       closeModal1();
+      // Handle success or display a success message
+      closeModal1();
     } catch (error) {
       // Handle error or display an error message
     }
@@ -166,16 +160,16 @@ const Result = () => {
     <>
       <Modal1 isOpen={isOpen1} onClose={closeModal1}>
         <div>
-          {/* <div className="mb-2"> 
+          <div className="mb-2">
             <label htmlFor="">Name of the Student : </label>
-            <label htmlFor="">{modal1StudentName}</label>
+            <label htmlFor="">Kshama</label>
           </div>
           <div className="mb-2">
             <label htmlFor="">Test Name : </label>
             <label htmlFor="" className="mb-4">
-              {modal1TestName}
+              Class Test 1
             </label>
-          </div>  */}
+          </div>
           <div className="mb-4">
             <label htmlFor="obtainedMarks">Obtained Marks : </label>
             <input
@@ -203,9 +197,8 @@ const Result = () => {
           </div>
           <div className="">
             <button
-              className="rounded-full bg-purple-900 text-white px-6 py-2 
-              flex flex-col items-center justify-center ml-28"
-              onClick={handleAddMarks}
+              className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+              onClick={() => handleAddMarks}
             >
               Add Marks
             </button>
@@ -322,6 +315,7 @@ const Result = () => {
                         type="submit"
                         className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center w-40 h-16"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
+                        // onClick={handleAddStudentResult}
                         onClick={() => openModal1()}
                       >
                         <FontAwesomeIcon
@@ -352,9 +346,9 @@ const Result = () => {
                             <div className="flex items-start">
                               <div className="col-span-2 grid">
                                 <img
-                                  src={random_profile_pic1}
+                                  src={student_profile_pic}
                                   alt="Student"
-                                  className="w-36 border h-28"
+                                  className="w-28 h-24"
                                 />
                               </div>
                               <div className="ml-4">
@@ -425,8 +419,7 @@ const Result = () => {
                                   style={{ width: "70px" }}
                                 >
                                   <strong>Marks:</strong>
-                                  <div>{student.obtainedMarks}{student.testName}</div>
-
+                                  <div>{student.obtainedMarks}</div>
                                 </div>
                               </div>
                               <div className="ml-4 flex items-center">

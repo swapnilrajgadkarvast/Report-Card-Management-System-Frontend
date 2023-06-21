@@ -389,20 +389,19 @@ const UserRoles = () => {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-12 mt-4 ml-1"></div>
               <div className=" grid grid-cols-12 mt-4 ml-1">
-                <div className="col-span-12 flex">
+                <div className="col-span-12 grid">
                   <div className="mt-4">
                     <div className="bg-purple-300 p-3 rounded-lg col-span-12">
                       <form onSubmit={handleSubmit}>
                         <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
-                          <div className="col-span-8">
+                          <div className="col-span-8 ">
                             <label htmlFor="student_name">User </label>
                             <select
                               value={selectedUser}
                               onChange={handleUserChange}
                               className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                              style={{ width: "450px", padding: "8px" }}
+                              style={{ width: "426px", padding: "8px" }}
                             >
                               <option value="">Select a User</option>
                               {users.map((username) => (
@@ -415,7 +414,7 @@ const UserRoles = () => {
                             </select>
                           </div>
                           <div className="col-span-4">
-                            <label htmlFor="birth_date">Roles </label>
+                            <label htmlFor="role">Roles </label>
                             <select
                               value={selectedRole}
                               onChange={handleRoleChange}
@@ -431,8 +430,8 @@ const UserRoles = () => {
                             </select>
                           </div>
 
-                          <div className="col-span-3">
-                            <label htmlFor="parent_name">Std </label>
+                          <div className="col-span-2">
+                            <label htmlFor="standard">Std </label>
                             <select
                               value={selectedStandard}
                               onChange={handleStandardChange}
@@ -448,8 +447,8 @@ const UserRoles = () => {
                               ))}
                             </select>
                           </div>
-                          <div className="col-span-3">
-                            <label htmlFor="contact">Div </label>
+                          <div className="col-span-2">
+                            <label htmlFor="division">Div </label>
 
                             <select
                               value={selectedDivision}
@@ -466,8 +465,8 @@ const UserRoles = () => {
                               ))}
                             </select>
                           </div>
-                          <div className="col-span-3">
-                            <label htmlFor="roll_no">Sub </label>
+                          <div className="col-span-2">
+                            <label htmlFor="subject">Sub </label>
 
                             <select
                               value={selectedSubject}
@@ -484,8 +483,8 @@ const UserRoles = () => {
                               ))}
                             </select>
                           </div>
-                          <div className="col-span-3">
-                            <label htmlFor="email">Year</label>
+                          <div className="col-span-2">
+                            <label htmlFor="year">Year</label>
 
                             <select
                               value={selectedYear}

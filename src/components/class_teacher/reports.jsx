@@ -11,7 +11,7 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-import random_profile_pic1 from "../../images/random_profile_pic.jpg";
+import student_profile_pic from "../../images/student_profile_pic.png";
 import reportStore from "../../stores/reportStore";
 import { useEffect } from "react";
 
@@ -528,7 +528,7 @@ const Reports = () => {
     const reportData = {
       student: filteredStudent._id,
       remark: remark,
-      reportFilePath: `D:/Report Card Management/rcms_frontend/src/ReportPDFs/${filteredStudent.firstName}_${filteredStudent.lastName}_${filteredTestsonDropdown[0].name}_report.pdf`,
+      reportFilePath: `D:\\Report Card Management\\Report-Card-Management-System\\src\\Report PDFs\\${filteredStudent.firstName}_${filteredStudent.lastName}_${filteredTestsonDropdown[0].name}_report.pdf`,
       rcn: filteredStudent._id + filteredTestsonDropdownIds[0],
     };
 
@@ -694,7 +694,7 @@ const Reports = () => {
                 >
                   <div className="col-span-2 grid" style={{ height: "160px" }}>
                     <img
-                      src={random_profile_pic1}
+                      src={student_profile_pic}
                       alt="Student"
                       className="w-full h-auto mb-2"
                     />
