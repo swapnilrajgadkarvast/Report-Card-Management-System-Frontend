@@ -51,6 +51,14 @@ const Standards = () => {
     setName("");
   };
 
+  const [searchText, setSearchText] = useState("");
+
+  // Filter the tests based on the search text
+  const searchedStandards = standards.filter((std) =>
+    std.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  // console.log(searchedTests)
+
   return (
     <>
       <Modal1
@@ -103,13 +111,17 @@ const Standards = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none 
-                  focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                  />
+                  {searchText && (
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                      onClick={() => setSearchText("")}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -164,7 +176,7 @@ const Standards = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {standards.map((standard) => (
+                      {searchedStandards.map((standard) => (
                         <div
                           className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
                           key={standard._id}

@@ -172,7 +172,7 @@ const Test = () => {
                 </div>
                 <div>
                   <p>
-                    There are {searchedTests.length} tests in this{" "}
+                    There are {filteredTests.length} tests in this{" "}
                     <strong>Class</strong>.
                   </p>
                 </div>

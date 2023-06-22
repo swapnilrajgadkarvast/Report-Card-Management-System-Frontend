@@ -49,6 +49,14 @@ const Roles = () => {
     setName("");
   };
 
+  const [searchText, setSearchText] = useState("");
+
+  // Filter the tests based on the search text
+  const searchedRoles = roles.filter((role) =>
+    role.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+  // console.log(searchedTests)
+
   return (
     <>
       <Modal
@@ -91,7 +99,7 @@ const Roles = () => {
             </div>
             <div className="col-span-10">
               <div className="flex items-center justify-end mt-4  ">
-                <div className="relative mb-10">
+                <div className="relative">
                   <FontAwesomeIcon
                     icon={faSearch}
                     className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"
@@ -99,13 +107,17 @@ const Roles = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300
-                   focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   />
-                  <FontAwesomeIcon
-                    icon={faTimes}
-                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                  />
+                  {searchText && (
+                    <FontAwesomeIcon
+                      icon={faTimes}
+                      className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
+                      onClick={() => setSearchText("")}
+                    />
+                  )}
                 </div>
               </div>
               <div className="grid grid-cols-12 mt-4 ml-1">
@@ -173,7 +185,7 @@ const Roles = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {roles.map((role) => (
+                      {searchedRoles.map((role) => (
                         <div
                           className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
                           key={role._id}
