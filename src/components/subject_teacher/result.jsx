@@ -19,6 +19,14 @@ import studentTestResultStore from "../../stores/studentTestResultStore";
 import Modal from "../../modals/Modal1";
 
 const Result = () => {
+
+  useEffect(() => {
+    getStudentTestResult(user).catch((error) => {
+      // Handle the error, e.g., display an error message
+      console.log("Error fetching test results:", error);
+    });
+  }, []);
+
   const loginData = JSON.parse(sessionStorage.getItem("loginData"));
   // console.log(loginData);
   const role = loginData.user.role;
@@ -61,7 +69,9 @@ const Result = () => {
       );
 
       console.log("Filter students based on the selected name -->");
+      getStudentTestResult(user)
       console.log(filteredStudents);
+      //setStudentWiseDataToDisplay(DataToDisplay);
       setStudentWiseDataToDisplay(filteredStudents);
     }
     // else
@@ -102,13 +112,7 @@ const Result = () => {
   console.log("Data To Display in JSX ");
   console.log(DataToDisplay);
 
-  useEffect(() => {
-    getStudentTestResult(user).catch((error) => {
-      // Handle the error, e.g., display an error message
-      console.log("Error fetching test results:", error);
-    });
-  }, []);
-
+  
   // console.log("studentTestResult.....");
   // console.log(studentTestResult);
 
@@ -150,7 +154,7 @@ const Result = () => {
     setIsOpen(false);
   };
 
-  const handleAddMarks = async () => {
+  const handleAddMarks = async (user) => {
     try {
       const studentTestResultObj = {
         student: selectedStudent,
@@ -158,10 +162,11 @@ const Result = () => {
         obtainedMarks: parseInt(modale1ObtainedMarks),
         obtainedGrade: selectedGrade,
       };
-
       console.log("New Test result object to add is");
       console.log(studentTestResultObj);
-      await addStudentTestResult(studentTestResultObj);
+      await addStudentTestResult(studentTestResultObj,user);
+    
+      //getStudentTestResult(user)
       // Handle success or display a success message
       closeModal1();
     } catch (error) {
@@ -259,7 +264,7 @@ const Result = () => {
           <div className="">
             <button
               className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-              onClick={() => handleAddMarks}
+              onClick={handleAddMarks}
             >
               Add Marks
             </button>
@@ -398,7 +403,7 @@ const Result = () => {
                           className="text-white"
                           style={{ fontSize: "24px" }}
                         />
-                        <span style={{ marginTop: "4px" }}>Add Report</span>
+                        <span style={{ marginTop: "4px" }}>Add Marks</span>
                       </button>
                     </div>
                   </div>
@@ -420,7 +425,7 @@ const Result = () => {
                                 <img
                                   src={student_profile_pic}
                                   alt="Student"
-                                  className="w-48 h-28"
+                                  className="w-28 h-24"
                                 />
                               </div>
                               <div className="ml-4">

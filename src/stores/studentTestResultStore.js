@@ -42,7 +42,7 @@ const studentTestResultStore = create((set) => ({
         
 
   getStudentTestResult: async (user) => {
-
+ console.log("Inside getStudentTestResult")
     try {
       //get user role for login user
       const userRoleresponse = await http.get(`/userroles?user=${user._id}`);
@@ -81,8 +81,8 @@ const studentTestResultStore = create((set) => ({
         `/tests?standard=${testFilter.standard}&subject=${testFilter.subject}&division=${testFilter.division}`
       );
       const tests = testResponse.data.data;
-      //console.log("tests");
-      //console.log(tests);
+      console.log("tests");
+      console.log(tests);
 
       if (tests.length === 0) {
         console.log("No tests found");
@@ -118,15 +118,15 @@ const studentTestResultStore = create((set) => ({
 
       for (const item of filteredData) {
 
+        console.log("Item data is")
+        console.log(item)
+
         const searchObjectStudentData = studentData.find(
           (studentDataObj) => studentDataObj._id === item.student
         );
         if (searchObjectStudentData) {
           const Id = item._id;
          // console.log("Test result Id is=>", Id);
-          //console.log("1");
-          //console.log(user1)
-          //console.log(typeof(user1))
           const { firstName, lastName } = searchObjectStudentData;
           //  console.log(firstName+" "+lastName);
           const studentname = firstName + " " + lastName;
@@ -147,6 +147,12 @@ const studentTestResultStore = create((set) => ({
           console.log("Array of marks")
           console.log(searchObjectMarks)
 
+          const searchObjectTest = tests.find(
+            (TestObj) => TestObj._id === item.tests
+          );
+         
+          console.log(searchObjectTest.name)
+
           console.log("=============================");
                       const Data = {
                         Id,
@@ -157,6 +163,7 @@ const studentTestResultStore = create((set) => ({
                         address,
                         student:item.student,
                         tests:item.tests,
+                        testName:searchObjectTest.name,
                         obtainedMarks:"",
                       };
                       console.log(Data);
@@ -175,12 +182,10 @@ const studentTestResultStore = create((set) => ({
        console.log(DataToDisplay1)
 
       set({
-        user: loginUserData.user,
+        user: user,
         DataToDisplay: DataToDisplay1,
         studentTestResultDataToDisplay:DataToDisplay1,
         userroles: userRoleresponse.data.data,
-        DataToDisplay:DataToDisplay1,
-        userroles:userRoleresponse.data.data,
         grades: gradesResponse.data.data,
         studentDataForDropdown:studentDataForDropdown.data,
         studentTestResult: filteredData,
@@ -192,21 +197,86 @@ const studentTestResultStore = create((set) => ({
     }
   },
 
+
   addStudentTestResult: async (studentTestResultObj) => {
     set({ loading: true });
     try {
       const response = await http.post(`/student-test-result`, studentTestResultObj);
-      console.log("response of post")
+      console.log("response of post");
       console.log(response.data);
-      set((state) => ({
-        studentTestResult: [...state.studentTestResult, response.data],
-        error: null,
-      }));
+  
+      // Perform the same logic as getStudentTestResultSearch to update DataToDisplay
+      set((state) => {
+        const newDataToDisplay = [...state.DataToDisplay];
+  
+        const { _id, student, tests } = response.data;
+  
+        const searchObjectStudentData = state.studentData.find(
+          (studentDataObj) => studentDataObj._id === student
+        );
+  
+        if (searchObjectStudentData) {
+          const { firstName, lastName } = searchObjectStudentData;
+          const studentname = firstName + " " + lastName;
+          const rollNumber = searchObjectStudentData.rollNumber;
+          const dateOfBirth = searchObjectStudentData.dateOfBirth;
+          const parentDetails =
+            searchObjectStudentData.parent.firstName +
+            " " +
+            searchObjectStudentData.parent.lastName +
+            "-" +
+            searchObjectStudentData.parent.relationship;
+          const address = searchObjectStudentData.parent.addressLine1;
+  
+          const searchObjectTest = state.testData.find(
+            (TestObj) => TestObj._id === tests
+          );
+  
+          const newData = {
+            Id: _id,
+            studentname,
+            rollNumber,
+            dateOfBirth,
+            parentDetails,
+            address,
+            student,
+            tests,
+            testName: searchObjectTest.name,
+            obtainedMarks: "",
+          };
+  
+          newDataToDisplay.push(newData);
+        }
+  
+        return {
+          ...state,
+          DataToDisplay: newDataToDisplay,
+          error: null,
+        };
+      });
     } catch (error) {
       set({ error: error.message });
     }
     set({ loading: false });
   },
+  
+
+  // addStudentTestResult: async (studentTestResultObj) => {
+  //   set({ loading: true });
+  //   try {
+  //     const response = await http.post(`/student-test-result`, studentTestResultObj);
+  //     console.log("response of post")
+  //     console.log(response.data);
+  //     set((state) => ({
+  //       studentTestResult: [...state.studentTestResult, response.data],
+  //       error: null,
+  //     }));
+      
+  //   } catch (error) {
+  //     set({ error: error.message });
+  //   }
+  //   set({ loading: false });
+  // },
 
   deleteStudentTestResult: async (id) => {
     set({ loading: true });
