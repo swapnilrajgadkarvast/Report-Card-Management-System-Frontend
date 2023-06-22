@@ -11,7 +11,7 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-import random_profile_pic1 from "../../images/random_profile_pic.jpg";
+import student_profile_pic from "../../images/student_profile_pic.png";
 import reportStore from "../../stores/reportStore";
 import { useEffect } from "react";
 
@@ -528,7 +528,7 @@ const Reports = () => {
     const reportData = {
       student: filteredStudent._id,
       remark: remark,
-      reportFilePath: `D:/Report Card Management/rcms_frontend/src/ReportPDFs/${filteredStudent.firstName}_${filteredStudent.lastName}_${filteredTestsonDropdown[0].name}_report.pdf`,
+      reportFilePath: `D:\\Report Card Management\\Report-Card-Management-System\\src\\Report PDFs\\${filteredStudent.firstName}_${filteredStudent.lastName}_${filteredTestsonDropdown[0].name}_report.pdf`,
       rcn: filteredStudent._id + filteredTestsonDropdownIds[0],
     };
 
@@ -544,22 +544,7 @@ const Reports = () => {
             <img src={logo} alt="Logo" className="w-44 h-20" />
           </div>
           <div className="col-span-10">
-            <div className="flex items-center justify-between mt-4">
-              <div className="relative">
-                <FontAwesomeIcon
-                  icon={faSearch}
-                  className="absolute top-1/2 left-3 transform -translate-y-1/2 text-gray-400"
-                />
-                <input
-                  type="text"
-                  placeholder="Search"
-                  className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-                <FontAwesomeIcon
-                  icon={faTimes}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-400 cursor-pointer"
-                />
-              </div>
+            <div className="flex items-end justify-end mt-4">
               <button className="ml-2 rounded-full bg-purple-900 text-white px-4 py-2">
                 Delete Student
               </button>
@@ -694,7 +679,7 @@ const Reports = () => {
                 >
                   <div className="col-span-2 grid" style={{ height: "160px" }}>
                     <img
-                      src={random_profile_pic1}
+                      src={student_profile_pic}
                       alt="Student"
                       className="w-full h-auto mb-2"
                     />

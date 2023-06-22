@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useBoundStore } from "../stores/store";
 import usersStore from "../stores/usersStore";
-import Modal from "../modals/Modal";
+import Modal from "../modals/Modal1";
 
 const Login = ({ setLogin }) => {
   const [loginRole, setLoginRole] = useState("");
@@ -168,7 +168,7 @@ const Login = ({ setLogin }) => {
                             flex flex-col items-center justify-center"
             onClick={() => handleEnterEmail(modalUserEmail)}
           >
-            Generate Change Password Link
+            Generate Temporary Password
           </button>
         </div>
       </Modal>
