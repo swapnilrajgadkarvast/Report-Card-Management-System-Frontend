@@ -155,7 +155,12 @@ const userrolesStore = create((set) => ({
 
     try {
       const response = await http.post(`/userroles`, userRoleObj);
-      console.log(response.data);
+      
+      const roleObj=await http.get(`/roles/${userRoleObj.role}`)
+      console.log("Role assigned is")
+      console.log(roleObj.data)
+      const response1=await http.patch(`/users/${userRoleObj.user}`,{role:roleObj.data.name})
+      console.log(response1.data);
       set(
         (state) => (
           { userroles: [...state.userroles, response.data] }, { error: null }
