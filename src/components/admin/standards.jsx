@@ -45,8 +45,29 @@ const Standards = () => {
     getStandards();
   }, [getStandards]);
 
+  const [nameError, setNameError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (name.trim() === "") {
+      // Empty standard name
+      setNameError("Please enter a standard name");
+      return;
+    }
+
+    const standardNameExists = standards.some(
+      (standard) => standard.name === name
+    );
+    if (standardNameExists) {
+      // Standard name already exists
+      setNameError("Standard name already exists");
+      return;
+    }
+
+    // Reset the error message
+    setNameError("");
+
     await addStandard(name);
     setName("");
   };
@@ -144,6 +165,12 @@ const Standards = () => {
                                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 style={{ width: "230px", padding: "8px" }}
                               />
+                              {nameError && (
+                                <p className="text-red-600 font-bold">
+                                  {nameError}
+                                </p>
+                              )}{" "}
+                              {/* Render the error message */}
                             </div>
                           </div>
                         </div>

@@ -46,9 +46,29 @@ const Division = () => {
     getDivisions();
   }, [getDivisions]);
 
+  const [nameError, setNameError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic for handling form submission
+
+    if (name.trim() === "") {
+      // Empty standard name
+      setNameError("Please enter a division name");
+      return;
+    }
+
+    const divisionNameExists = divisions.some(
+      (division) => division.name === name
+    );
+    if (divisionNameExists) {
+      // Standard name already exists
+      setNameError("Division name already exists");
+      return;
+    }
+
+    // Reset the error message
+    setNameError("");
+
     await addDivision(name);
     setName("");
   };
@@ -149,6 +169,12 @@ const Division = () => {
                                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 style={{ width: "230px", padding: "8px" }}
                               />
+                              {nameError && (
+                                <p className="text-red-600 font-bold">
+                                  {nameError}
+                                </p>
+                              )}{" "}
+                              {/* Render the error message */}
                             </div>
                           </div>
                         </div>

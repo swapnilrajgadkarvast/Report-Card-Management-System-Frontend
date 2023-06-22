@@ -32,6 +32,7 @@ const Test = () => {
   } = testStore();
   const [name, setName] = useState("");
   const [searchText, setSearchText] = useState("");
+  const [nameError, setNameError] = useState("");
 
   useEffect(() => {
     getTests(user);
@@ -39,6 +40,22 @@ const Test = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (name.trim() === "") {
+      setNameError("Test name is required"); // Set the error message
+      return; // Return if the name field is empty
+    }
+
+    const testNameExists = filteredTests.some((test) => test.name === name);
+    if (testNameExists) {
+      // Test name is already assigned
+      setNameError("Test name is already assigned");
+      return;
+    }
+
+    // Reset the error message
+    setNameError("");
+
     const newTest = {
       name: name,
       totalMarks: 100, // Add the totalMarks value here
@@ -105,14 +122,15 @@ const Test = () => {
     );
   });
 
-  // console.log("Filtered Tests : ");
-  // console.log(filteredTests);
+  console.log("Filtered Tests : ");
+  console.log(filteredTests);
 
   // Filter the tests based on the search text
   const searchedTests = filteredTests.filter((test) =>
     test.name.toLowerCase().includes(searchText.toLowerCase())
   );
-  // console.log(searchedTests)
+  console.log("Searched Tests :");
+  console.log(searchedTests);
 
   return (
     <>
@@ -178,7 +196,7 @@ const Test = () => {
                 </div>
               </div>
 
-              <div className=" grid grid-cols-12 mt-12 ml-1">
+              <div className="grid grid-cols-12 mt-12 ml-1">
                 <div className="col-span-10 flex">
                   <div className="mt-4 w-full">
                     <div className="bg-purple-300 p-3 rounded-lg">
@@ -188,7 +206,6 @@ const Test = () => {
                             <label htmlFor="test_name">
                               <strong>Test &nbsp; </strong>
                             </label>
-
                             <input
                               type="text"
                               value={name}
@@ -197,6 +214,10 @@ const Test = () => {
                               className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500 "
                               style={{ width: "400px" }}
                             />
+                            {nameError && (
+                              <p className="text-red-600 font-bold">{nameError}</p>
+                            )}{" "}
+                            {/* Render the error message */}
                           </div>
                         </div>
                       </form>

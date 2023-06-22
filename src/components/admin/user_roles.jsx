@@ -40,22 +40,12 @@ const UserRoles = () => {
     getUserRoles();
   }, []);
 
-  const [showProfile, setShowProfile] = useState(false);
-
   const [selectedUser, setSelectedUser] = useState("");
   const [selectedRole, setSelectedRole] = useState("");
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-
-  const handleProfileClick = () => {
-    setShowProfile(!showProfile);
-  };
-
-  const handleLogout = () => {
-    // Logic for handling logout
-  };
 
   const handleUserChange = (e) => {
     setSelectedUser(e.target.value);
@@ -87,58 +77,71 @@ const UserRoles = () => {
     console.log(selectedYear);
   };
 
+  console.log("userRolesDataToDisplay : ");
+  console.log(userRolesDataToDisplay);
+
+  const [nameError, setNameError] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Logic for handling form submission
-    // console.log("Selected User:", selectedUser);
-    // console.log("Selected Role:", selectedRole);
-    // console.log("Selected Standard:", selectedStandard);
-    // console.log("Selected Division:", selectedDivision);
-    // console.log("Selected Subject:", selectedSubject);
-    // console.log("Selected Year:", selectedYear);
 
-    const userrolesobj = {
+    const userRolesObj = {
       user: selectedUser,
       role: selectedRole,
       standard: selectedStandard,
       division: selectedDivision,
       subject: selectedSubject,
-      year: selectedYear,
+      year: parseInt(selectedYear),
     };
 
-    let found = false;
-    for (let i = 0; i < userroles.length; i++) {
-      let currentObj = userroles[i];
-      delete currentObj._id;
-      console.log(userrolesobj);
-      console.log(currentObj);
-      console.log("++++++++++++++++++++++++");
-      // Compare the current object with the input object
-      if (
-        userrolesobj.user === currentObj.user &&
-        userrolesobj.role === currentObj.role &&
-        userrolesobj.standard === currentObj.standard &&
-        userrolesobj.division === currentObj.division &&
-        userrolesobj.subject === currentObj.subject &&
-        userrolesobj.year === currentObj.year
-      ) {
-        found = true;
-        console.log(found);
-        break; // No need to continue iterating if a match is found
-      }
-    }
+    console.log("userRolesObj :");
+    console.log(userRolesObj);
 
-    if (!found) {
-      addUserRole(userrolesobj);
-    }
-    // Reset form after submission
+    // Check if all fields are already present in userRolesDataToDisplay
+    const isExistingData = userRolesDataToDisplay.some((userData) => {
+      // console.log("Comparing userData:", userData);
+      // console.log("Comparing userRolesObj:", userRolesObj);
+      return (
+        userData.userId === userRolesObj.username &&
+        userData.roleId === userRolesObj.role &&
+        userData.standardId === userRolesObj.standard &&
+        userData.divisionId === userRolesObj.division &&
+        userData.subjectId === userRolesObj.subject &&
+        userData.year === parseInt(userRolesObj.year)
+      );
+    });
+    console.log("Existing Data:");
+    console.log(isExistingData);
 
-    setSelectedUser("");
-    setSelectedRole("");
-    setSelectedStandard("");
-    setSelectedDivision("");
-    setSelectedSubject("");
-    setSelectedYear("");
+    // Check if nothing is selected
+    const isFormEmpty =
+      !userRolesObj.user ||
+      !userRolesObj.role ||
+      !userRolesObj.standard ||
+      !userRolesObj.division ||
+      !userRolesObj.subject ||
+      !userRolesObj.year;
+
+    console.log("is form empty :");
+    console.log(isFormEmpty);
+
+    if (isExistingData) {
+      // Show message for existing data
+      setNameError("User Role with same data already exists");
+    } else if (isFormEmpty) {
+      // Show message for empty form
+      setNameError("Please select all fields");
+    } else {
+      // Add user role if it's a new data and form is not empty
+      addUserRole(userRolesObj);
+      // Reset form after submission
+      setSelectedUser("");
+      setSelectedRole("");
+      setSelectedStandard("");
+      setSelectedDivision("");
+      setSelectedSubject("");
+      setSelectedYear("");
+    }
   };
 
   const handleUpdateUserRole = async () => {
@@ -505,6 +508,10 @@ const UserRoles = () => {
                       </div>
                     </div>
                   </div>
+                  {nameError && (
+                    <p className="text-red-600 font-bold">{nameError}</p>
+                  )}{" "}
+                  {/* Render the error message */}
                 </div>
                 <div className="col-span-2">
                   <div className="ml-6 flex items-end justify-end">

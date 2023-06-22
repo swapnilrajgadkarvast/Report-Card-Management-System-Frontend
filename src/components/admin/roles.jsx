@@ -42,9 +42,28 @@ const Roles = () => {
     setModalRoleName("");
   };
 
+  const [nameError, setNameError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Logic for handling form submission
+
+    if (name.trim() === "") {
+      // Empty standard name
+      setNameError("Please enter a role name");
+      return;
+    }
+
+    const roleNameExists = roles.some((role) => role.name === name);
+    if (roleNameExists) {
+      // Standard name already exists
+      setNameError("Role name already exists");
+      return;
+    }
+
+    // Reset the error message
+    setNameError("");
+
     await addRole(name);
     setName("");
   };
@@ -146,6 +165,12 @@ const Roles = () => {
                                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 style={{ width: "400px", padding: "8px" }}
                               />
+                              {nameError && (
+                                <p className="text-red-600 font-bold">
+                                  {nameError}
+                                </p>
+                              )}{" "}
+                              {/* Render the error message */}
                             </div>
                           </div>
 

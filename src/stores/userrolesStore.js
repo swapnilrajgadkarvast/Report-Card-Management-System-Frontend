@@ -131,7 +131,6 @@ const userrolesStore = create((set) => ({
           console.log(userData);
           userRolesDataToDisplay1.push(userData);
         }
-    
       }
       set({ userRolesDataToDisplay: userRolesDataToDisplay1, error: null });
       set({ userroles: data, error: null });
@@ -149,24 +148,25 @@ const userrolesStore = create((set) => ({
 
   addUserRole: async (userRoleObj) => {
     set({ loading: true });
-    console.log("user role obj in patch")
+    console.log("user role obj in patch");
     console.log(userRoleObj);
-    
 
     try {
       const response = await http.post(`/userroles`, userRoleObj);
-      
-      const roleObj=await http.get(`/roles/${userRoleObj.role}`)
-      console.log("Role assigned is")
-      console.log(roleObj.data)
-      const response1=await http.patch(`/users/${userRoleObj.user}`,{role:roleObj.data.name})
+
+      const roleObj = await http.get(`/roles/${userRoleObj.role}`);
+      console.log("Role assigned is");
+      console.log(roleObj.data);
+      const response1 = await http.patch(`/users/${userRoleObj.user}`, {
+        role: roleObj.data.name,
+      });
       console.log(response1.data);
       set(
         (state) => (
           { userroles: [...state.userroles, response.data] }, { error: null }
         )
       );
-      
+
       console.log("New User role added");
     } catch (error) {
       set({ error: error.message });

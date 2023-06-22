@@ -40,9 +40,27 @@ const Grades = () => {
     getGrades(getGrades);
   }, []);
 
+  const [nameError, setNameError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Logic for handling form submission
+
+    if (name.trim() === "") {
+      // Empty grade name
+      setNameError("Please enter a grade name");
+      return;
+    }
+
+    const gradeNameExists = grades.some((grade) => grade.name === name);
+    if (gradeNameExists) {
+      // Grade name already exists
+      setNameError("Grade name already exists");
+      return;
+    }
+    // Reset the error message
+    setNameError("");
+
     const grade = {
       name,
       start,
@@ -199,6 +217,12 @@ const Grades = () => {
                                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 style={{ width: "230px", padding: "8px" }}
                               />
+                              {nameError && (
+                                <p className="text-red-600 font-bold">
+                                  {nameError}
+                                </p>
+                              )}{" "}
+                              {/* Render the error message */}
                             </div>
                           </div>
 
