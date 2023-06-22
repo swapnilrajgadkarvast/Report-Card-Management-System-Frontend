@@ -206,7 +206,8 @@ const Students = () => {
                 value={selectedStandard}
                 onChange={handleStandardChange}
                 placeholder="select standard"
-                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="rounded-lg border border-gray-300 px-2 py-1 
+                focus:outline-none focus:ring-2 focus:ring-purple-500"
                 style={{ width: "230px", padding: "8px" }}
               >
                 // <option value="">Select Standard</option>
@@ -222,7 +223,8 @@ const Students = () => {
               <select
                 value={selectedDivision}
                 onChange={handleDivisionChange}
-                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="rounded-lg border border-gray-300 px-2 py-1 
+                focus:outline-none focus:ring-2 focus:ring-purple-500"
                 style={{ width: "230px", padding: "8px" }}
               >
                 <option value="">Select Division</option>
@@ -504,7 +506,8 @@ const Students = () => {
               <select
                 value={selectedStandard}
                 onChange={handleStandardChange}
-                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="rounded-lg border border-gray-300 px-2 py-1 
+                focus:outline-none focus:ring-2 focus:ring-purple-500"
                 style={{ width: "230px", padding: "8px" }}
               >
                 <option value="">Select Standard</option>
@@ -520,7 +523,8 @@ const Students = () => {
               <select
                 value={selectedDivision}
                 onChange={handleDivisionChange}
-                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="rounded-lg border border-gray-300 px-2 py-1 
+                focus:outline-none focus:ring-2 focus:ring-purple-500"
                 style={{ width: "230px", padding: "8px" }}
               >
                 <option value="">Select Division</option>

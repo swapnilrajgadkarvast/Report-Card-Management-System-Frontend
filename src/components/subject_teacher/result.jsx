@@ -25,18 +25,78 @@ const Result = () => {
   const user = loginData.user;
   console.log("logged in user in subject-teacher/test is");
   console.log(user);
+  const {
+    studentTestResult,
+    studentData,
+    testData,
+    grades,
+    getStudentTestResult,
+    studentDataForDropdown,
+    addStudentTestResult,
+    updateStudentTestResult,
+    deleteStudentTestResult,
+    getStudentTestResultSearch,
+    DataToDisplay,
+    studentTestResultDataToDisplay,
+  } = studentTestResultStore();
+
+
   const [showProfile, setShowProfile] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState("");
   const [selectedTest, setSelectedTest] = useState("");
   const [selectedGrade, setSelectedGrade] = useState("");
+  const [selectedStudent1, setSelectedStudent1] = useState("");
+  const [selectedTest1, setSelectedTest1] = useState("");
+ const [studentWiseDataToDisplay,setStudentWiseDataToDisplay]=useState([]);
+ //const [testWiseDataToDisplay,setTestWiseDataToDisplay]=useState([]);
 
-  // const handleProfileClick = () => {
-  //   setShowProfile(!showProfile);
-  // };
+ 
+ 
+   const handleStudentChange1 = (e) => {
+   console.log(e.target.value)
+    setSelectedStudent1(e.target.value);
+    if(e.target.value==="All Students")
+    {
+      setStudentWiseDataToDisplay(DataToDisplay)
+    }
+    else
+    if(e.target.value)
+    {
+     // Filter students based on the selected standard and division
+     const filteredStudents = DataToDisplay.filter(
+      (student) => student.studentname === e.target.value
+    );
+    
+    console.log(
+      "Filter students based on the selected name -->"
+    );
+    console.log(filteredStudents);
+    setStudentWiseDataToDisplay(filteredStudents)
+    }
+    // else
+    // setStudentWiseDataToDisplay(DataToDisplay)
+  };
 
-  // const handleLogout = () => {
-  //   // Logic for handling logout
-  // };
+  const handleTestChange1 = (e) => {
+    setSelectedTest1(e.target.value);
+
+    console.log(e.target.value)
+    setSelectedTest1(e.target.value);
+    if(e.target.value)
+    {
+     // Filter students based on the selected standard and division
+     const filteredStudents = DataToDisplay.filter(
+      (student) => student.testName === e.target.value
+    );
+    
+    console.log(
+      "Filter students based on the selected name -->"
+    );
+    console.log(filteredStudents);
+    setStudentWiseDataToDisplay(filteredStudents)
+    }
+   
+  };
 
   const handleStudentChange = (e) => {
     setSelectedStudent(e.target.value);
@@ -52,28 +112,7 @@ const Result = () => {
     console.log(e.target.value);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Logic for handling form submission
-  // };
-
-  // const [student, setStudent] = useState("");
-  // const [test, setTest] = useState("");
-
-  const {
-    studentTestResult,
-    studentData,
-    testData,
-    grades,
-    getStudentTestResult,
-    studentDataForDropdown,
-    addStudentTestResult,
-    updateStudentTestResult,
-    deleteStudentTestResult,
-    DataToDisplay,
-  } = studentTestResultStore();
-
-
+ 
   console.log("Data To Display in JSX ");
   console.log(DataToDisplay);
 
@@ -90,9 +129,8 @@ const Result = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [obtainedMarksMpodal2, setObtainedMarksModal2] = useState("");
   const [studTestResultId,setStudTestResultId]=useState("");
-  
   const [isOpen1, setIsOpen1] = useState(false);
-  const [modal1StudentId, setModal1StudentID] = useState("");
+  const [modal1StudentId, setModal1StudentId] = useState("");
   const [modal1TestId, setModal1TestId] = useState("");
   const [modale1ObtainedMarks, setMoadal1ObtainedMarks] = useState("");
   // const [modal1ObtainedGrade,setModal1ObtainedGrade]=useState("")
@@ -100,9 +138,9 @@ const Result = () => {
   const openModal1 = (studentName,testName) => {
     setIsOpen1(true);
     console.log("In open modal 1")
-    console.log(studentName)
-    console.log(testName)
-    //console.log(studentTestResult);
+
+    setSelectedStudent("")
+    setSelectedTest("")
   };
 
   const closeModal1 = () => {
@@ -118,11 +156,9 @@ const Result = () => {
     // console.log("Marks updated successfully");
   };
 
-
   // const [selectedStudent, setSelectedStudent] = useState("");
   // const [selectedTest, setSelectedTest] = useState("");
   // const [selectedGrade, setSelectedGrade] = useState("");
-
 
   const closeModal = () => {
     setIsOpen(false);
@@ -158,20 +194,55 @@ const Result = () => {
     }
   };
 
+  const [student_name,setStudent_Name]=useState("")
+  const handleSearchChange=async(e)=>
+  {
+      const {value}=e.target;
+      setStudent_Name(value);
+      getStudentTestResultSearch(student_name)
+      console.log(value);
+  }
+
   return (
     <>
       <Modal1 isOpen={isOpen1} onClose={closeModal1}>
         <div>
-          {/* <div className="mb-2"> 
-            <label htmlFor="">Name of the Student : </label>
-            <label htmlFor="">{modal1StudentName}</label>
-          </div>
-          <div className="mb-2">
-            <label htmlFor="">Test Name : </label>
-            <label htmlFor="" className="mb-4">
-              {modal1TestName}
-            </label>
-          </div>  */}
+          <h2 className="text-lg font-bold mb-4">Enetr Obtained Marks</h2>
+          <div className="mb-4">
+          <label htmlFor="studentName">Select Student: </label>
+          <select
+                              value={selectedStudent}
+                              onChange={handleStudentChange}
+                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none
+                               focus:ring-2 focus:ring-purple-500"
+                              style={{ width: "230px", padding: "8px" }}
+                            >
+                              <option value="">Select Student</option>
+                              {studentDataForDropdown.map((student) => (
+                                <option key={student._id} value={student._id}>
+                                  {student.firstName} {student.lastName}
+                                </option>
+                              ))}
+                            </select>
+            </div>
+            <div className="mb-4 ml-6">
+          <label htmlFor="studentName">Select Test: </label>
+          <select
+                              value={selectedTest}
+                              onChange={handleTestChange}
+                              className="rounded-lg border border-gray-300 px-2 py-1 
+                              focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              style={{ width: "230px", padding: "8px" }}
+                            >
+                              <option value="">Select Test</option>
+                              {testData.map((test) => (
+                                <option key={test._id} value={test._id}>
+                                  {test.name}
+                                </option>
+                              ))}
+            </select>
+            </div>
+    
           <div className="mb-4">
             <label htmlFor="obtainedMarks">Obtained Marks : </label>
             <input
@@ -179,6 +250,9 @@ const Result = () => {
               id="obtainedMarks"
               value={modale1ObtainedMarks}
               onChange={(e) => setMoadal1ObtainedMarks(e.target.value)}
+              className="rounded-lg border border-gray-300 px-2 py-1 
+                              focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              style={{ width: "230px", padding: "8px" }}
             />
           </div>
           <div className="mb-4">
@@ -211,7 +285,7 @@ const Result = () => {
 
       <Modal2 isOpen={isOpen} onClose={closeModal}>
         <div className="my-5">
-          <h2 className="text-lg font-bold">Update Obtained Marks</h2>
+          <h2 className="text-lg font-bold mb-4">Update Obtained Marks</h2>
           <label htmlFor="obtainedMarks" className="block mt-2 text-sm">
             Obtained Marks:
           </label>
@@ -248,7 +322,10 @@ const Result = () => {
                   <input
                     type="text"
                     placeholder="Search"
-                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="rounded-full pl-10 pr-32 py-2 border border-gray-300
+                    focus:outline-none focus:ring-2
+                   focus:ring-purple-500 focus:border-transparent"
+                   onChange={handleSearchChange}
                   />
                   <FontAwesomeIcon
                     icon={faTimes}
@@ -276,14 +353,16 @@ const Result = () => {
                               Student &nbsp;{" "}
                             </label>
                             <select
-                              value={selectedStudent}
-                              onChange={handleStudentChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              value={selectedStudent1}
+                              onChange={handleStudentChange1}
+                              className="rounded-lg border border-gray-300 px-2 py-1 
+                              focus:outline-none focus:ring-2 focus:ring-purple-500"
                               style={{ width: "230px", padding: "8px" }}
                             >
                               <option value="">Select Student</option>
+                              <option value="All Students">Show All Students</option>
                               {studentDataForDropdown.map((student) => (
-                                <option key={student._id} value={student._id}>
+                                <option key={student._id} value={student.firstName+" "+student.lastName}>
                                   {student.firstName} {student.lastName}
                                 </option>
                               ))}
@@ -292,14 +371,15 @@ const Result = () => {
                           <div className="col-span-6">
                             <label htmlFor="testName">Test &nbsp;</label>
                             <select
-                              value={selectedTest}
-                              onChange={handleTestChange}
-                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              value={selectedTest1}
+                              onChange={handleTestChange1}
+                              className="rounded-lg border border-gray-300 px-2 py-1 
+                              focus:outline-none focus:ring-2 focus:ring-purple-500"
                               style={{ width: "230px", padding: "8px" }}
                             >
                               <option value="">Select Test</option>
                               {testData.map((test) => (
-                                <option key={test._id} value={test._id}>
+                                <option key={test._id} value={test.name}>
                                   {test.name}
                                 </option>
                               ))}
@@ -316,7 +396,8 @@ const Result = () => {
                     <div className="col-span-2 ml-6 flex items-end justify-end">
                       <button
                         type="submit"
-                        className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center w-40 h-16"
+                        className="rounded-full bg-purple-900 text-white px-6 py-2
+                         flex flex-col items-center justify-center w-40 h-16"
                         style={{ fontSize: "13px", borderRadius: "8px" }}
                         onClick={() => openModal1()}
                       >
@@ -336,10 +417,7 @@ const Result = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {DataToDisplay.map((student) => {
-                        const studentTestResultData = studentTestResult.filter(
-                          (result) => result.student === student._id
-                        );
+                      {studentWiseDataToDisplay.map((student) => {
                         return (
                           <div
                             className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
@@ -350,13 +428,13 @@ const Result = () => {
                                 <img
                                   src={random_profile_pic1}
                                   alt="Student"
-                                  className="w-36 border h-28"
+                                  className="w-48 border h-28"
                                 />
                               </div>
                               <div className="ml-4">
                                 <div
                                   className="grid grid-cols-2"
-                                  style={{ width: "160px" }}
+                                  style={{ width: "130px" }}
                                 >
                                   <div className="col-span-2">
                                     <strong>Student:</strong> <br />
@@ -379,7 +457,7 @@ const Result = () => {
                               <div className="ml-4">
                                 <div
                                   className="col-span-2"
-                                  style={{ width: "130px" }}
+                                  style={{ width: "110px" }}
                                 >
                                   <strong>Birth Date :</strong> <br />
                                   <FontAwesomeIcon
@@ -405,7 +483,7 @@ const Result = () => {
                               <div className="ml-4">
                                 <div
                                   className="col-span-2"
-                                  style={{ width: "170px" }}
+                                  style={{ width: "160px" }}
                                 >
                                   <strong>Address:</strong> <br />
                                   <FontAwesomeIcon
@@ -418,7 +496,17 @@ const Result = () => {
                               <div className="ml-4">
                                 <div
                                   className="col-span-2"
-                                  style={{ width: "70px" }}
+                                  style={{ width: "90px" }}
+                                >
+                                  <strong>Test Name:</strong>
+                                  <div>{student.testName}</div>
+
+                                </div>
+                              </div>
+                              <div className="ml-4">
+                                <div
+                                  className="col-span-2"
+                                  style={{ width: "50px" }}
                                 >
                                   <strong>Marks:</strong>
                                   <div>{student.obtainedMarks}</div>
@@ -427,7 +515,8 @@ const Result = () => {
                               </div>
                               <div className="ml-4 flex items-center">
                                 <button
-                                  className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2"
+                                  className="rounded-full bg-purple-900 text-white
+                                   px-6 py-2 flex flex-col items-center justify-center mr-2"
                                   onClick={() =>
                                     openModal(student.Id, student.obtainedMarks)
                                   }

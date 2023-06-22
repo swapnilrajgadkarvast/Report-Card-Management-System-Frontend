@@ -16,6 +16,30 @@ const studentTestResultStore = create((set) => ({
   testData: [],
   loading: false,
   error: null,
+  
+    getStudentTestResultSearch: (studentname) => {
+      if(studentname)
+      {
+      set((state) => {
+        console.log(studentname)
+        console.log("original data to display in search")
+        console.log(state.DataToDisplay)
+        const newDataToDisplay = state.DataToDisplay.filter(
+          (studentTestResultObj) =>
+            studentTestResultObj.studentname.match(
+              new RegExp(`^${studentname}`, `i`)
+            )
+        );
+        console.log("Data to display in search")
+        console.log(newDataToDisplay)
+          return {
+          ...state,
+          DataToDisplay: newDataToDisplay,
+          error: null,
+        };
+      });}
+    },
+        
 
   getStudentTestResult: async (user) => {
     try {
@@ -158,7 +182,8 @@ const studentTestResultStore = create((set) => ({
        for(const item of DataToDisplay1 )
        {
          const searchObjectTestMarks= filteredData.find(
-              (searchObjectTestMarksObj) => searchObjectTestMarksObj.tests === item.tests && searchObjectTestMarksObj.student===item.student 
+              (searchObjectTestMarksObj) => searchObjectTestMarksObj.tests === item.tests 
+              && searchObjectTestMarksObj.student===item.student 
             );
            item.obtainedMarks=searchObjectTestMarks.obtainedMarks
        }
@@ -167,6 +192,7 @@ const studentTestResultStore = create((set) => ({
       set({
         user: loginUserData.user,
         DataToDisplay: DataToDisplay1,
+        studentTestResultDataToDisplay:DataToDisplay1,
         userroles: userRoleresponse.data.data,
         grades: gradesResponse.data.data,
         studentDataForDropdown: studentDataForDropdown.data,

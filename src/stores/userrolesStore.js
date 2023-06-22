@@ -16,7 +16,6 @@ const userrolesStore = create((set) => ({
   loading: false,
   error: null,
 
-
   getUserRoles: async () => {
     set({ loading: true });
     try {
@@ -132,13 +131,9 @@ const userrolesStore = create((set) => ({
           console.log(userData);
           userRolesDataToDisplay1.push(userData);
         }
-
-        
+    
       }
-      // // console.log("userRolesDataToDisplay1");
-      // //  console.log(userRolesDataToDisplay1);
       set({ userRolesDataToDisplay: userRolesDataToDisplay1, error: null });
-
       set({ userroles: data, error: null });
       set({ userRoleIds: userroleIds, error: null });
       set({ users: usersdata.data, error: null });
@@ -154,9 +149,18 @@ const userrolesStore = create((set) => ({
 
   addUserRole: async (userRoleObj) => {
     set({ loading: true });
+    console.log("user role obj in patch")
+    console.log(userRoleObj);
+    
+
     try {
       const response = await http.post(`/userroles`, userRoleObj);
-      console.log(response.data);
+      
+      const roleObj=await http.get(`/roles/${userRoleObj.role}`)
+      console.log("Role assigned is")
+      console.log(roleObj.data)
+      const response1=await http.patch(`/users/${userRoleObj.user}`,{role:roleObj.data.name})
+      console.log(response1.data);
       set(
         (state) => (
           { userroles: [...state.userroles, response.data] }, { error: null }
