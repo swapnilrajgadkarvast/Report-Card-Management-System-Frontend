@@ -250,7 +250,13 @@ const studentTestResultStore = create((set) => ({
   
           newDataToDisplay.push(newData);
         }
+        console.log("In add")
+  console.log(newDataToDisplay)
+
+  set({
   
+    DataToDisplay: newDataToDisplay,
+     });
         return {
           ...state,
           DataToDisplay: newDataToDisplay,
