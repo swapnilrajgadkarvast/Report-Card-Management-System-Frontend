@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import subjectStore from "../../stores/subjectStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -9,147 +9,96 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-import testStore from "../../stores/testStore";
-import Modal from "../../modals/Modal1";
+//import random_profile_pic1 from "../images/random_profile_pic.jpg";
+//import random_profile_pic2 from "../images/random_profile_pic2.jpg";
+import Modal1 from "../../modals/Modal1";
 
-const Test = () => {
-  const loginData = JSON.parse(sessionStorage.getItem("loginData"));
-  // console.log(loginData);
-  const role = loginData.user.role;
-  const user = loginData.user;
-  console.log("logged in user in subject-teacher/test is");
-  console.log(user);
-
+const Subject = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalSubjectId, setModalSubjectId] = useState("");
+  const [modalSubjectName, setModalSubjectName] = useState("");
   const {
-    tests,
-    userroles,
+    subjects,
     loading,
     error,
-    getTests,
-    addTest,
-    updateTest,
-    deleteTest,
-  } = testStore();
+    getSubjects,
+    addSubject,
+    deleteSubject,
+    updateSubject,
+  } = subjectStore();
+
   const [name, setName] = useState("");
-  const [searchText, setSearchText] = useState("");
-  const [nameError, setNameError] = useState("");
+
+  const openModal = (subject) => {
+    setIsOpen(true);
+    setModalSubjectId(subject._id);
+    setModalSubjectName(subject.name);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalSubjectId("");
+    setModalSubjectName("");
+  };
 
   useEffect(() => {
-    getTests(user);
-  }, []);
+    getSubjects();
+  }, [getSubjects]);
+
+  const [nameError, setNameError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (name.trim() === "") {
-      setNameError("Test name is required"); // Set the error message
-      return; // Return if the name field is empty
+      // Empty subject name
+      setNameError("Please enter a subject name");
+      return;
     }
 
-    const testNameExists = filteredTests.some((test) => test.name === name);
-    if (testNameExists) {
-      // Test name is already assigned
-      setNameError("Test name is already assigned");
+    const subjectNameExists = subjects.some((subject) => subject.name === name);
+    if (subjectNameExists) {
+      // subject name already exists
+      setNameError("Subject name already exists");
       return;
     }
 
     // Reset the error message
     setNameError("");
 
-    const newTest = {
-      name: name,
-      totalMarks: 100, // Add the totalMarks value here
-      subject: userroles[0].subject, // Replace with the appropriate subject ID
-      standard: userroles[0].standard, // Replace with the appropriate standard ID
-      division: userroles[0].division, // Replace with the appropriate division ID
-      year: 2023,
-      highestMarks: 95,
-      averageMarks: 65, // Replace with the appropriate year value
-    };
-
-    // Add the test using the addTest function from testStore
-    await addTest(
-      newTest.name,
-      newTest.totalMarks,
-      newTest.subject,
-      newTest.standard,
-      newTest.division,
-      newTest.year,
-      newTest.highestMarks,
-      newTest.averageMarks
-    );
-
+    await addSubject(name);
     setName("");
   };
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [modalTestId, setModalTestId] = useState("");
-  const [modalTestName, setModalTestName] = useState("");
-
-  const openModal = (tests) => {
-    setIsOpen(true);
-    setModalTestId(tests._id);
-    setModalTestName(tests.name);
-  };
-
-  const closeModal = () => {
-    setIsOpen(false);
-    setModalTestId("");
-    setModalTestName("");
-  };
-
-  const handleEditTest = async () => {
-    try {
-      await updateTest(modalTestId, modalTestName);
-      // Handle success or display a success message
-      closeModal();
-    } catch (error) {
-      // Handle error or display an error message
-    }
-  };
-
-  const handleDeleteTest = async (testId) => {
-    try {
-      await deleteTest(testId);
-      // Handle success or display a success message
-    } catch (error) {
-      // Handle error or display an error message
-    }
-  };
-
-  // Filter the tests array based on the provided criteria
-  const filteredTests = tests.filter((test) => {
-    return (
-      test.standard === userroles[0].standard &&
-      test.division === userroles[0].division &&
-      test.subject === userroles[0].subject
-    );
-  });
-
-  console.log("Filtered Tests : ");
-  console.log(filteredTests);
+  const [searchText, setSearchText] = useState("");
 
   // Filter the tests based on the search text
-  const searchedTests = filteredTests.filter((test) =>
-    test.name.toLowerCase().includes(searchText.toLowerCase())
+  const searchedSubjects = subjects.filter((sub) =>
+    sub.name.toLowerCase().includes(searchText.toLowerCase())
   );
-  console.log("Searched Tests :");
-  console.log(searchedTests);
+  // console.log(searchedSubjects)
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={closeModal}>
+      <Modal1
+        isOpen={isOpen}
+        onClose={closeModal}
+        data={modalSubjectId}
+        data2={modalSubjectName}
+      >
         <div className="items-center justify-center">
           <div className="mb-4">
             <div className="h-10 w-40 mb-4">
-              <h2 className="text-xl ">Enter Test Name</h2>
+              <h2 className="text-2xl ">Enter Subject</h2>
             </div>
             <input
               type="text"
-              value={modalTestName}
-              placeholder="Enter Test"
+              id="subject_name"
+              name="subject_name"
+              value={modalSubjectName}
+              placeholder="Enter subject"
               onChange={(e) => {
-                setModalTestName(e.target.value);
+                setModalSubjectName(e.target.value);
               }}
               className="rounded-lg border border-gray-300 px-2 py-1
                              focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -158,12 +107,13 @@ const Test = () => {
           <button
             className="rounded-full bg-purple-900 text-white px-6 py-2 
                             flex flex-col items-center justify-center"
-            onClick={handleEditTest}
+            onClick={() => updateSubject(modalSubjectId, modalSubjectName)}
           >
-            Update Test
+            Update Subject
           </button>
         </div>
-      </Modal>
+      </Modal1>
+
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
           <div className="grid grid-cols-12">
@@ -171,7 +121,7 @@ const Test = () => {
               <img src={logo} alt="Logo" className="w-44 h-20" />
             </div>
             <div className="col-span-10">
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex items-end justify-end mt-4">
                 <div className="relative">
                   <FontAwesomeIcon
                     icon={faSearch}
@@ -192,38 +142,34 @@ const Test = () => {
                     />
                   )}
                 </div>
-                <div>
-                  <p>
-                    There are {filteredTests.length} tests in this{" "}
-                    <strong>Class</strong>.
-                  </p>
-                </div>
               </div>
 
-              <div className="grid grid-cols-12 mt-12 ml-1">
+              <div className=" grid grid-cols-12 mt-4 ml-1">
                 <div className="col-span-10 flex">
                   <div className="mt-4 w-full">
                     <div className="bg-purple-300 p-3 rounded-lg">
                       <form onSubmit={handleSubmit}>
-                        <div className="grid px-8 grid-cols-6 lg:grid-cols-12 gap-4">
-                          <div className="col-span-8">
-                            <label htmlFor="test_name">
-                              <strong>Test &nbsp; </strong>
-                            </label>
-                            <input
-                              type="text"
-                              value={name}
-                              placeholder="Enter Test"
-                              onChange={(e) => setName(e.target.value)}
-                              className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500 "
-                              style={{ width: "400px" }}
-                            />
-                            {nameError && (
-                              <p className="text-red-600 font-bold">
-                                {nameError}
-                              </p>
-                            )}{" "}
-                            {/* Render the error message */}
+                        <div className="grid grid-cols-2 gap-16">
+                          <div className="flex items-center">
+                            <span className="font-bold text-lg mr-2 ml-2">
+                              Subject{" "}
+                            </span>
+                            <div className="mr-4 ml-2">
+                              <input
+                                type="text"
+                                placeholder="Enter Division"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                style={{ width: "230px", padding: "8px" }}
+                              />
+                              {nameError && (
+                                <p className="text-red-600 font-bold">
+                                  {nameError}
+                                </p>
+                              )}{" "}
+                              {/* Render the error message */}
+                            </div>
                           </div>
                         </div>
                       </form>
@@ -244,7 +190,7 @@ const Test = () => {
                           className="text-white"
                           style={{ fontSize: "24px" }}
                         />
-                        <span style={{ marginTop: "4px" }}>Add Test</span>
+                        <span style={{ marginTop: "4px" }}>Add Subject</span>
                       </button>
                     </div>
                   </div>
@@ -255,30 +201,31 @@ const Test = () => {
                 <div className="col-span-12 grid">
                   <div className="bg-purple-300 p-3 rounded-lg">
                     <div className="mt-4 ml-1">
-                      {searchedTests.map((test) => (
+                      {searchedSubjects.map((subject) => (
                         <div
                           className="bg-purple-300 w-full p-3 rounded-lg mb-4 border border-white"
-                          key={test.id}
+                          key={subject._id}
                         >
                           <div className="flex items-start">
                             <div className="ml-4">
                               <div
                                 className="col-span-2"
-                                style={{ width: "100px" }}
+                                style={{ width: "150px" }}
                               >
-                                <strong>Test </strong> <br />
+                                <strong>Subject </strong> <br />
                               </div>
                             </div>
                             <div
                               className="col-span-2"
-                              style={{ width: "700px" }}
+                              style={{ width: "600px" }}
                             >
-                              <strong>{test.name}</strong> <br />
+                              <strong>{subject.name}</strong> <br />
                             </div>
                             <div className="ml-4 flex items-center">
                               <button
-                                className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center mr-2"
-                                onClick={() => openModal(test)}
+                                className="rounded-full bg-purple-900 text-white px-6 py-2
+                             flex flex-col items-center justify-center mr-2"
+                                onClick={() => openModal(subject)}
                               >
                                 <FontAwesomeIcon
                                   icon={faEdit}
@@ -286,8 +233,9 @@ const Test = () => {
                                 />
                               </button>
                               <button
-                                className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
-                                onClick={() => handleDeleteTest(test._id)}
+                                className="rounded-full bg-purple-900 text-white px-6 py-2 
+                            flex flex-col items-center justify-center"
+                                onClick={() => deleteSubject(subject._id)}
                               >
                                 <FontAwesomeIcon
                                   icon={faTrash}
@@ -310,4 +258,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default Subject;

@@ -6,24 +6,23 @@ const http = axios.create({ baseURL: "http://127.0.0.1:3030/" });
 const testStore = create((set) => {
   return {
     tests: [],
-    userroles:[],
+    userroles: [],
     loading: false,
     error: null,
 
-
     getTests: async (user) => {
       set({ loading: true });
-      console.log("user in store")
+      console.log("user in store");
       console.log(user);
       try {
         const response = await http.get("/tests");
         const { data } = response.data;
         console.log(data);
 
-      const response1 = await http.get(`/userroles?user=${user._id}`);
-      console.log("users corrosponding userrole is")
-      console.log(response1.data.data);
-        set({userroles:response1.data.data,error:null})
+        const response1 = await http.get(`/userroles?user=${user._id}`);
+        console.log("users corrosponding userrole is");
+        console.log(response1.data.data);
+        set({ userroles: response1.data.data, error: null });
         set({ tests: data, error: null });
       } catch (error) {
         set({ error: error.message });
@@ -32,7 +31,16 @@ const testStore = create((set) => {
       set({ loading: false });
     },
 
-    addTest: async (name, totalMarks, subject, standard, division, year) => {
+    addTest: async (
+      name,
+      totalMarks,
+      subject,
+      standard,
+      division,
+      year,
+      highestMarks,
+      averageMarks
+    ) => {
       set({ loading: true });
 
       try {
@@ -43,6 +51,8 @@ const testStore = create((set) => {
           standard,
           division,
           year,
+          highestMarks,
+          averageMarks,
         });
 
         const { data } = response;

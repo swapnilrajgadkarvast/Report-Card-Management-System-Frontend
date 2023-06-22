@@ -19,6 +19,21 @@ const Navbar = ({ setLogin }) => {
   const role = loginData.user.role;
   const user = loginData.user;
 
+  const getRandomColor = () => {
+    const colors = ["#F87171", "#7F9CF5", "#34D399", "#FCD34D", "#A78BFA"];
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
+  };
+
+  const getInitials = (firstName, lastName) => {
+    const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : "";
+    const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : "";
+    return `${firstInitial}${lastInitial}`;
+  };
+
+  const backgroundColor = getRandomColor();
+  const initials = getInitials(user.firstName, user.lastName);
+
   return (
     <nav className="flex items-center justify-between bg-purple-900 p-4">
       <div className="flex items-center">
@@ -99,6 +114,16 @@ const Navbar = ({ setLogin }) => {
                     ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
                     : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
                 }
+                to={"/admin/subject"}
+              >
+                Subject
+              </NavLink>
+              <NavLink
+                className={({ isActive }) =>
+                  isActive
+                    ? "transition duration-300 font-bold focus:outline-none p-2 bg-gray-100 shadow rounded-md m-1"
+                    : "transition duration-300 font-bold focus:outline-none p-2 hover:bg-purple-600 hover:shadow rounded-md m-1"
+                }
                 to={"/admin/roles"}
               >
                 Role
@@ -137,11 +162,12 @@ const Navbar = ({ setLogin }) => {
             onClick={handleProfileClick}
             className="flex items-center focus:outline-none ml-4"
           >
-            <img
-              src={random_profile_pic1}
-              alt="Profile"
-              className="w-24 h-16 rounded-full"
-            />
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{ backgroundColor }}
+            >
+              <span className="text-white text-2xl font-bold">{initials}</span>
+            </div>
           </button>
           {/* Dropdown menu */}
           {showProfile && (
@@ -149,12 +175,14 @@ const Navbar = ({ setLogin }) => {
               <div className="py-4 px-4">
                 <div className="flex items-start space-x-4">
                   <div className="mr-4">
-                    {" "}
-                    <img
-                      src={random_profile_pic1}
-                      alt="Profile"
-                      className="w-36 h-28"
-                    />
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{ backgroundColor }}
+                    >
+                      <span className="text-white text-2xl font-bold">
+                        {initials}
+                      </span>
+                    </div>
                   </div>
                   <div>
                     <p className="text-lg font-medium">{`${user.firstName} ${user.lastName}`}</p>

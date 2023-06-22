@@ -16,6 +16,7 @@ import Students from "./components/class_teacher/students";
 
 import Standards from "./components/admin/standards";
 import Division from "./components/admin/division";
+import Subject from "./components/admin/subject";
 import Grades from "./components/admin/grades";
 import Roles from "./components/admin/roles";
 import UserRoles from "./components/admin/user_roles";
@@ -74,6 +75,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Division />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin/subject"
+              element={
+                <PrivateRoute>
+                  <Subject />
                 </PrivateRoute>
               }
             />

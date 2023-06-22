@@ -969,7 +969,9 @@ const Students = () => {
                                   />
                                   {filteredStudent.parent.addressLine1 +
                                     " " +
-                                    filteredStudent.parent.addressLine2}
+                                    filteredStudent.parent.area +
+                                    " " +
+                                    filteredStudent.parent.city}
                                 </div>
                               </div>
                               <div className="ml-4 flex items-center">

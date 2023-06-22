@@ -19,7 +19,6 @@ import studentTestResultStore from "../../stores/studentTestResultStore";
 import Modal from "../../modals/Modal1";
 
 const Result = () => {
-
   useEffect(() => {
     getStudentTestResult(user).catch((error) => {
       // Handle the error, e.g., display an error message
@@ -69,7 +68,7 @@ const Result = () => {
       );
 
       console.log("Filter students based on the selected name -->");
-      getStudentTestResult(user)
+      getStudentTestResult(user);
       console.log(filteredStudents);
       //setStudentWiseDataToDisplay(DataToDisplay);
       setStudentWiseDataToDisplay(filteredStudents);
@@ -112,7 +111,6 @@ const Result = () => {
   console.log("Data To Display in JSX ");
   console.log(DataToDisplay);
 
-  
   // console.log("studentTestResult.....");
   // console.log(studentTestResult);
 
@@ -164,8 +162,8 @@ const Result = () => {
       };
       console.log("New Test result object to add is");
       console.log(studentTestResultObj);
-      await addStudentTestResult(studentTestResultObj,user);
-    
+      await addStudentTestResult(studentTestResultObj, user);
+
       //getStudentTestResult(user)
       // Handle success or display a success message
       closeModal1();
@@ -323,7 +321,7 @@ const Result = () => {
                 </div>
                 <div>
                   <p>
-                    There are <strong>{studentTestResult.length}</strong>{" "}
+                    There are <strong>{studentDataForDropdown.length}</strong>{" "}
                     students in this Class.
                   </p>
                 </div>
@@ -474,7 +472,7 @@ const Result = () => {
                                     icon={faUser}
                                     className="text-purple-900 mr-2"
                                   />
-                                  {student.parentDetails})
+                                  {student.parentDetails}
                                 </div>
                               </div>
                               <div className="ml-4">
