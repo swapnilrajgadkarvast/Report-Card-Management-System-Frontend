@@ -153,25 +153,27 @@ const userrolesStore = create((set) => ({
 
     try {
       const response = await http.post(`/userroles`, userRoleObj);
+      const { data } = response;
 
       const roleObj = await http.get(`/roles/${userRoleObj.role}`);
       console.log("Role assigned is");
       console.log(roleObj.data);
+
       const response1 = await http.patch(`/users/${userRoleObj.user}`, {
         role: roleObj.data.name,
       });
       console.log(response1.data);
-      set(
-        (state) => (
-          { userroles: [...state.userroles, response.data] }, { error: null }
-        )
-      );
+
+      set((state) => ({
+        userroles: [...state.userroles, data],
+        error: null,
+        loading: false,
+      }));
 
       console.log("New User role added");
     } catch (error) {
-      set({ error: error.message });
+      set({ error: error.message, loading: false });
     }
-    set({ loading: false });
   },
 
   deleteUserRole: async (id) => {
@@ -180,8 +182,7 @@ const userrolesStore = create((set) => ({
       const response = await http.delete(`/userroles/${id}`);
       console.log(response.data);
       set((state) => ({
-        userroles: state.userroles.filter((s) => s._id !== id),
-        error: null,
+        userroles: state.userroles.filter((s) => s._id !== response.data._id),
       }));
     } catch (error) {
       set({ error: error.message });

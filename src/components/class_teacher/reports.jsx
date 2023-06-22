@@ -544,11 +544,11 @@ const Reports = () => {
             <img src={logo} alt="Logo" className="w-44 h-20" />
           </div>
           <div className="col-span-10">
-            <div className="flex items-end justify-end mt-4">
+            {/* <div className="flex items-end justify-end mt-4">
               <button className="ml-2 rounded-full bg-purple-900 text-white px-4 py-2">
                 Delete Student
               </button>
-            </div>
+            </div> */}
             <div className="grid grid-cols-12 mt-4 ml-1">
               <div className="col-span-3">
                 <div className="flex items-center">

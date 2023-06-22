@@ -252,7 +252,7 @@ const UserRoles = () => {
   const searchedUsers = userRolesDataToDisplay.filter((user) =>
     user.username.toLowerCase().includes(searchText.toLowerCase())
   );
-  // console.log(searchedTests)
+  // console.log(searchedUsers)
 
   return (
     <>
