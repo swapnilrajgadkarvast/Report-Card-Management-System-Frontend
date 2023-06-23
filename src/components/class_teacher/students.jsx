@@ -484,7 +484,7 @@ const Students = () => {
         <div className="bg-white p-4 max-w-full max-h-full overflow-auto">
           <div className="mb-2 bg-slate-200">
             <div className="h-10 w-60 mb-2">
-              <h2 className="text-xl text-center">Update Student Details</h2>
+              <h2 className="text-xl text-center">Add Student Details</h2>
             </div>
             <div className="mb-2">
               <label className="ml-8">Enter First Name:</label>
@@ -761,6 +761,9 @@ const Students = () => {
                   parent,
                   isActive,
                 };
+
+                const updatedStudents = [...filteredStudents, student];
+                setFilteredStudents(updatedStudents);
 
                 console.log(student);
                 addStudent(student);
