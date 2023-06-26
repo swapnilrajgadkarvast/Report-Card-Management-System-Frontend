@@ -79,40 +79,40 @@ const userrolesStore = create((set) => ({
 
           //  console.log(firstName+" "+lastName);
           const username = firstName + " " + lastName;
-          console.log(username);
+          // console.log(username);
 
           const searchObjectRole = rolesdata.data.find(
             (roleobj) => roleobj._id === item.role
           );
           const role = searchObjectRole.name;
           const roleId = searchObjectRole._id;
-          console.log(role);
+          // console.log(role);
 
           const searchObjectStandard = standarddata.data.find(
             (standardobj) => standardobj._id === item.standard
           );
           const standard = searchObjectStandard.name;
           const standardId = searchObjectStandard._id;
-          console.log(standard);
+          // console.log(standard);
 
           const searchObjectDivision = divisiondata.data.find(
             (divisionobj) => divisionobj._id === item.division
           );
           const division = searchObjectDivision.name;
           const divisionId = searchObjectDivision._id;
-          console.log(division);
+          // console.log(division);
 
           const searchObjectsubject = subjectsdata.data.find(
             (subjectobj) => subjectobj._id === item.subject
           );
           const subject = searchObjectsubject.name;
           const subjectId = searchObjectsubject._id;
-          console.log(subject);
+          // console.log(subject);
 
           const year = item.year;
-          console.log(item.year);
+          // console.log(item.year);
 
-          console.log("=============================");
+          // console.log("=============================");
 
           const userData = {
             Id,

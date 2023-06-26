@@ -39,15 +39,26 @@ const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const { getUsers, addUsers, updateUsers, deleteUsers } = usersStore();
+  const { users, getUsers, addUsers, updateUsers, deleteUsers } = usersStore();
 
   const [registered, setRegistered] = useState(false);
+  const [emailRegistered, setEmailRegistered] = useState(false);
 
   const onSubmitHandler = async (data) => {
     try {
+      // console.log("Users:", users); // Fetch the users data
+
+      const existingUser = users.find((user) => user.email === data.email); // Check if email already exists
+
+      if (existingUser) {
+        console.log("Email is already registered.");
+        // Show a message that email is already registered
+        setEmailRegistered(true);
+        return;
+      }
+
       // Save the user data
       await addUsers(data);
-      // console.log(data);
       reset();
       console.log("User saved successfully.");
       // Set the success message state
@@ -179,9 +190,14 @@ const Register = () => {
                 Register
               </button>
             </div>
+            {emailRegistered && (
+              <p className="text-red-700 text-center font-bold">
+                Email is already registered !
+              </p>
+            )}
             {registered && (
               <p className="text-green-700 text-center font-bold">
-                Registered successfully!
+                Registered successfully.
               </p>
             )}
             <div id="alreadyuser" className="form-text m-2 text-xl">

@@ -114,7 +114,7 @@ const studentStore1 = create((set) => ({
       const response = await http.delete(`/student/${id}`);
       console.log(response.data);
       set((state) => ({
-        studentDetails: state.studentDetails.filter((s) => s._id !== id),
+        studentDetails: state.studentDetails.filter((s) => s._id != response.data._id),
         error: null,
       }));
     } catch (error) {

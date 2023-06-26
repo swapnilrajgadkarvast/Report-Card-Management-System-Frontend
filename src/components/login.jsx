@@ -33,7 +33,7 @@ const Login = ({ setLogin }) => {
   } = useForm({ resolver: yupResolver(schema) });
 
   const handleLogin = (data) => {
-    console.log(data);
+    // console.log(data);
 
     if (
       (data.loginRole === "subject-teacher" &&
@@ -48,22 +48,26 @@ const Login = ({ setLogin }) => {
     loginUser(data)
       .then((res) => {
         const role = res.data.user.role;
-        console.log("Role:", role);
-        setLogin(true);
+        // console.log("Role:", role);
         if (role === "Admin") {
+          setLogin(true);
           console.log("Navigating to /admin/standards");
           navigate("/admin/standards");
         } else if (
           role === "Subject Teacher" &&
           loginRole === "subject-teacher"
         ) {
-          console.log("Navigating to /subject_teacher/test");
+          setLogin(true);
+          // console.log("Navigating to /subject_teacher/test");
           navigate("/subject_teacher/test");
         } else if (role === "Class Teacher" && loginRole === "class-teacher") {
-          console.log("Navigating to /class_teacher/students");
+          setLogin(true);
+          // console.log("Navigating to /class_teacher/students");
           navigate("/class_teacher/students");
         } else {
-          console.log("Enter Valid data");
+          setLogin(false);
+          sessionStorage.clear();
+          // console.log("Enter Valid data");
           navigate("/login-error-page");
         }
       })

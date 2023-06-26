@@ -13,6 +13,8 @@ const usersStore = create((set) => ({
     try {
       const response = await http.get("/users");
       const { data } = response.data;
+      // console.log('Users data :')
+      // console.log(data)
       set({ users: data, error: null });
     } catch (error) {
       set({ error: error.message });

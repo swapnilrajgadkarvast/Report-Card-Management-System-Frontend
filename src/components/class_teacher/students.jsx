@@ -105,8 +105,8 @@ const Students = () => {
     //setModalRoleName("");
   };
 
-  console.log("students");
-  console.log(students);
+  // console.log("students");
+  // console.log(students);
 
   const handleStandardChange = (event) => {
     const selectedStandard = event.target.value;

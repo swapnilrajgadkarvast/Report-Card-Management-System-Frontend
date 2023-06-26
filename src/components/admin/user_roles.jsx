@@ -77,8 +77,8 @@ const UserRoles = () => {
     console.log(selectedYear);
   };
 
-  console.log("userRolesDataToDisplay : ");
-  console.log(userRolesDataToDisplay);
+  // console.log("userRolesDataToDisplay : ");
+  // console.log(userRolesDataToDisplay);
 
   const [nameError, setNameError] = useState("");
 
@@ -102,7 +102,7 @@ const UserRoles = () => {
       // console.log("Comparing userData:", userData);
       // console.log("Comparing userRolesObj:", userRolesObj);
       return (
-        userData.userId === userRolesObj.username &&
+        userData.userId === userRolesObj.user &&
         userData.roleId === userRolesObj.role &&
         userData.standardId === userRolesObj.standard &&
         userData.divisionId === userRolesObj.division &&
@@ -134,6 +134,7 @@ const UserRoles = () => {
     } else {
       // Add user role if it's a new data and form is not empty
       addUserRole(userRolesObj);
+      window.location.reload();
       // Reset form after submission
       setSelectedUser("");
       setSelectedRole("");
@@ -190,6 +191,7 @@ const UserRoles = () => {
   const handleDeleteUserRole = async (userRoleId) => {
     try {
       await deleteUserRole(userRoleId);
+      window.location.reload();
     } catch (error) {}
   };
 

@@ -337,6 +337,10 @@ const Reports = () => {
     // Determine the grade based on the percentage
     if (percentage > 70) {
       grade = "Distinction";
+    } else if (percentage >= 60 && percentage < 70) {
+      grade = "First Class";
+    } else if (percentage >= 50 && percentage < 60) {
+      grade = "Second Class";
     } else if (percentage >= 35) {
       grade = "Pass";
     } else if (percentage > 0) {
