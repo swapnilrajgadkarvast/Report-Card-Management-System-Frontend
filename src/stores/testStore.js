@@ -19,10 +19,83 @@ const testStore = create((set) => {
         const { data } = response.data;
         console.log(data);
 
-        const response1 = await http.get(`/userroles?user=${user._id}`);
-        console.log("users corrosponding userrole is");
-        console.log(response1.data.data);
-        set({ userroles: response1.data.data, error: null });
+        const response2 = await http.get("/standard");
+        const standardData = response2.data;
+        // console.log(standarddata.data);
+
+        const response3 = await http.get("/division");
+        const divisionData = response3.data;
+        // console.log(divisiondata.data);
+
+        const response4 = await http.get("/subjects");
+        const subjectData = response4.data;
+        // console.log(standarddata.data);
+
+        const response5 = await http.get("/userroles");
+        const userRolesData = response5.data;
+        console.log("User Roles Data");
+        console.log(userRolesData.data);
+
+        // Filter userRolesData based on loginUserData.user
+        const filteredUserRolesData = userRolesData.data.filter((userRole) => {
+          // Compare userRole.user with loginUserData.user
+          return userRole.user === user._id;
+        });
+
+        console.log("Filtered User Roles Data");
+        console.log(filteredUserRolesData);
+
+        // Filter standards and divisions based on user and role IDs
+        const filteredStandards = standardData.data.filter((standard) =>
+          userRolesData.data.some(
+            (userRole) =>
+              userRole.user === user._id && userRole.standard === standard._id
+          )
+        );
+
+        console.log("Filtered standard");
+        console.log(filteredStandards);
+
+        const filteredDivisions = divisionData.data.filter((division) =>
+          userRolesData.data.some(
+            (userRole) =>
+              userRole.user === user._id && userRole.division === division._id
+          )
+        );
+
+        console.log("Filtered divisions");
+        console.log(filteredDivisions);
+
+        const filteredSubject = subjectData.data.filter((subject) =>
+          userRolesData.data.some(
+            (userRole) =>
+              userRole.user === user._id && userRole.subject === subject._id
+          )
+        );
+
+        console.log("Filtered subjects");
+        console.log(filteredSubject);
+
+        const filteredTests = data.filter((test) => {
+          // Check if the student's standard and division are included in the filteredStandards and filteredDivisions
+          return (
+            filteredStandards.some(
+              (standard) => standard._id === test.standard
+            ) &&
+            filteredDivisions.some(
+              (division) => division._id === test.division
+            ) &&
+            filteredSubject.some((subject) => subject._id === test.subject)
+          );
+        });
+
+        console.log("Filtered Tests");
+        console.log(filteredTests);
+
+        set({ userroles: filteredUserRolesData, error: null });
+        set({ standards: filteredStandards, error: null });
+        set({ divisions: filteredDivisions, error: null });
+        set({ subject: filteredSubject, error: null });
         set({ tests: data, error: null });
       } catch (error) {
         set({ error: error.message });

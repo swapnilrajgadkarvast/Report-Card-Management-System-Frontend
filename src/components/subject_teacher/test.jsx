@@ -199,6 +199,46 @@ const Test = () => {
                   </p>
                 </div>
               </div>
+              <div className=" grid grid-cols-12 mt-4 ml-1">
+                <div className="col-span-10 flex">
+                  <div className="mr-4">
+                    <select
+                      // value={selectedStandard}
+                      // onChange={handleStandardChange}
+                      className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                      style={{ width: "230px", padding: "8px" }}
+                      // disabled={standards.length <= 1}
+                    >
+                      <option value="">Select Standard</option>
+                      {/* {standards.map((standard) => (
+                        <option key={standard._id} value={standard._id}>
+                          {standard.name}
+                        </option>
+                      ))} */}
+                    </select>
+                  </div>
+                  <div className="col-span-3">
+                    <div className="flex items-center">
+                      <div>
+                        <select
+                          // value={selectedDivision}
+                          // onChange={handleDivisionChange}
+                          className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                          style={{ width: "230px", padding: "8px" }}
+                          // disabled={divisions.length <= 1}
+                        >
+                          <option value="">Select Division</option>
+                          {/* {divisions.map((division) => (
+                            <option key={division._id} value={division._id}>
+                              {division.name}
+                            </option>
+                          ))} */}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               <div className="grid grid-cols-12 mt-12 ml-1">
                 <div className="col-span-10 flex">

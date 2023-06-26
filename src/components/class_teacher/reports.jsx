@@ -40,6 +40,9 @@ const Reports = () => {
     getReports();
   }, []);
 
+  console.log("Tests Data :");
+  console.log(tests);
+
   const [selectedStandard, setSelectedStandard] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
   const [filteredStudents, setFilteredStudents] = useState([]);
@@ -610,6 +613,12 @@ const Reports = () => {
                               onChange={handleStudentChange}
                               className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
                               style={{ width: "230px", padding: "8px" }}
+                              disabled={
+                                selectedStandard.length > 0 &&
+                                selectedDivision.length > 0
+                                  ? false
+                                  : true
+                              }
                             >
                               <option value="">Select Student</option>
                               {filteredStudents.map((student) => (
