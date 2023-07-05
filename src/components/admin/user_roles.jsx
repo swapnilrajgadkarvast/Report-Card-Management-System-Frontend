@@ -14,11 +14,10 @@ import {
   faUserGraduate,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-//import random_profile_pic1 from "../images/random_profile_pic.jpg";
-//import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 import userrolesStore from "../../stores/userrolesStore";
 import { useEffect } from "react";
 import Modal1 from "../../modals/Modal1";
+import DeleteModal from "../../modals/DeleteModal";
 
 const UserRoles = () => {
   const {
@@ -188,13 +187,6 @@ const UserRoles = () => {
     }
   };
 
-  const handleDeleteUserRole = async (userRoleId) => {
-    try {
-      await deleteUserRole(userRoleId);
-      window.location.reload();
-    } catch (error) {}
-  };
-
   const [isOpen, setIsOpen] = useState(false);
   const [modalUserName, setModalUserName] = useState("");
   const [modalUserId, setModalUserId] = useState("");
@@ -255,6 +247,25 @@ const UserRoles = () => {
     user.username.toLowerCase().includes(searchText.toLowerCase())
   );
   // console.log(searchedUsers)
+
+  const [showModal, setShowModal] = useState(false);
+  const [userRoleToDelete, setUserRoleToDelete] = useState(null);
+
+  const handleDeleteUserRole = async (userRoleId) => {
+    try {
+      await deleteUserRole(userRoleId);
+      setShowModal(false); // Close the modal after deletion
+      window.location.reload(); // Reload the page
+    } catch (error) {
+      // Handle any error that occurred during deletion
+      console.error(error);
+    }
+  };
+
+  const openDeleteModal = (userRoleId) => {
+    setUserRoleToDelete(userRoleId);
+    setShowModal(true);
+  };
 
   return (
     <>
@@ -646,7 +657,7 @@ const UserRoles = () => {
                                   style={{ fontSize: "24px" }}
                                 />
                               </button>
-                              <button
+                              {/* <button
                                 className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col
                              items-center justify-center"
                                 onClick={() => handleDeleteUserRole(data.Id)}
@@ -655,7 +666,24 @@ const UserRoles = () => {
                                   icon={faTrash}
                                   style={{ fontSize: "24px" }}
                                 />
+                              </button> */}
+                              <button
+                                className="rounded-full bg-purple-900 text-white px-6 py-2 flex flex-col items-center justify-center"
+                                onClick={() => openDeleteModal(data.Id)}
+                              >
+                                <FontAwesomeIcon
+                                  icon={faTrash}
+                                  style={{ fontSize: "24px" }}
+                                />
                               </button>
+
+                              <DeleteModal
+                                show={showModal}
+                                onClose={() => setShowModal(false)}
+                                onDelete={() =>
+                                  handleDeleteUserRole(userRoleToDelete)
+                                }
+                              />
                             </div>
                           </div>
                         </div>

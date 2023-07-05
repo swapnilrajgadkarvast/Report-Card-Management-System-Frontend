@@ -3,12 +3,22 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import random_profile_pic1 from "../images/random_profile_pic.jpg";
 import { faEnvelope, faPhone } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LogOutModal from "../modals/LogOutModal";
 
 const Navbar = ({ setLogin }) => {
   const [showProfile, setShowProfile] = useState(false);
 
   const handleProfileClick = () => {
     setShowProfile(!showProfile);
+  };
+
+  const [showModal, setShowModal] = useState(false);
+
+  const handleLogout = () => {
+    navigate("/login");
+    setLogin(false);
+    sessionStorage.clear();
+    setShowModal(false);
   };
 
   // const { setLogin } = props;
@@ -171,7 +181,7 @@ const Navbar = ({ setLogin }) => {
           </button>
           {/* Dropdown menu */}
           {showProfile && (
-            <div className="absolute right-0 mt-80 w-[26rem] bg-white rounded-md shadow-lg overflow-hidden z-30">
+            <div className="absolute right-0 mt-80 w-[26rem] bg-gray-900 rounded-md shadow-lg overflow-hidden z-30" style={{ boxShadow: "0 0 20px black" }}>
               <div className="py-4 px-4">
                 <div className="flex items-start space-x-4">
                   <div className="mr-4">
@@ -179,25 +189,25 @@ const Navbar = ({ setLogin }) => {
                       className="w-16 h-16 rounded-full flex items-center justify-center"
                       style={{ backgroundColor }}
                     >
-                      <span className="text-white text-2xl font-bold">
+                      <span className="text-black text-2xl font-bold">
                         {initials}
                       </span>
                     </div>
                   </div>
                   <div>
-                    <p className="text-lg font-medium">{`${user.firstName} ${user.lastName}`}</p>
+                    <p className="text-lg font-medium text-white">{`${user.firstName} ${user.lastName}`}</p>
                     <div>
-                      <p>
+                      <p className="text-white">
                         <FontAwesomeIcon
                           icon={faEnvelope}
-                          className="text-purple-900 mr-2"
+                          className="text-purple-600 mr-2"
                         />
                         {`${user.email}`}
                       </p>
-                      <p>
+                      <p className="text-white">
                         <FontAwesomeIcon
                           icon={faPhone}
-                          className="text-purple-900 mr-2"
+                          className="text-purple-600 mr-2"
                         />
                         {`${user.phone}`}
                       </p>
@@ -205,7 +215,7 @@ const Navbar = ({ setLogin }) => {
                   </div>
                 </div>
                 <div className="mt-4">
-                  <p>
+                  <p className="text-white">
                     Username : <strong>{`${user.userName}`}</strong>
                   </p>
                 </div>
@@ -216,7 +226,7 @@ const Navbar = ({ setLogin }) => {
                   >
                     Cancel
                   </button>
-                  <button
+                  {/* <button
                     className="block px-4 py-2 text-sm text-white bg-purple-700 hover:bg-purple-800 ml-2 rounded"
                     onClick={() => {
                       navigate("/login");
@@ -225,7 +235,21 @@ const Navbar = ({ setLogin }) => {
                     }}
                   >
                     Logout
+                  </button> */}
+                  <button
+                    className="block px-4 py-2 text-sm text-white bg-purple-700 hover:bg-purple-800 ml-2 rounded"
+                    onClick={() => setShowModal(true)}
+                  >
+                    Logout
                   </button>
+
+                  {/* Logout Modal */}
+                  <LogOutModal
+                    show={showModal}
+                    onClose={() => setShowModal(false)}
+                    setLogin={setLogin}
+                    setShow={setShowModal}
+                  />
                 </div>
               </div>
             </div>

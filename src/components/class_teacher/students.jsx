@@ -20,6 +20,7 @@ import logo from "../../images/rcms_logo_small.jpg";
 import student_profile_pic from "../../images/student_profile_pic.png";
 import studentStore from "../../stores/studentStore";
 import Modal from "../../modals/Modal";
+import DeleteModal from "../../modals/DeleteModal";
 
 const Students = () => {
   const {
@@ -168,6 +169,23 @@ const Students = () => {
 
   const handleClearSearch = () => {
     setSearchText("");
+  };
+
+  const [showModal, setShowModal] = useState(false);
+  const [filterStudentToDelete, setFilterStudentToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (filterStudentToDelete) {
+      // Perform the deletion logic here
+      deleteStudent(filterStudentToDelete);
+      setFilterStudentToDelete(null);
+      setShowModal(false); // Close the modal after deletion
+    }
+  };
+
+  const openDeleteModal = (filterStudentId) => {
+    setFilterStudentToDelete(filterStudentId);
+    setShowModal(true);
   };
 
   return (
@@ -988,7 +1006,7 @@ const Students = () => {
                                     style={{ fontSize: "24px" }}
                                   />
                                 </button>
-                                <button
+                                {/* <button
                                   className="rounded-full bg-purple-900 text-white px-6 py-2 
                             flex flex-col items-center justify-center"
                                   onClick={() =>
@@ -999,7 +1017,25 @@ const Students = () => {
                                     icon={faTrash}
                                     style={{ fontSize: "24px" }}
                                   />
+                                </button> */}
+                                <button
+                                  className="rounded-full bg-purple-900 text-white px-6 py-2 
+                    flex flex-col items-center justify-center"
+                                  onClick={() =>
+                                    openDeleteModal(filteredStudent._id)
+                                  }
+                                >
+                                  <FontAwesomeIcon
+                                    icon={faTrash}
+                                    style={{ fontSize: "24px" }}
+                                  />
                                 </button>
+                                {/* Delete Modal */}
+                                <DeleteModal
+                                  show={showModal}
+                                  onClose={() => setShowModal(false)}
+                                  onDelete={handleDelete}
+                                />
                               </div>
                             </div>
                           </div>

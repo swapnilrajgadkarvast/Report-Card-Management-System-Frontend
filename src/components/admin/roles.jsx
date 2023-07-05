@@ -12,9 +12,7 @@ import logo from "../../images/rcms_logo_small.jpg";
 import rolesStore from "../../stores/rolesStore";
 import { useEffect } from "react";
 import Modal from "../../modals/Modal1";
-
-//import random_profile_pic1 from "../images/random_profile_pic.jpg";
-//import random_profile_pic2 from "../images/random_profile_pic2.jpg";
+import DeleteModal from "../../modals/DeleteModal";
 
 const Roles = () => {
   const { roles, loading, error, getRoles, addRole, deleteRole, updateRole } =
@@ -75,6 +73,23 @@ const Roles = () => {
     role.name.toLowerCase().includes(searchText.toLowerCase())
   );
   // console.log(searchedTests)
+
+  const [showModal, setShowModal] = useState(false);
+  const [roleToDelete, setRoleToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (roleToDelete) {
+      // Perform the deletion logic here
+      deleteRole(roleToDelete);
+      setRoleToDelete(null);
+      setShowModal(false); // Close the modal after deletion
+    }
+  };
+
+  const openDeleteModal = (roleId) => {
+    setRoleToDelete(roleId);
+    setShowModal(true);
+  };
 
   return (
     <>
@@ -248,15 +263,21 @@ const Roles = () => {
                               </button>
 
                               <button
-                                className="rounded-full bg-purple-900 text-white px-6 py-2 flex
-                             flex-col items-center justify-center"
-                                onClick={() => deleteRole(role._id)}
+                                className="rounded-full bg-purple-900 text-white px-6 py-2 
+                    flex flex-col items-center justify-center"
+                                onClick={() => openDeleteModal(role._id)}
                               >
                                 <FontAwesomeIcon
                                   icon={faTrash}
                                   style={{ fontSize: "24px" }}
                                 />
                               </button>
+                              {/* Delete Modal */}
+                              <DeleteModal
+                                show={showModal}
+                                onClose={() => setShowModal(false)}
+                                onDelete={handleDelete}
+                              />
                             </div>
                           </div>
                         </div>

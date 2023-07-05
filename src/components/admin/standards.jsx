@@ -12,6 +12,7 @@ import logo from "../../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 import Modal1 from "../../modals/Modal1";
+import DeleteModal from "../../modals/DeleteModal";
 
 const Standards = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -79,6 +80,23 @@ const Standards = () => {
     std.name.toLowerCase().includes(searchText.toLowerCase())
   );
   // console.log(searchedTests)
+
+  const [showModal, setShowModal] = useState(false);
+  const [standardToDelete, setStandardToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (standardToDelete) {
+      // Perform the deletion logic here
+      deleteStandard(standardToDelete);
+      setStandardToDelete(null);
+      setShowModal(false); // Close the modal after deletion
+    }
+  };
+
+  const openDeleteModal = (standardId) => {
+    setStandardToDelete(standardId);
+    setShowModal(true);
+  };
 
   return (
     <>
@@ -159,7 +177,7 @@ const Standards = () => {
                             <div className="mr-4 ml-2">
                               <input
                                 type="text"
-                                placeholder="Enter Division"
+                                placeholder="Enter standard"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -236,14 +254,20 @@ const Standards = () => {
                               </button>
                               <button
                                 className="rounded-full bg-purple-900 text-white px-6 py-2 
-                            flex flex-col items-center justify-center"
-                                onClick={() => deleteStandard(standard._id)}
+                    flex flex-col items-center justify-center"
+                                onClick={() => openDeleteModal(standard._id)}
                               >
                                 <FontAwesomeIcon
                                   icon={faTrash}
                                   style={{ fontSize: "24px" }}
                                 />
                               </button>
+                              {/* Delete Modal */}
+                              <DeleteModal
+                                show={showModal}
+                                onClose={() => setShowModal(false)}
+                                onDelete={handleDelete}
+                              />
                             </div>
                           </div>
                         </div>

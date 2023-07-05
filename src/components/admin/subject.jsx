@@ -11,7 +11,8 @@ import {
 import logo from "../../images/rcms_logo_small.jpg";
 //import random_profile_pic1 from "../images/random_profile_pic.jpg";
 //import random_profile_pic2 from "../images/random_profile_pic2.jpg";
-import Modal1 from "../../modals/Modal1";
+import Modal from "../../modals/Modal1";
+import DeleteModal from "../../modals/DeleteModal";
 
 const Subject = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,9 +79,26 @@ const Subject = () => {
   );
   // console.log(searchedSubjects)
 
+  const [showModal, setShowModal] = useState(false);
+  const [subjectToDelete, setSubjectToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (subjectToDelete) {
+      // Perform the deletion logic here
+      deleteSubject(subjectToDelete);
+      setSubjectToDelete(null);
+      setShowModal(false); // Close the modal after deletion
+    }
+  };
+
+  const openDeleteModal = (subjectId) => {
+    setSubjectToDelete(subjectId);
+    setShowModal(true);
+  };
+
   return (
     <>
-      <Modal1
+      <Modal
         isOpen={isOpen}
         onClose={closeModal}
         data={modalSubjectId}
@@ -112,7 +130,7 @@ const Subject = () => {
             Update Subject
           </button>
         </div>
-      </Modal1>
+      </Modal>
 
       <div style={{ backgroundColor: "white" }} className="min-h-screen">
         <div className="container">
@@ -157,7 +175,7 @@ const Subject = () => {
                             <div className="mr-4 ml-2">
                               <input
                                 type="text"
-                                placeholder="Enter Division"
+                                placeholder="Enter subject"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="rounded-lg border border-gray-300 px-2 py-1 focus:outline-none focus:ring-2 focus:ring-purple-500"
@@ -234,14 +252,20 @@ const Subject = () => {
                               </button>
                               <button
                                 className="rounded-full bg-purple-900 text-white px-6 py-2 
-                            flex flex-col items-center justify-center"
-                                onClick={() => deleteSubject(subject._id)}
+                    flex flex-col items-center justify-center"
+                                onClick={() => openDeleteModal(subject._id)}
                               >
                                 <FontAwesomeIcon
                                   icon={faTrash}
                                   style={{ fontSize: "24px" }}
                                 />
                               </button>
+                              {/* Delete Modal */}
+                              <DeleteModal
+                                show={showModal}
+                                onClose={() => setShowModal(false)}
+                                onDelete={handleDelete}
+                              />
                             </div>
                           </div>
                         </div>

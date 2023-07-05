@@ -9,11 +9,10 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../images/rcms_logo_small.jpg";
-//import random_profile_pic1 from "../images/random_profile_pic.jpg";
-//import random_profile_pic2 from "../images/random_profile_pic2.jpg";
 import { useEffect } from "react";
 import divisionStore from "../../stores/divisionStore";
 import Modal from "../../modals/Modal1";
+import DeleteModal from "../../modals/DeleteModal";
 
 const Division = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -80,6 +79,23 @@ const Division = () => {
     div.name.toLowerCase().includes(searchText.toLowerCase())
   );
   // console.log(searchedTests)
+
+  const [showModal, setShowModal] = useState(false);
+  const [divisionToDelete, setDivisionToDelete] = useState(null);
+
+  const handleDelete = () => {
+    if (divisionToDelete) {
+      // Perform the deletion logic here
+      deleteDivision(divisionToDelete);
+      setDivisionToDelete(null);
+      setShowModal(false); // Close the modal after deletion
+    }
+  };
+
+  const openDeleteModal = (divisionId) => {
+    setDivisionToDelete(divisionId);
+    setShowModal(true);
+  };
 
   return (
     <>
@@ -241,14 +257,20 @@ const Division = () => {
                               </button>
                               <button
                                 className="rounded-full bg-purple-900 text-white px-6 py-2 
-                            flex flex-col items-center justify-center"
-                                onClick={() => deleteDivision(division._id)}
+                    flex flex-col items-center justify-center"
+                                onClick={() => openDeleteModal(division._id)}
                               >
                                 <FontAwesomeIcon
                                   icon={faTrash}
                                   style={{ fontSize: "24px" }}
                                 />
                               </button>
+                              {/* Delete Modal */}
+                              <DeleteModal
+                                show={showModal}
+                                onClose={() => setShowModal(false)}
+                                onDelete={handleDelete}
+                              />
                             </div>
                           </div>
                         </div>
